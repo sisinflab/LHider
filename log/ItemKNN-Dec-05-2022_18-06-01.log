@@ -1,0 +1,130 @@
+2022-12-05 18:06:01.185363: I Loading parameters
+2022-12-05 18:06:01.185423: I Parameter neighbors set to 509
+2022-12-05 18:06:01.185532: I Parameter similarity set to cosine
+2022-12-05 18:06:01.185633: I Parameter implementation set to aiolli
+2022-12-05 18:06:01.185714: I Parameter implicit set to False
+2022-12-05 18:06:01.185779: I Parameter shrink set to 0
+2022-12-05 18:06:01.185843: I Parameter normalize set to True
+2022-12-05 18:06:01.185905: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:01.185967: I Parameter tversky_alpha set to False
+2022-12-05 18:06:01.186029: I Parameter tversky_beta set to False
+2022-12-05 18:06:01.186091: I Parameter row_weights set to None
+2022-12-05 18:06:06.863049: I Finished
+2022-12-05 18:06:06.863321: I ******************************************
+2022-12-05 18:06:06.869568: I Loading parameters
+2022-12-05 18:06:06.869637: I Parameter neighbors set to 469
+2022-12-05 18:06:06.869674: I Parameter similarity set to cosine
+2022-12-05 18:06:06.869708: I Parameter implementation set to aiolli
+2022-12-05 18:06:06.869740: I Parameter implicit set to False
+2022-12-05 18:06:06.869941: I Parameter shrink set to 0
+2022-12-05 18:06:06.870023: I Parameter normalize set to True
+2022-12-05 18:06:06.870093: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:06.870160: I Parameter tversky_alpha set to False
+2022-12-05 18:06:06.870223: I Parameter tversky_beta set to False
+2022-12-05 18:06:06.870286: I Parameter row_weights set to None
+2022-12-05 18:06:12.792296: I Finished
+2022-12-05 18:06:12.792489: I ******************************************
+2022-12-05 18:06:12.799021: I Loading parameters
+2022-12-05 18:06:12.799161: I Parameter neighbors set to 853
+2022-12-05 18:06:12.799211: I Parameter similarity set to cosine
+2022-12-05 18:06:12.799248: I Parameter implementation set to aiolli
+2022-12-05 18:06:12.799396: I Parameter implicit set to False
+2022-12-05 18:06:12.799477: I Parameter shrink set to 0
+2022-12-05 18:06:12.799547: I Parameter normalize set to True
+2022-12-05 18:06:12.799614: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:12.799679: I Parameter tversky_alpha set to False
+2022-12-05 18:06:12.799751: I Parameter tversky_beta set to False
+2022-12-05 18:06:12.799813: I Parameter row_weights set to None
+2022-12-05 18:06:18.813451: I Finished
+2022-12-05 18:06:18.813643: I ******************************************
+2022-12-05 18:06:18.820325: I Loading parameters
+2022-12-05 18:06:18.820400: I Parameter neighbors set to 500
+2022-12-05 18:06:18.820438: I Parameter similarity set to cosine
+2022-12-05 18:06:18.820471: I Parameter implementation set to aiolli
+2022-12-05 18:06:18.820679: I Parameter implicit set to False
+2022-12-05 18:06:18.820761: I Parameter shrink set to 0
+2022-12-05 18:06:18.820830: I Parameter normalize set to True
+2022-12-05 18:06:18.820895: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:18.820959: I Parameter tversky_alpha set to False
+2022-12-05 18:06:18.821034: I Parameter tversky_beta set to False
+2022-12-05 18:06:18.821106: I Parameter row_weights set to None
+2022-12-05 18:06:24.894440: I Finished
+2022-12-05 18:06:24.894548: I ******************************************
+2022-12-05 18:06:24.900661: I Loading parameters
+2022-12-05 18:06:24.900874: I Parameter neighbors set to 831
+2022-12-05 18:06:24.901104: I Parameter similarity set to cosine
+2022-12-05 18:06:24.901189: I Parameter implementation set to aiolli
+2022-12-05 18:06:24.901250: I Parameter implicit set to False
+2022-12-05 18:06:24.901321: I Parameter shrink set to 0
+2022-12-05 18:06:24.901388: I Parameter normalize set to True
+2022-12-05 18:06:24.901453: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:24.901517: I Parameter tversky_alpha set to False
+2022-12-05 18:06:24.901581: I Parameter tversky_beta set to False
+2022-12-05 18:06:24.901656: I Parameter row_weights set to None
+2022-12-05 18:06:31.098582: I Finished
+2022-12-05 18:06:31.098745: I ******************************************
+2022-12-05 18:06:31.105496: I Loading parameters
+2022-12-05 18:06:31.105621: I Parameter neighbors set to 819
+2022-12-05 18:06:31.105711: I Parameter similarity set to cosine
+2022-12-05 18:06:31.105817: I Parameter implementation set to aiolli
+2022-12-05 18:06:31.105917: I Parameter implicit set to False
+2022-12-05 18:06:31.106006: I Parameter shrink set to 0
+2022-12-05 18:06:31.106094: I Parameter normalize set to True
+2022-12-05 18:06:31.106182: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:31.106278: I Parameter tversky_alpha set to False
+2022-12-05 18:06:31.106364: I Parameter tversky_beta set to False
+2022-12-05 18:06:31.106450: I Parameter row_weights set to None
+2022-12-05 18:06:37.288213: I Finished
+2022-12-05 18:06:37.288402: I ******************************************
+2022-12-05 18:06:37.294999: I Loading parameters
+2022-12-05 18:06:37.295239: I Parameter neighbors set to 760
+2022-12-05 18:06:37.295305: I Parameter similarity set to cosine
+2022-12-05 18:06:37.295397: I Parameter implementation set to aiolli
+2022-12-05 18:06:37.295457: I Parameter implicit set to False
+2022-12-05 18:06:37.295528: I Parameter shrink set to 0
+2022-12-05 18:06:37.295596: I Parameter normalize set to True
+2022-12-05 18:06:37.295661: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:37.295725: I Parameter tversky_alpha set to False
+2022-12-05 18:06:37.295788: I Parameter tversky_beta set to False
+2022-12-05 18:06:37.295851: I Parameter row_weights set to None
+2022-12-05 18:06:43.354739: I Finished
+2022-12-05 18:06:43.354965: I ******************************************
+2022-12-05 18:06:43.361293: I Loading parameters
+2022-12-05 18:06:43.361365: I Parameter neighbors set to 655
+2022-12-05 18:06:43.361404: I Parameter similarity set to cosine
+2022-12-05 18:06:43.361438: I Parameter implementation set to aiolli
+2022-12-05 18:06:43.361471: I Parameter implicit set to False
+2022-12-05 18:06:43.361642: I Parameter shrink set to 0
+2022-12-05 18:06:43.361700: I Parameter normalize set to True
+2022-12-05 18:06:43.361803: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:43.361872: I Parameter tversky_alpha set to False
+2022-12-05 18:06:43.361937: I Parameter tversky_beta set to False
+2022-12-05 18:06:43.362002: I Parameter row_weights set to None
+2022-12-05 18:06:49.354636: I Finished
+2022-12-05 18:06:49.354872: I ******************************************
+2022-12-05 18:06:49.361177: I Loading parameters
+2022-12-05 18:06:49.361259: I Parameter neighbors set to 589
+2022-12-05 18:06:49.361301: I Parameter similarity set to cosine
+2022-12-05 18:06:49.361337: I Parameter implementation set to aiolli
+2022-12-05 18:06:49.361634: I Parameter implicit set to False
+2022-12-05 18:06:49.361716: I Parameter shrink set to 0
+2022-12-05 18:06:49.361784: I Parameter normalize set to True
+2022-12-05 18:06:49.361850: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:49.361915: I Parameter tversky_alpha set to False
+2022-12-05 18:06:49.361979: I Parameter tversky_beta set to False
+2022-12-05 18:06:49.362041: I Parameter row_weights set to None
+2022-12-05 18:06:55.422900: I Finished
+2022-12-05 18:06:55.423141: I ******************************************
+2022-12-05 18:06:55.430225: I Loading parameters
+2022-12-05 18:06:55.430381: I Parameter neighbors set to 959
+2022-12-05 18:06:55.430497: I Parameter similarity set to cosine
+2022-12-05 18:06:55.430589: I Parameter implementation set to aiolli
+2022-12-05 18:06:55.430679: I Parameter implicit set to False
+2022-12-05 18:06:55.430766: I Parameter shrink set to 0
+2022-12-05 18:06:55.430853: I Parameter normalize set to True
+2022-12-05 18:06:55.430940: I Parameter asymmetric_alpha set to False
+2022-12-05 18:06:55.431026: I Parameter tversky_alpha set to False
+2022-12-05 18:06:55.431142: I Parameter tversky_beta set to False
+2022-12-05 18:06:55.431227: I Parameter row_weights set to None
+2022-12-05 18:07:01.499793: I Finished
+2022-12-05 18:07:01.499991: I ******************************************

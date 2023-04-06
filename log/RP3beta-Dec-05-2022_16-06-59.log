@@ -1,0 +1,70 @@
+2022-12-05 16:06:59.921694: I Loading parameters
+2022-12-05 16:06:59.921810: I Parameter neighborhood set to 297
+2022-12-05 16:06:59.921905: I Parameter alpha set to 1.7069432971491505
+2022-12-05 16:06:59.921997: I Parameter beta set to 0.26988715996218327
+2022-12-05 16:06:59.922087: I Parameter normalize_similarity set to False
+2022-12-05 16:07:06.470908: I Finished
+2022-12-05 16:07:06.471068: I ******************************************
+2022-12-05 16:07:06.483577: I Loading parameters
+2022-12-05 16:07:06.483683: I Parameter neighborhood set to 634
+2022-12-05 16:07:06.483788: I Parameter alpha set to 0.1791716532540264
+2022-12-05 16:07:06.483881: I Parameter beta set to 0.4357040479768619
+2022-12-05 16:07:06.483970: I Parameter normalize_similarity set to True
+2022-12-05 16:07:13.708160: I Finished
+2022-12-05 16:07:13.708353: I ******************************************
+2022-12-05 16:07:13.731744: I Loading parameters
+2022-12-05 16:07:13.731835: I Parameter neighborhood set to 167
+2022-12-05 16:07:13.731907: I Parameter alpha set to 1.9253338532752182
+2022-12-05 16:07:13.731964: I Parameter beta set to 1.3330328519531967
+2022-12-05 16:07:13.732006: I Parameter normalize_similarity set to False
+2022-12-05 16:07:20.024676: I Finished
+2022-12-05 16:07:20.024860: I ******************************************
+2022-12-05 16:07:20.037574: I Loading parameters
+2022-12-05 16:07:20.037698: I Parameter neighborhood set to 725
+2022-12-05 16:07:20.037745: I Parameter alpha set to 1.4369175847782412
+2022-12-05 16:07:20.037782: I Parameter beta set to 0.08112216186242605
+2022-12-05 16:07:20.037858: I Parameter normalize_similarity set to True
+2022-12-05 16:07:27.290829: I Finished
+2022-12-05 16:07:27.291085: I ******************************************
+2022-12-05 16:07:27.313675: I Loading parameters
+2022-12-05 16:07:27.313812: I Parameter neighborhood set to 179
+2022-12-05 16:07:27.313881: I Parameter alpha set to 0.542341511609653
+2022-12-05 16:07:27.313928: I Parameter beta set to 1.5165026804454838
+2022-12-05 16:07:27.314034: I Parameter normalize_similarity set to False
+2022-12-05 16:07:33.521270: I Finished
+2022-12-05 16:07:33.521473: I ******************************************
+2022-12-05 16:07:33.533688: I Loading parameters
+2022-12-05 16:07:33.533804: I Parameter neighborhood set to 777
+2022-12-05 16:07:33.533878: I Parameter alpha set to 0.4139652166267562
+2022-12-05 16:07:33.533957: I Parameter beta set to 0.9702595900337772
+2022-12-05 16:07:33.534025: I Parameter normalize_similarity set to True
+2022-12-05 16:07:40.862469: I Finished
+2022-12-05 16:07:40.862834: I ******************************************
+2022-12-05 16:07:40.887693: I Loading parameters
+2022-12-05 16:07:40.887844: I Parameter neighborhood set to 573
+2022-12-05 16:07:40.887910: I Parameter alpha set to 0.5643805968422251
+2022-12-05 16:07:40.887982: I Parameter beta set to 0.5111524357693684
+2022-12-05 16:07:40.888048: I Parameter normalize_similarity set to True
+2022-12-05 16:07:48.021852: I Finished
+2022-12-05 16:07:48.022160: I ******************************************
+2022-12-05 16:07:48.046726: I Loading parameters
+2022-12-05 16:07:48.046858: I Parameter neighborhood set to 144
+2022-12-05 16:07:48.046945: I Parameter alpha set to 0.8719344487538971
+2022-12-05 16:07:48.047055: I Parameter beta set to 0.24836975394290328
+2022-12-05 16:07:48.047128: I Parameter normalize_similarity set to True
+2022-12-05 16:07:54.200460: I Finished
+2022-12-05 16:07:54.200572: I ******************************************
+2022-12-05 16:07:54.210578: I Loading parameters
+2022-12-05 16:07:54.210687: I Parameter neighborhood set to 400
+2022-12-05 16:07:54.210777: I Parameter alpha set to 1.29635336697628
+2022-12-05 16:07:54.210849: I Parameter beta set to 1.1672439855189671
+2022-12-05 16:07:54.210916: I Parameter normalize_similarity set to False
+2022-12-05 16:08:01.035330: I Finished
+2022-12-05 16:08:01.035442: I ******************************************
+2022-12-05 16:08:01.054781: I Loading parameters
+2022-12-05 16:08:01.054976: I Parameter neighborhood set to 701
+2022-12-05 16:08:01.055058: I Parameter alpha set to 0.1501779006724322
+2022-12-05 16:08:01.055135: I Parameter beta set to 0.47597598749661274
+2022-12-05 16:08:01.055201: I Parameter normalize_similarity set to False
+2022-12-05 16:08:08.158314: I Finished
+2022-12-05 16:08:08.158500: I ******************************************
