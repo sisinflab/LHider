@@ -4,17 +4,13 @@ senders:
 
 receivers:
   - alberto.mancino@poliba.it
+  - a.difazio@studenti.poliba.it
+  - antonio.ferrara@poliba.it
 
 messages:
   ok:
-    subject: This is good object
-    body: This is a good message
+    subject: Esperimento LHider terminato
+    body: L'esperimento di LHider è terminato con successo
   error:
-    subject: This is bad object
-    body: This is a bad message
-
-server:
-  smtp.gmail.com
-
-port:
-  465
+    subject: Esperimento LHider fallito
+    body: L'esperimento di LHider è terminato con un errore

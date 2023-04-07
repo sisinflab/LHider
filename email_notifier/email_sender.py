@@ -1,10 +1,14 @@
+import os.path
 import yaml
 import smtplib, ssl
 from email.message import EmailMessage
 
 
 class EmailNotifier:
-    def __init__(self, configuration_path):
+    def __init__(self, configuration_path=None):
+        if configuration_path is None:
+            configuration_path = os.path.join(os.path.dirname(__file__), 'config.yml')
+
         self.senders_field = 'senders'
         self.receivers_field = 'receivers'
         self.messages_field = 'messages'
@@ -21,7 +25,7 @@ class EmailNotifier:
         self.default_server = 'smtp.gmail.com'
         self.default_port = 465
 
-        self.senders, self.receivers, self.messages, self.server, self.port =\
+        self.senders, self.receivers, self.messages, self.server, self.port = \
             self.read_configuration_file(configuration_path)
 
     def read_configuration_file(self, path) -> tuple:
@@ -46,8 +50,8 @@ class EmailNotifier:
             messages = config[self.messages_field]
         else:
             messages = [{'role': self.ok_message_field,
-                        'subject': self.default_ok_subject,
-                        'body': self.default_ok_message},
+                         'subject': self.default_ok_subject,
+                         'body': self.default_ok_message},
                         {'role': self.error_message_field,
                          'subject': self.default_error_subject,
                          'body': self.default_error_message}]

@@ -236,12 +236,13 @@ def aggregate_results(folder):
             local_result = pickle.load(file)
         results.update(local_result)
 
-    print('store aggregation')
-    max_result = max([int(file.split('seed_score_')[1].split('.pk')[0]) for f in folders for file in os.listdir(f)])
-    result_path = os.path.join(aggregate_dir, f'seed_score_{max_result}_n{len(results)}.pk')
-
+    print('storing aggregation')
+    max_seed = max(results.keys())
+    min_seed = min(results.keys())
+    result_path = os.path.join(aggregate_dir, f'seed_score_{min_seed}_{max_seed}.pk')
     with open(result_path, 'wb') as result_file:
         pickle.dump(results, result_file)
+    print(f'aggregation written at \'{result_path}\'')
 
 
 def exponential_mechanism(path, eps):

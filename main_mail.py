@@ -1,7 +1,6 @@
 import argparse
-from src.run import run, run_mp
+from src.run import run
 import multiprocessing as mp
-from email_notifier import email_sender
 
 
 def read_arguments(args: argparse.Namespace):
@@ -24,20 +23,7 @@ parser.add_argument('--proc', required=False, default=mp.cpu_count()-1, type=int
 parser.add_argument('--final_path', required=False, type=str)
 
 
-args = parser.parse_args()
-
-email_reference = ''
-senders, receivers, messages = None, None, None
-if email_reference:
-    senders = '_'.join([email_reference, 'info.txt'])
-    receivers = '_'.join([email_reference, 'info.txt'])
-    messages = '_'.join([email_reference, 'message.txt'])
-
-try:
-    run(read_arguments(args))
-    email_sender.send_email(senders=senders, receivers=receivers, messages=messages)
-except Exception as e:
-    print(f'An error occurred. Exception {e}')
-    print('Sending emails')
-    email_sender.send_email(senders=senders, receivers=receivers, messages=messages, error=True, error_exception=e)
-
+from email_notifier.email_sender import EmailNotifier
+notifier = EmailNotifier()
+arguments = read_arguments(parser.parse_args())
+notifier.notify(run, arguments, additional_body=str(arguments))
