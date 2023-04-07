@@ -1,2 +1,0 @@
-all	esperimento terminato	Ciao l'esperimento di LHider su Azure è finito
-error	Si è verificato un errore nell'esperimento	durante l'esperimento generico si è verificato un errore che lo ha fatto bloccare.

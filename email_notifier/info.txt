@@ -1,4 +1,0 @@
-sender	emailsenderexpriments@gmail.com	izptigbofjxrlspo
-receiver	alberto.mancino@poliba.it
-receiver	a.difazio@studenti.poliba.it
-receiver	antonio.ferrara@poliba.it

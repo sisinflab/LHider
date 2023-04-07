@@ -1,144 +1,150 @@
+import yaml
 import smtplib, ssl
 from email.message import EmailMessage
-import os
 
-NOTIFIER_FOLDER = './email_notifier'
 
 class EmailNotifier:
-    def __init__(self, config_path, message_path):
-        self.config_path = config_path
+    def __init__(self, configuration_path):
+        self.senders_field = 'senders'
+        self.receivers_field = 'receivers'
+        self.messages_field = 'messages'
+        self.server_field = 'server'
+        self.port_field = 'port'
 
-        self.message_path = message_path
-        self.port = 465  # for SSL
-        self.server = "smtp.gmail.com"
-        pass
+        self.ok_message_field = 'ok'
+        self.error_message_field = 'error'
+        self.default_ok_subject = 'esperimento terminato'
+        self.default_error_subject = 'si è verificato un errore durante l\'esperimento'
+        self.default_ok_message = 'job terminato'
+        self.default_error_message = 'job in errore'
 
-    def read_configuration(self, path):
-        senders = []
-        receivers = []
-        with open(path, 'r') as file:
-            for row in file.readlines():
-                tokens = row.split('\t')
-                role = tokens[0]
-                if role == 'receiver':
-                    receivers.append(tokens[1].replace('\n', ''))
-                elif role == 'sender':
-                    senders.append({
-                        'mail': tokens[1],
-                        'pass': tokens[2].replace('\n', '')
-                    })
-        return senders, receivers
+        self.default_server = 'smtp.gmail.com'
+        self.default_port = 465
+
+        self.senders, self.receivers, self.messages, self.server, self.port =\
+            self.read_configuration_file(configuration_path)
+
+    def read_configuration_file(self, path) -> tuple:
+        """
+        Given the path of the configuration file returns the parameters necessary for the class.
+        If a not mandatory field is missing the value is replaced with the default value.
+        Mandatory fields: 'senders' and 'receivers'
+        @param path: path of the configuration file
+        @return: the senders, the receivers, the messages, the server address and the port
+        """
+
+        print(f'Reading configuration file from \'{path}\'')
+        config = yaml.safe_load(open(path))
+        mandatory_fields = [self.senders_field, self.receivers_field]
+        for field in mandatory_fields:
+            if field not in config:
+                raise AttributeError(f'Field {field} is missing in the configuration file. Please, fix it.')
+        senders = config[self.senders_field]
+        receivers = config[self.receivers_field]
+
+        if self.messages_field in config:
+            messages = config[self.messages_field]
+        else:
+            messages = [{'role': self.ok_message_field,
+                        'subject': self.default_ok_subject,
+                        'body': self.default_ok_message},
+                        {'role': self.error_message_field,
+                         'subject': self.default_error_subject,
+                         'body': self.default_error_message}]
+
+        if self.server_field in config:
+            server = config[self.server_field]
+        else:
+            server = self.default_server
+
+        if self.port_field in config:
+            port = config[self.port_field]
+        else:
+            port = self.default_port
+
+        return senders, receivers, messages, server, port
+
+    def send_ok(self, additional_body=None):
+        """
+        Send a success email
+        @param additional_body: a message that is appended to the body
+        @return: None
+        """
+        message = dict(self.messages[self.ok_message_field])
+        if additional_body:
+            message['body'] += '\n' + additional_body
+        for sender in self.senders:
+            sender_mail, sender_pass = sender['mail'], sender['pass']
+            for receiver in self.receivers:
+                self.send(sender_mail, receiver, message, sender_pass)
+
+    def send_error(self, additional_body=None, exception=None):
+        """
+        Send an error email
+        @param additional_body: a message that is appended to the body
+        @param exception: error exception class
+        @return: None
+        """
+
+        message = dict(self.messages[self.error_message_field])
+        if additional_body:
+            message['body'] += '\n' + additional_body
+        if exception:
+            message['body'] += '\n' + f'Error type: {exception}'
+
+        for sender in self.senders:
+            sender_mail = sender['mail']
+            sender_pass = sender['pass']
+            for receiver in self.receivers:
+                self.send(sender_mail, receiver, message, sender_pass)
+
+    def send(self, sender, receiver, message, password, smtp_server=None, port=None):
+        """
+        Send an email
+        @param sender: email sender
+        @param receiver: email receiver
+        @param message: email message
+        @param password: sender password
+        @param smtp_server: smtp server address
+        @param port: port
+        @return: None
+        """
+        if smtp_server is None:
+            smtp_server = self.server
+        if port is None:
+            port = self.port
+
+        print(f'sending message from {sender} to {receiver}')
+        context = ssl.create_default_context()
+
+        message_obj = EmailMessage()
+        message_obj['Subject'] = message['subject']
+        message_obj['From'] = sender
+        message_obj['To'] = receiver
+        message_obj.set_content(message['body'])
+
+        try:
+            with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+                server.login(sender, password)
+                server.send_message(message_obj)
+            print(f'email from {sender} to {receiver} sent')
+        except ConnectionError:
+            print(f'an error occurred while sending an email from {sender} to {receiver} sent')
+
+    def notify(self, func, *args, additional_body=None, **kwargs):
+        """
+        Wrapper for sending an email both if the function succeeds or fails.
+        It is possible to add a message to the body for both cases.
+        @param func: the called function
+        @param args: the positional arguments of the called function
+        @param additional_body: the text that will be attached to the email body
+        @param kwargs: keyword arguments of the called function
+        @return: the result of the function or None if fails
+        """
+        try:
+            func(*args, **kwargs)
+            self.send_ok(additional_body)
+        except Exception as e:
+            self.send_error(additional_body=additional_body, exception=e)
 
 
-DATA_PATH = os.path.join(NOTIFIER_FOLDER, './info.txt')
-MESSAGE_PATH = os.path.join(NOTIFIER_FOLDER, 'message.txt')
-
-PORT = 465  # For SSL
-SMPT_SERVER = "smtp.gmail.com"
-
-
-def read_data(path):
-    senders = []
-    receivers = []
-    with open(path, 'r') as file:
-        for row in file.readlines():
-            tokens = row.split('\t')
-            role = tokens[0]
-            if role == 'receiver':
-                receivers.append(tokens[1].replace('\n', ''))
-            elif role == 'sender':
-                senders.append({
-                    'mail': tokens[1],
-                    'pass': tokens[2].replace('\n', '')
-                })
-    return senders, receivers
-
-
-def read_message(path):
-    messages = []
-    with open(path, 'r') as file:
-        for row in file.readlines():
-            tokens = row.split('\t')
-            role = tokens[0]
-            messages.append({
-                'role': role,
-                'subject': tokens[1],
-                'text': tokens[2].replace('\n', '')
-            })
-    return messages
-
-
-def send_email(senders=None, receivers=None, messages=None, error=False, error_exception=None):
-
-    if isinstance(senders, list):
-        pass
-    else:
-        senders_path = os.path.abspath(DATA_PATH)
-
-        if isinstance(senders, str):
-            senders_path = os.path.abspath(os.path.join(NOTIFIER_FOLDER, senders))
-            assert os.path.exists(senders_path), f'senders file path at \'{senders_path}\' does not exist'
-
-        senders, _ = read_data(senders_path)
-
-    if isinstance(receivers, list):
-        pass
-    else:
-        receivers_path = os.path.abspath(DATA_PATH)
-
-        if isinstance(receivers, str):
-            receivers_path = os.path.abspath(os.path.join(NOTIFIER_FOLDER, receivers))
-            assert os.path.exists(receivers_path), 'receivers file path at \'{receivers_path}\' does not exist'
-
-        _, receivers = read_data(receivers_path)
-
-    if isinstance(messages, list):
-        pass
-    else:
-        messages_path = os.path.abspath(MESSAGE_PATH)
-
-        if isinstance(messages, str):
-            messages_path = os.path.abspath(os.path.join(NOTIFIER_FOLDER, messages))
-            assert os.path.exists(messages_path), f'messages file path at \'{messages_path}\' does not exist'
-
-        messages = read_message(messages_path)
-
-    for sender in senders:
-        sender_mail = sender['mail']
-        sender_pass = sender['pass']
-
-        for receiver in receivers:
-
-            for message in messages:
-                role = message['role']
-                if error:
-                    if role == 'error':
-                        if error_exception:
-                            message['text'] = message['text'] + f'\nException: {error_exception}'
-                        send(sender_mail, receiver, message, sender_pass)
-                else:
-                    if role == 'all' or role == receiver:
-                        send(sender_mail, receiver, message, sender_pass)
-
-
-def send(sender, receiver, message, password, smpt_server=SMPT_SERVER, port=PORT):
-    print(f'sending message from {sender} to {receiver}')
-    context = ssl.create_default_context()
-
-    message_obj = EmailMessage()
-    message_obj['Subject'] = message['subject']
-    message_obj['From'] = sender
-    message_obj['To'] = receiver
-    message_obj.set_content(message['text'])
-
-    try:
-        with smtplib.SMTP_SSL(smpt_server, port, context=context) as server:
-            server.login(sender, password)
-            server.send_message(message_obj)
-        print(f'email from {sender} to {receiver} sent')
-    except:
-        print(f'an error occurred while sending an email from {sender} to {receiver} sent')
-
-
-def run_with_mail(func):
-    pass

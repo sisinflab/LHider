@@ -1,0 +1,20 @@
+senders:
+  - mail: emailsenderexpriments@gmail.com
+    pass: izptigbofjxrlspo
+
+receivers:
+  - alberto.mancino@poliba.it
+
+messages:
+  ok:
+    subject: This is good object
+    body: This is a good message
+  error:
+    subject: This is bad object
+    body: This is a bad message
+
+server:
+  smtp.gmail.com
+
+port:
+  465
