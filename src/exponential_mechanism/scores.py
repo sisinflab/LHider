@@ -5,6 +5,7 @@ import numpy as np
 import scipy
 import pickle
 import os
+import pandas as pd
 
 
 class ScoreFunction:
@@ -102,3 +103,35 @@ class LoadScores(ScoreFunction):
     def score_function(self, x):
         assert x in self.data
         return self.data[x]
+
+
+class Scores:
+
+    def __init__(self, path):
+        assert os.path.exists(path)
+        self.path = os.path.abspath(path)
+        print(f'Scores found at: \'{self.path}\'')
+        self.data = None
+
+    def load(self, dropna=True):
+        print(f'Loading scores from: \'{self.path}\'')
+        with open(self.path, 'rb') as file:
+            data = pickle.load(file)
+
+        if dropna:
+            data = self.drop_na(data)
+
+        assert isinstance(data, dict)
+        self.data = data
+
+    def drop_na(self, data: dict):
+        return {k: v for k, v in data.items() if not (isnan(v))}
+
+    def to_dataframe(self):
+        data = pd.DataFrame()
+        data['id'] = self.data.keys()
+        data['scores'] = self.data.values()
+        return data
+
+    def decimal(self, decimals):
+        self.data = {k: round(v, decimals) for k, v in self.data.items()}

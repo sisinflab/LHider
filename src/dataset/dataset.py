@@ -123,6 +123,7 @@ class Dataset:
 
             self._user_col = self.columns[0]
             print(f'{self.__class__.__name__}: first column set as user column')
+        return self._user_col
 
     @property
     def item_col(self):
@@ -134,6 +135,7 @@ class Dataset:
 
             self._item_col = self.columns[1]
             print(f'{self.__class__.__name__}: second column set as item column')
+        return self._item_col
 
     @property
     def ratings_col(self):
@@ -290,6 +292,9 @@ class Dataset:
     def apply_mapping(self, column, mapping):
         return None
 
+    def info(self):
+        pass
+
 
 class DPDataFrame(Dataset):
 
@@ -307,19 +312,23 @@ class DPDataFrame(Dataset):
 
     @property
     def users(self):
-        return self.dataset[self._user_col].unique()
+        return self.dataset[self.user_col].unique()
 
     @property
     def n_users(self):
-        return self.dataset[self._user_col].nunique()
+        return self.dataset[self.user_col].nunique()
 
     @property
     def items(self):
-        return self.dataset[self._item_col].unique()
+        return self.dataset[self.item_col].unique()
 
     @property
     def n_items(self):
-        return self.dataset[self._item_col].nunique()
+        return self.dataset[self.item_col].nunique()
+
+    @property
+    def shape(self):
+        return self.n_users, self.n_items
 
     @property
     def transactions(self):

@@ -53,7 +53,7 @@ def run(args):
 
     # job
     job = args['job']
-    jobs = {'identity', 'gen_n_score', 'run_batch', 'run_batch_mp', 'aggregate', 'randomize'}
+    jobs = {'identity', 'gen_n_score', 'run_batch', 'run_batch_mp', 'randomize'}
     assert job in jobs
 
     if job == 'identity':
@@ -93,8 +93,6 @@ def run(args):
         batch = args['batch']
         n_procs = args['proc']
         run_batch_mp(data, ratings, change_prob, seed, start, end, batch, dataset_result_dir, n_procs)
-    elif job == 'aggregate':
-        aggregate_results(dataset_result_dir)
     elif job == 'randomize':
         path = args['final_path']
         eps = args['exp_eps']
@@ -118,7 +116,7 @@ def compute_recommendations(data, model_name):
 
 
 def generate(data, change_probability, seed):
-    ratings_generator = RandomizeResponse(change_probability=change_probability, random_seed=seed)
+    ratings_generator = RandomizeResponse(change_probability=change_probability, base_seed=seed)
     return ratings_generator.privatize(data.values)
 
 
@@ -132,7 +130,8 @@ def fake(data, ratings, n_ratings, seed=0):
 
 
 def gen_and_score(data, ratings, change_probability, seed=0):
-    ratings_generator = RandomizeResponse(change_probability=change_probability, random_seed=seed)
+    ratings_generator = RandomizeResponse(change_probability=change_probability, base_seed=seed)
+    # TODO: usare privatize_np  se possibile
     generated_dataset = ratings_generator.privatize(data.values)
     generated_dataset = DPCrsMatrix(generated_dataset)
     generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
@@ -140,7 +139,7 @@ def gen_and_score(data, ratings, change_probability, seed=0):
     return score, seed
 
 
-def gen_score_and_store(data, ratings, change_probability, seed=0):
+def gen_score_and_store(data, ratings, change_probability, seed=42):
     score, _ = gen_and_score(data=data,ratings=ratings, change_probability=change_probability, seed=seed)
     with open(os.path.join(RESULT_DIR, f'{seed}.pk'), 'wb') as file:
         pickle.dump(score, file)
@@ -216,34 +215,6 @@ def run_batch_mp(data, ratings, change_prob, seed, start, end, batch, result_dir
     with mp.Pool(n_procs) as pool:
         results = pool.starmap_async(run_batch, args)
         results.get()
-
-
-def aggregate_results(folder):
-
-    print('reading paths')
-    aggregate_dir = os.path.join(folder, 'aggregate')
-    if not os.path.exists(aggregate_dir):
-        os.makedirs(aggregate_dir)
-    folders = [os.path.join(folder, f) for f in os.listdir(folder)]
-    if aggregate_dir in folders:
-        folders.remove(aggregate_dir)
-
-    print('files loading and aggregation')
-    files = [os.path.join(f, file) for f in folders for file in os.listdir(f)]
-    results = dict()
-    for path in files:
-        with open(path, 'rb') as file:
-            local_result = pickle.load(file)
-        results.update(local_result)
-
-    print('storing aggregation')
-    max_seed = max(results.keys())
-    min_seed = min(results.keys())
-    result_path = os.path.join(aggregate_dir, f'seed_score_{min_seed}_{max_seed}.pk')
-    with open(result_path, 'wb') as result_file:
-        pickle.dump(results, result_file)
-    print(f'aggregation written at \'{result_path}\'')
-
 
 def exponential_mechanism(path, eps):
     result_path = os.path.join('results', 'final', path)

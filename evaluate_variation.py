@@ -7,7 +7,6 @@ from src.create_dataset import user_item_rating_matrix_from_dataset
 def evaluate_total_variation(original_matrix, result_matrix):
     different = sum(sum(original_matrix != result_matrix))
     size = original_matrix.size
-
     return different / size * 100
 
 
@@ -22,7 +21,7 @@ def evaluate_ones_variation(original_matrix, result_matrix):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--original_dataset', required=True)
-parser.add_argument('--result_root_directory', required=False, default='result')
+parser.add_argument('--result_root_directory', required=False, default='results')
 
 args = parser.parse_args()
 dataset_path = args.original_dataset

@@ -1,7 +1,7 @@
 from src.loader import *
 from src.dataset.dataset import DPCrsMatrix
 from scipy.sparse import csr_matrix
-from src.recommender.neighbours import ItemKNN
+from src.recommender.neighbours_numpy import ItemKNN
 from src.randomize_response.mechanism import RandomizeResponse
 from src.loader.paths import RESULT_DIR
 from src.dataset.generator.neighbour import NeighboursGenerator, NeighboursIterative
@@ -23,7 +23,7 @@ def compute_score(a, b):
 
 
 def gen_and_score(ratings, change_probability, seed=0):
-    ratings_generator = RandomizeResponse(change_probability=change_probability, random_seed=seed)
+    ratings_generator = RandomizeResponse(change_probability=change_probability, base_seed=seed)
     generated_dataset = ratings_generator.privatize(data.values)
     generated_dataset = DPCrsMatrix(generated_dataset)
     generated_ratings = compute_recommendations(generated_dataset)

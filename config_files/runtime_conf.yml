@@ -1,8 +1,8 @@
 experiment:
-  dataset: YahooMovies_eps0.0
+  dataset: YahooMovies
   data_config:
     strategy: dataset
-    dataset_path: ../data/YahooMovies_eps0.0.tsv
+    dataset_path: ../data/YahooMovies.tsv
   top_k: 10
   splitting:
     test_splitting:
