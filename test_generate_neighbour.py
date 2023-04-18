@@ -1,7 +1,7 @@
 from src.loader import *
 from src.dataset.dataset import DPCrsMatrix
 from scipy.sparse import csr_matrix
-from src.recommender.neighbours_numpy import ItemKNN
+from src.recommender.neighbours import ItemKNN
 from src.laplace_mechanism.mechanism import LaplaceMechanism
 from src.loader.paths import RESULT_DIR
 from src.dataset.generator.neighbour import NeighboursGenerator, NeighboursIterative

@@ -10,7 +10,7 @@ from scipy.sparse import csr_matrix
 from src.exponential_mechanism.mechanism import ExponentialMechanism
 from src.exponential_mechanism.scores import MatrixCosineSimilarity, LoadScores
 from src.randomize_response.mechanism import RandomizeResponse
-from src.recommender import ItemKNN, ItemKNNNumpy
+from src.recommender import ItemKNNNumpy
 import pandas as pd
 import multiprocessing as mp
 import os
@@ -56,7 +56,8 @@ def run(args: dict):
 
     # recommendations returned as a np.array
     print(f'\nComputing recommendations')
-    ratings = compute_recommendations(dataset, model_name='itemknn')
+    data = np.array(dataset.dataset.todense())
+    ratings = compute_recommendations(data, model_name='itemknn')
     change_prob = args['change_prob']
     seed = args['base_seed']
     start = args['start']
@@ -65,10 +66,10 @@ def run(args: dict):
     batch = args['batch']
     n_procs = args['proc']
 
-    run_batch(dataset, ratings, change_prob, seed, start, end, batch, dataset_result_dir)
+    run_batch(data, ratings, change_prob, seed, start, end, batch, dataset_result_dir)
 
 
-def compute_recommendations(data, model_name: str):
+def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
     """
     Compute the recommendation for a given model
     @param data: np.ndarray of the data
@@ -76,22 +77,22 @@ def compute_recommendations(data, model_name: str):
     @return: np.ndarray containing the recommendation for the given data
     """
     MODEL_NAMES = ['itemknn']
-    MODELS = {'itemknn': ItemKNN}
+    MODELS = {'itemknn': ItemKNNNumpy}
     assert model_name in MODEL_NAMES, f'Model missing. Model name {model_name}'
     model = MODELS[model_name](data, k=20)
     return model.fit()
 
 
-def compute_score(a, b):
+def compute_score(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     scorer = MatrixCosineSimilarity(a)
     return scorer.score_function(b)
 
 
-def gen_and_score(data, randomizer: RandomizeResponse, ratings, seed: int) -> [int, int]:
-    generated_dataset = randomizer.privatize(input_data=data.dataset, relative_seed=seed)
-    generated_dataset = DPCrsMatrix(generated_dataset)
+def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, seed: int) -> [int, int]:
+    generated_dataset = randomizer.privatize_choice(input_data=data, relative_seed=seed)
     generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
     score = compute_score(ratings, generated_ratings)
+    print(score, seed)
     return score, seed
 
 
