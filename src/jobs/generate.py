@@ -10,7 +10,7 @@ from scipy.sparse import csr_matrix
 from src.exponential_mechanism.mechanism import ExponentialMechanism
 from src.exponential_mechanism.scores import MatrixCosineSimilarity, LoadScores
 from src.randomize_response.mechanism import RandomizeResponse
-from src.recommender import ItemKNNNumpy
+from src.recommender import ItemKNN
 import pandas as pd
 import multiprocessing as mp
 import os
@@ -77,7 +77,7 @@ def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
     @return: np.ndarray containing the recommendation for the given data
     """
     MODEL_NAMES = ['itemknn']
-    MODELS = {'itemknn': ItemKNNNumpy}
+    MODELS = {'itemknn': ItemKNN}
     assert model_name in MODEL_NAMES, f'Model missing. Model name {model_name}'
     model = MODELS[model_name](data, k=20)
     return model.fit()

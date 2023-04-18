@@ -1,2 +1,1 @@
-from .neighbours import ItemKNNNumpy
-from .neighbours_csr import ItemKNN
+from .neighbours import ItemKNN

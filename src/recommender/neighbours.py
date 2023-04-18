@@ -6,7 +6,7 @@ import numpy as np
 import math
 
 
-class ItemKNNNumpy:
+class ItemKNN:
 
     def __init__(self, data: np.array, k, similarity_fun=cosine_similarity):
         self.data = data
