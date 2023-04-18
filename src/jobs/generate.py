@@ -58,8 +58,10 @@ def run(args: dict):
         args['change_prob'], args['base_seed'], args['start'], args['end'], args['batch'], args['proc']
     assert end >= start
 
-    run_batch_mp(data, ratings, change_prob, base_seed, start, end, batch, dataset_result_dir, n_procs)
-
+    if n_procs > 1:
+        run_batch_mp(data, ratings, change_prob, base_seed, start, end, batch, dataset_result_dir, n_procs)
+    else:
+        run_batch(data, ratings, change_prob, base_seed, start, end, batch, dataset_result_dir)
 
 def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
     """
