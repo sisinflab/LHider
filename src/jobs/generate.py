@@ -80,8 +80,8 @@ def compute_score(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     return scorer.score_function(b)
 
 
-def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, seed: int, difference: True) -> [int, int]:
-    generated_dataset = randomizer.privatize_choice(input_data=data, relative_seed=seed)
+def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, seed: int, difference: bool = True) -> [int, int]:
+    generated_dataset = randomizer.privatize_np(input_data=data, relative_seed=seed)
     generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
     score = compute_score(ratings, generated_ratings)
 
