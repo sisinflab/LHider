@@ -6,7 +6,7 @@ from src.loader.paths import *
 from src.dataset.dataset import *
 from src.exponential_mechanism.scores import MatrixCosineSimilarity
 from src.randomize_response.mechanism import RandomizeResponse
-from src.recommender import ItemKNN
+from src.recommender import ItemKNNDense
 import multiprocessing as mp
 import os
 import pickle
@@ -18,6 +18,7 @@ def experiment_info(arguments: dict):
     @param arguments: dictionary containing the parameters
     @return: None
     """
+    print('Running generation job in dense configuration')
     for arg, value in arguments.items():
         print(f'{arg}: {value}')
 
@@ -71,7 +72,7 @@ def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
     @return: np.ndarray containing the recommendation for the given data
     """
     MODEL_NAMES = ['itemknn']
-    MODELS = {'itemknn': ItemKNN}
+    MODELS = {'itemknn': ItemKNNDense}
     assert model_name in MODEL_NAMES, f'Model missing. Model name {model_name}'
     model = MODELS[model_name](data, k=20)
     return model.fit()

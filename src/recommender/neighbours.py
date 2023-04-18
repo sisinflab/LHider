@@ -1,12 +1,8 @@
-import time
-
-import tqdm
-from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-import math
+from sklearn.metrics.pairwise import cosine_similarity
 
 
-class ItemKNN:
+class ItemKNNDense:
 
     def __init__(self, data: np.array, k, similarity_fun=cosine_similarity):
         self.data = data
@@ -24,7 +20,8 @@ class ItemKNN:
         return self._top_k
 
     def compute_top_k(self, k):
-        return {i: np.argpartition(-self._similarity_matrix[i, np.r_[:i, i+1:self.n_items]], k)[:k] for i in range(self.n_items)}
+        return {i: np.argpartition(-self._similarity_matrix[i, np.r_[:i, i + 1:self.n_items]], k)[:k] for i in
+                range(self.n_items)}
 
     def fit(self):
         predictions = np.zeros(self.shape)
@@ -36,16 +33,7 @@ class ItemKNN:
         return predictions
 
 
-
-import time
-
-import tqdm
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
-import math
-
-
-class ItemKNNOld:
+class ItemKNNSparse:
 
     def __init__(self, data, k, similarity_fun=cosine_similarity):
         self._data = data
@@ -61,7 +49,7 @@ class ItemKNNOld:
         return self._top_k
 
     def compute_top_k(self, k):
-        return {i: np.argpartition(-self._similarity_matrix[i, np.r_[:i, i+ 1:self._data.n_items]], k)[:k] for i in
+        return {i: np.argpartition(-self._similarity_matrix[i, np.r_[:i, i + 1:self._data.n_items]], k)[:k] for i in
                 range(self._data.n_items)}
 
     def fit(self):
