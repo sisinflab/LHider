@@ -82,7 +82,7 @@ def compute_score(a, b):
     return scorer.score_function(b)
 
 
-def gen_and_score(data, randomizer: RandomizeResponse, ratings, seed: int, difference: bool = True) -> [int, int]:
+def gen_and_score(data, randomizer: RandomizeResponse, ratings, seed: int, difference: bool = False) -> [int, int]:
     generated_dataset = randomizer.privatize(input_data=data.dataset, relative_seed=seed)
     generated_dataset = DPCrsMatrix(generated_dataset)
     generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
@@ -146,7 +146,7 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
             # progress bar update
             iterator.set_description(f'running seed {data_seed} in batch {batch_start} - {batch_end}')
 
-            randomized_info = gen_and_score(data=data, ratings=ratings, seed=data_seed, randomizer=randomizer, difference=True)
+            randomized_info = gen_and_score(data=data, ratings=ratings, seed=data_seed, randomizer=randomizer, difference=False)
             batch_results[data_seed] = randomized_info
 
         # update total score results
