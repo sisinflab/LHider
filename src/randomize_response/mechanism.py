@@ -19,12 +19,11 @@ class RandomizeResponse:
         data_seed = self._base_seed + relative_seed
         np.random.seed(data_seed)
         mask = np.random.rand(input_data.shape[0], input_data.shape[1])
-        return np.logical_xor(input_data, mask > 0.25).astype(int)
+        return np.logical_xor(input_data, mask > self._change_probability).astype(int)
 
     def privatize_choice(self, input_data: np.matrix, relative_seed: int = 0) -> np.ndarray:
         data_seed = self._base_seed + relative_seed
         np.random.seed(data_seed)
         mask = np.random.choice([0, 1], p=[1 - self._change_probability, self._change_probability],
-                                           size=input_data.shape)
-        return np.logical_xor(input_data, mask > 0.25).astype(int)
-
+                                size=input_data.shape)
+        return np.logical_xor(input_data, mask).astype(int)

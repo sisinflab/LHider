@@ -1,17 +1,12 @@
-import math
-
 import tqdm
 
 from src.loader import *
 from src.loader.paths import *
 
 from src.dataset.dataset import *
-from scipy.sparse import csr_matrix
-from src.exponential_mechanism.mechanism import ExponentialMechanism
-from src.exponential_mechanism.scores import MatrixCosineSimilarity, LoadScores
+from src.exponential_mechanism.scores import MatrixCosineSimilarity
 from src.randomize_response.mechanism import RandomizeResponse
 from src.recommender import ItemKNN
-import pandas as pd
 import multiprocessing as mp
 import os
 import pickle
@@ -58,15 +53,12 @@ def run(args: dict):
     print(f'\nComputing recommendations')
     data = np.array(dataset.dataset.todense())
     ratings = compute_recommendations(data, model_name='itemknn')
-    change_prob = args['change_prob']
-    seed = args['base_seed']
-    start = args['start']
-    end = args['end']
-    assert end >= start
-    batch = args['batch']
-    n_procs = args['proc']
 
-    run_batch_mp(data, ratings, change_prob, seed, start, end, batch, dataset_result_dir, n_procs)
+    change_prob, base_seed, start, end, batch, n_procs = \
+        args['change_prob'], args['base_seed'], args['start'], args['end'], args['batch'], args['proc']
+    assert end >= start
+
+    run_batch_mp(data, ratings, change_prob, base_seed, start, end, batch, dataset_result_dir, n_procs)
 
 
 def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:

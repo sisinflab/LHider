@@ -119,7 +119,7 @@ def id_to_diff(data, scores, change_probability):
     differences = {}
     data = np.array(data.values.todense())
     for seed, score in tqdm.tqdm(scores.data.items()):
-        generated = ratings_generator.privatize_choice(data, seed)
+        generated = ratings_generator.privatize_np(data, seed)
         diff = np.sum(data != generated)
         differences[diff] = score
 

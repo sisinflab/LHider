@@ -3,9 +3,9 @@ from src.jobs.generate import run
 import multiprocessing as mp
 
 
-def read_arguments(args: argparse.Namespace):
-    arguments = ['dataset', 'change_prob', 'base_seed', 'start', 'end', 'batch', 'proc']
-    return {arg: args.__getattribute__(arg) for arg in arguments}
+def read_arguments(argparse_arguments: argparse.Namespace):
+    job_arguments = ['dataset', 'change_prob', 'base_seed', 'start', 'end', 'batch', 'proc']
+    return {arg: argparse_arguments.__getattribute__(arg) for arg in job_arguments}
 
 
 parser = argparse.ArgumentParser()
@@ -17,8 +17,6 @@ parser.add_argument('--end', required=False, type=int, default=100)
 parser.add_argument('--batch', required=False, type=int, default=10)
 parser.add_argument('--proc', required=False, default=mp.cpu_count()-1, type=int)
 parser.add_argument('--mail', action='store_true')
-
-
 args = parser.parse_args()
 
 if args.mail:
