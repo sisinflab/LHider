@@ -66,7 +66,7 @@ def run(args: dict):
     batch = args['batch']
     n_procs = args['proc']
 
-    run_batch(data, ratings, change_prob, seed, start, end, batch, dataset_result_dir)
+    run_batch_mp(data, ratings, change_prob, seed, start, end, batch, dataset_result_dir, n_procs)
 
 
 def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
@@ -88,12 +88,16 @@ def compute_score(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     return scorer.score_function(b)
 
 
-def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, seed: int) -> [int, int]:
+def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, seed: int, difference: True) -> [int, int]:
     generated_dataset = randomizer.privatize_choice(input_data=data, relative_seed=seed)
     generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
     score = compute_score(ratings, generated_ratings)
-    print(score, seed)
-    return score, seed
+
+    if difference:
+        diff = np.sum(data != generated_dataset)
+        return {"score": score, "diff": diff}
+
+    return score
 
 
 def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, seed: int,
@@ -148,7 +152,7 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
             # progress bar update
             iterator.set_description(f'running seed {data_seed} in batch {batch_start} - {batch_end}')
 
-            randomized_info = gen_and_score(data=data, ratings=ratings, seed=data_seed, randomizer=randomizer)
+            randomized_info = gen_and_score(data=data, ratings=ratings, seed=data_seed, randomizer=randomizer, difference=True)
             batch_results[data_seed] = randomized_info
 
         # update total score results

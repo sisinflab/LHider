@@ -86,9 +86,10 @@ def score_variance(scores, plot=True):
     for i in range(100, len(data), 100):
         variance[i] = data[:i].scores.var()
 
-    plt.plot(variance.keys(), variance.values())
-    plt.show()
-    print()
+    if plot:
+        plt.plot(variance.keys(), variance.values())
+        plt.show()
+
 
 def score_max(scores, plot=True):
     data = scores.to_dataframe()
@@ -97,10 +98,9 @@ def score_max(scores, plot=True):
     for i in range(100, len(data), 100):
         max_vals[i] = data[:i].scores.max()
 
-    plt.plot(max_vals.keys(), max_vals.values())
-    plt.show()
-    print()
-
+    if plot:
+        plt.plot(max_vals.keys(), max_vals.values())
+        plt.show()
 
 def score_frequency(scores, decimals=5, plot=True):
 
@@ -117,12 +117,10 @@ def id_to_diff(data, scores, change_probability):
     # impostiamo il base seed a 0 perché abbiamo il valore assoluto del seed
     ratings_generator = RandomizeResponse(change_probability=change_probability, base_seed=0)
     differences = {}
-    data = data.values.todense()
+    data = np.array(data.values.todense())
     for seed, score in tqdm.tqdm(scores.data.items()):
-        generated = ratings_generator.privatize_np(data, seed)
-        diff = 0
-        #diff = scipy.sparse.csr_matrix.sum(data.dataset != generated)
+        generated = ratings_generator.privatize_choice(data, seed)
+        diff = np.sum(data != generated)
         differences[diff] = score
 
-    print()
-    return ratings_generator.privatize(data.values)
+    return differences
