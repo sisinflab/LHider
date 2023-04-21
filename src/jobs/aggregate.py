@@ -15,7 +15,7 @@ def experiment_info(arguments: dict):
         print(f'{arg}: {value}')
 
 
-def run(args):
+def run(args: dict):
     # print information about the experiment
     experiment_info(args)
 
@@ -24,15 +24,16 @@ def run(args):
 
     # loading files
     dataset_name = args['dataset']
+    output_name = args['output']
 
     # dataset result directory
     dataset_result_dir = os.path.join(RESULT_DIR, dataset_name)
 
     # aggregate results from results directory
-    aggregate_results(dataset_result_dir)
+    aggregate_results(dataset_result_dir, output_name)
 
 
-def aggregate_results(folder):
+def aggregate_results(folder: str, output_name: str = None):
 
     print('reading paths')
     aggregate_dir = os.path.join(folder, 'aggregate')
@@ -54,7 +55,12 @@ def aggregate_results(folder):
     print('storing aggregation')
     max_seed = max(results.keys())
     min_seed = min(results.keys())
-    result_path = os.path.join(aggregate_dir, f'seed_score_{min_seed}_{max_seed}.pk')
+
+    if output_name:
+        result_path = os.path.join(aggregate_dir, f'{output_name}.pk')
+    else:
+        result_path = os.path.join(aggregate_dir, f'seed_score_{min_seed}_{max_seed}.pk')
+
     with open(result_path, 'wb') as result_file:
         pickle.dump(results, result_file)
     print(f'aggregation written at \'{result_path}\'')

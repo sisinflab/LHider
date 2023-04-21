@@ -1,3 +1,5 @@
+import math
+
 from src.loader import *
 from src.loader.paths import *
 from src.dataset.dataset import DPCrsMatrix
@@ -47,9 +49,14 @@ def run(args):
     eps = args['eps']
     change_prob = args['change_prob']
 
+    eps_rr = round(math.log((1-change_prob)/change_prob))
+    eps_pk = int(scores_name[scores_name.find("eps") + len("eps")])
+    assert eps_rr == eps_pk, f'Change probability and score file don\'t match'
+
+
     for eps_ in eps:
         c_seed, c_score = exponential_mechanism(scores_path=scores_path, eps=eps_)
-        print(f'Selected a dataset with score: {c_score}')
+        print(f'Selected a dataset with score {c_score} and seed {c_seed}')
         gen_dataset = generate(data=data, change_probability=change_prob, seed=c_seed-GLOBAL_SEED)
         gen_dataframe = pd.DataFrame(zip(gen_dataset.nonzero()[0], gen_dataset.nonzero()[1]))
         result_path = os.path.join(f'{RESULT_DIR}', f'{data.name}_p{change_prob}_eps{eps_}.tsv')

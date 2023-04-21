@@ -4,7 +4,7 @@ from src.dataset.dataset import DPCrsMatrix
 from src.exponential_mechanism.mechanism import ExponentialMechanism
 from src.exponential_mechanism.scores import *
 from src.randomize_response.mechanism import RandomizeResponse
-import os, statistics
+import os
 from matplotlib import pyplot as plt
 
 GLOBAL_SEED = 42

@@ -94,7 +94,7 @@ class LoadScores(ScoreFunction):
             data = pickle.load(file)
 
         if dropna:
-            data = {k: v for k, v in data.items() if not (isnan(v))}
+            data = {k: v['score'] for k, v in data.items() if not (isnan(v['score']))}
 
         assert isinstance(data, dict)
         super(LoadScores, self).__init__(data)
