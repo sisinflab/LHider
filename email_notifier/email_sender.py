@@ -1,4 +1,5 @@
 import os.path
+import socket
 import yaml
 import smtplib, ssl
 from email.message import EmailMessage
@@ -38,7 +39,8 @@ class EmailNotifier:
         """
 
         print(f'Reading configuration file from \'{path}\'')
-        config = yaml.safe_load(open(path))
+        with open(path, encoding='utf8') as file:
+            config = yaml.safe_load(file)
         mandatory_fields = [self.senders_field, self.receivers_field]
         for field in mandatory_fields:
             if field not in config:
@@ -122,7 +124,7 @@ class EmailNotifier:
         context = ssl.create_default_context()
 
         message_obj = EmailMessage()
-        message_obj['Subject'] = message['subject']
+        message_obj['Subject'] = f"{message['subject']} ({socket.gethostname()})"
         message_obj['From'] = sender
         message_obj['To'] = receiver
         message_obj.set_content(message['body'])

@@ -12,5 +12,5 @@ messages:
     subject: Esperimento LHider terminato
     body: L'esperimento di LHider è terminato con successo
   error:
-    subject: Esperimento LHider fallito
+    subject: Esperimento LHider su fallito
     body: L'esperimento di LHider è terminato con un errore
