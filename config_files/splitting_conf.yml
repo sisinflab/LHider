@@ -1,0 +1,26 @@
+experiment:
+  dataset: FacebookBooks
+  data_config:
+    strategy: dataset
+    dataset_path: ../data/facebook_book_eps1_1/dataset.tsv
+  top_k: 10
+  splitting:
+    save_on_disk: True
+    save_folder: ../data/facebook_book/split
+    test_splitting:
+      strategy: random_subsampling
+      test_ratio: 0.2
+  evaluation:
+    cutoffs: [10]
+    simple_metrics: [nDCGRendle2020]
+  gpu: 0
+  models:
+    Random:
+      meta:
+        verbose: True
+        save_recs: False
+      seed: 42
+    MostPop:
+      meta:
+        verbose: True
+        save_recs: False
