@@ -10,7 +10,7 @@ from scipy.sparse import csr_matrix
 from src.exponential_mechanism.mechanism import ExponentialMechanism
 from src.exponential_mechanism.scores import MatrixCosineSimilarity, LoadScores
 from src.randomize_response.mechanism import RandomizeResponse
-from src.recommender import ItemKNNSparse
+from src.recommender import ItemKNN
 import pandas as pd
 import multiprocessing as mp
 import os
@@ -109,7 +109,7 @@ def run(args):
 
 def compute_recommendations(data, model_name):
     MODEL_NAMES = ['itemknn']
-    MODELS = {'itemknn': ItemKNNSparse}
+    MODELS = {'itemknn': ItemKNN}
     assert model_name in MODEL_NAMES, f'Model missing. Model name {model_name}'
     model = MODELS[model_name](data, k=20)
     return model.fit()

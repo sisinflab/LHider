@@ -147,7 +147,7 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
             # progress bar update
             iterator.set_description(f'running seed {data_seed} in batch {batch_start} - {batch_end}')
 
-            randomized_info = gen_and_score(data=data, ratings=ratings, seed=data_seed, randomizer=randomizer, difference=True)
+            randomized_info = gen_and_score(data=data, ratings=ratings, seed=data_seed, randomizer=randomizer, difference=False)
             batch_results[data_seed] = randomized_info
 
         # update total score results

@@ -26,11 +26,15 @@ def run(args):
     # print information about the experiment
     experiment_info(args)
 
-    # check the fundamental directories
+    # check for the existence of fundamental directories, otherwise create them
     check_main_directories()
 
+    # dataset directory
+    dataset_name = args['dataset']
+    dataset_dir = os.path.join(DATA_DIR, dataset_name)
+
     # loading files
-    dataset_path = args['dataset']
+    dataset_path = os.path.join(dataset_dir, 'dataset.tsv')
     loader = TsvLoader(path=dataset_path, return_type="csr")
     data = DPCrsMatrix(loader.load(), path=dataset_path)
 
@@ -44,17 +48,19 @@ def run(args):
     print(f'data users: {data.n_users}')
     print(f'data items: {data.n_items}')
 
-    scores_name = args['scores']
+    # privacy budgets
+    eps_rr = float(args['eps_rr'])
+    esp_exp = args['eps_exp']
+
+    # path of the folder containing the scores
     scores_path = os.path.join(dataset_result_dir, scores_name)
-    eps = args['eps']
+
     change_prob = args['change_prob']
 
-    eps_rr = round(math.log((1-change_prob)/change_prob))
     eps_pk = int(scores_name[scores_name.find("eps") + len("eps")])
     assert eps_rr == eps_pk, f'Change probability and score file don\'t match'
 
-
-    for eps_ in eps:
+    for eps_ in esp_exp:
         c_seed, c_score = exponential_mechanism(scores_path=scores_path, eps=eps_)
         print(f'Selected a dataset with score {c_score} and seed {c_seed}')
         gen_dataset = generate(data=data, change_probability=change_prob, seed=c_seed-GLOBAL_SEED)

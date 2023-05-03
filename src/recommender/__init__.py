@@ -1,1 +1,1 @@
-from .neighbours import ItemKNNSparse, ItemKNNDense
+from .neighbours import ItemKNN
