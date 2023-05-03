@@ -19,8 +19,9 @@ class ExponentialMechanism:
         return probabilities
 
     def privatize(self, output, probs=None):
+        print(f'{self.__class__.__name__}: choosing between {len(output)} possible outputs')
         if probs is None:
             probs = self.probabilities(output)
         assert len(probs) == len(output),\
             f'{self.__class__.__name__}: output and probabilities must have the same length'
-        return output[np.random.choice(range(len(output)), p=probs)]
+        return np.random.choice(output, p=probs)
