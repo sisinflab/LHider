@@ -1,5 +1,0 @@
-- la classe Exponential Mechanism dovrebbe essere solo in grado di applicare il meccanismo a prescindere su qualunque
-  lista di valori. L'applicazione ad un dataset di raccomandazione dovrebbe essere una soluzione esterna alla classe.
-  In questo modo potrebbe essere comodo applicare indifferentemente diversi meccanismi cambiando solo la classe di
-  randomizzazione differentially private.
-
