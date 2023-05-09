@@ -88,20 +88,23 @@ class MatrixCosineSimilarity(ScoreFunction):
 class LoadScores(ScoreFunction):
 
     def __init__(self, path, sensitivity, dropna=True):
-        assert os.path.exists(path)
-        f'Scores found at: \'{path}\''
+        # load scores from file
+        if not os.path.exists(path):
+            raise FileNotFoundError(f'Scores file not found at \'{path}\'. Please, check your files.')
         with open(path, 'rb') as file:
             data = pickle.load(file)
+        print(f'Scores found at: \'{path}\'')
 
         if dropna:
             data = {k: v['score'] for k, v in data.items() if not (isnan(v['score']))}
 
         assert isinstance(data, dict)
+
         super(LoadScores, self).__init__(data)
         self.sensitivity = sensitivity
 
     def score_function(self, x):
-        assert x in self.data
+        assert x in self.data, f'Sample {x} not found in data.'
         return self.data[x]
 
 

@@ -37,10 +37,23 @@ def dataset_directory(dataset_name: str):
     return os.path.abspath(dataset_dir)
 
 
-def scores_directory(dataset_dir: str, score: float):
-    score_string = str(score)
-    scores_dir = os.path.join(dataset_dir, 'scores', 'eps_'+score_string)
+def scores_directory(dataset_dir: str, eps: float):
+    eps_string = str(eps)
+    scores_dir = os.path.join(dataset_dir, 'scores', 'eps_'+eps_string)
     if not os.path.exists(scores_dir):
         raise FileNotFoundError(f'Scores at {scores_dir} not found. Please, check that scores directory exists')
     return os.path.abspath(scores_dir)
 
+def scores_file_path(scores_dir: str):
+    """
+    Given a scores directory searches for the scores file path
+    @param scores_dir: directory containing the scores file
+    @return: path of the scores file
+    """
+    files_in_dir = os.listdir(scores_dir)
+    assert len(files_in_dir) == 1, 'More than one file found in the score directory. ' \
+                                   f'Please, check the directory {files_in_dir}'
+    scores_file_path = os.path.abspath(os.path.join(scores_dir, files_in_dir[0]))
+    if not os.path.exists(scores_file_path):
+        raise FileNotFoundError(f'File not found at {scores_file_path}. Please, check your files.')
+    return scores_file_path
