@@ -34,7 +34,6 @@ class ItemKNNDense:
 
 
 class ItemKNNSparse:
-
     def __init__(self, data, k, similarity_fun=cosine_similarity):
         self._data = data
         self._similarity_fun = similarity_fun

@@ -1,7 +1,7 @@
 import json
 import os
 import argparse
-from best_template import TEMPLATE
+from config_templates.best import TEMPLATE
 from elliot.run import run_experiment
 
 config_dir = 'config_files/'

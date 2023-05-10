@@ -1,10 +1,5 @@
-
-import time
-
-import tqdm
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-import math
 
 
 class ItemKNN:
