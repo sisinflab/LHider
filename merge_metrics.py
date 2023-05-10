@@ -6,7 +6,7 @@ import re
 dataset_name = "FacebookBooks"
 base_path = os.path.join(os.getcwd(), "metrics")
 files_path = os.path.join(base_path, dataset_name + "*", "*.tsv")
-output_path = os.path.join(base_path, f"{dataset_name}.tsv")
+output_path = os.path.join(base_path, f"{dataset_name}_merged.tsv")
 
 for filename in glob.glob(files_path):
     eps_rr = (re.findall('epsrr([0-9]*)', filename)[0]) if "epsrr" in str(filename) else 0
