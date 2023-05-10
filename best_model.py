@@ -33,4 +33,7 @@ config_path = os.path.join(config_dir, 'best_conf.yml')
 with open(config_path, 'w') as file:
     file.write(config)
 
+metrics_path = os.path.join(os.getcwd(), "metrics", dataset_name)
+os.makedirs(metrics_path, exist_ok=True)
+
 run_experiment(config_path)

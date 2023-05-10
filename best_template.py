@@ -1,5 +1,6 @@
 TEMPLATE = """experiment:
   dataset: {dataset}
+  path_output_rec_performance: ./metrics/{dataset}
   data_config:
     strategy: dataset
     dataset_path: ../data/{dataset}.tsv
