@@ -23,13 +23,13 @@ def experiment_info(arguments: dict):
         print(f'{arg}: {value}')
 
 
-def make_scores_folder(dataset_name):
+def make_scores_folder(dataset_name, eps_rr):
     """
     Create the folder where the scores will be stored
     @param dataset_name: name of the dataset and name of the folder
     @return: path of the directory containing the scores
     """
-    folder_path = os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'scores'))
+    folder_path = os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'scores', eps_rr))
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
         print(f'Scores directory has been created at \'{folder_path}\'')
@@ -59,7 +59,8 @@ def run(args: dict):
     # paths
     d_name = args['dataset']
     d_path = dataset_path(d_name)
-    scores_folder = make_scores_folder(d_name)
+    eps_rr = "eps_" + str(round(math.log((1 - args['change_prob'])/args['change_prob']), 0))
+    scores_folder = make_scores_folder(d_name, eps_rr)
 
     # loading files
     loader = TsvLoader(path=d_path, return_type="csr")
