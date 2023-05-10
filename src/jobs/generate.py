@@ -1,15 +1,15 @@
+import time
 import tqdm
-
 from src.loader import *
 from src.loader.paths import *
-
+from src.recommender.neighbours import ItemKNNDense, ItemKNNSparse
 from src.dataset.dataset import *
 from src.exponential_mechanism.scores import MatrixCosineSimilarity
 from src.randomize_response.mechanism import RandomizeResponse
-from src.recommender import ItemKNNDense
 import multiprocessing as mp
 import os
 import pickle
+from src.jobs.aggregate import aggregate_scores
 
 
 def experiment_info(arguments: dict):
@@ -23,6 +23,27 @@ def experiment_info(arguments: dict):
         print(f'{arg}: {value}')
 
 
+def make_scores_folder(dataset_name):
+    """
+    Create the folder where the scores will be stored
+    @param dataset_name: name of the dataset and name of the folder
+    @return: path of the directory containing the scores
+    """
+    folder_path = os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'scores'))
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        print(f'Scores directory has been created at \'{folder_path}\'')
+    return folder_path
+
+
+def dataset_path(dataset_name):
+    """
+    Given the name of the dataset return the path of the relative dataset file
+    @param dataset_name: name of the dataset
+    @return: path of the dataset
+    """
+    return os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'dataset.tsv'))
+
 def run(args: dict):
     """
     Run the generate dataset job
@@ -35,10 +56,14 @@ def run(args: dict):
     # check the fundamental directories
     check_main_directories()
 
+    # paths
+    d_name = args['dataset']
+    d_path = dataset_path(d_name)
+    scores_folder = make_scores_folder(d_name)
+
     # loading files
-    dataset_path = args['dataset']
-    loader = TsvLoader(path=dataset_path, return_type="csr")
-    dataset = DPCrsMatrix(loader.load(), path=dataset_path)
+    loader = TsvLoader(path=d_path, return_type="csr")
+    dataset = DPCrsMatrix(loader.load(), path=d_name)
 
     # dataset result directory
     dataset_result_dir = os.path.join(RESULT_DIR, dataset.name)
@@ -55,14 +80,16 @@ def run(args: dict):
     data = np.array(dataset.dataset.todense())
     ratings = compute_recommendations(data, model_name='itemknn')
 
+    # generation parameters
     change_prob, base_seed, start, end, batch, n_procs = \
         args['change_prob'], args['base_seed'], args['start'], args['end'], args['batch'], args['proc']
     assert end >= start
 
     if n_procs > 1:
-        run_batch_mp(data, ratings, change_prob, base_seed, start, end, batch, dataset_result_dir, n_procs)
+        run_batch_mp(data, ratings, change_prob, base_seed, start, end, batch, scores_folder, n_procs)
     else:
-        run_batch(data, ratings, change_prob, base_seed, start, end, batch, dataset_result_dir)
+        run_batch(data, ratings, change_prob, base_seed, start, end, batch, scores_folder)
+
 
 def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
     """
@@ -99,6 +126,7 @@ def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, seed
                  start: int, end: int, batch: int, result_dir: str, n_procs: int):
     print('running multiprocessing batch')
     print(f'n processes: {n_procs}')
+    print(f'scores will be stored at \'{result_dir}\'')
 
     procs_batch = math.ceil((end - start) / n_procs)
     batch = min(procs_batch, batch)
@@ -117,6 +145,20 @@ def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, seed
     with mp.Pool(n_procs) as pool:
         results = pool.starmap_async(run_batch, args)
         results.get()
+
+    # aggregate all results
+    score_paths = []
+    for process_path in procs_path:
+        for score in os.listdir(process_path):
+            if '.pk' in score:
+                score_paths.append(os.path.join(process_path, score))
+    aggregate_scores(score_paths=score_paths, output_folder=result_dir)
+
+    # delete old scores
+    import shutil
+    for process_path in procs_path:
+        shutil.rmtree(process_path)
+        print(f'Folder removed: \'{process_path}\'')
 
 
 def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, base_seed: int,

@@ -21,7 +21,6 @@ args = parser.parse_args()
 
 if args.mail:
     from email_notifier.email_sender import EmailNotifier
-
     notifier = EmailNotifier()
     arguments = read_arguments(parser.parse_args())
     notifier.notify(run, arguments, additional_body=str(arguments))

@@ -10,7 +10,7 @@ TEMPLATE = """experiment:
       test_ratio: 0.2
   evaluation:
     cutoffs: [10]
-    simple_metrics: [nDCGRendle2020, Recall, HR, nDCG, Precision, F1, MAP, MAR, ItemCoverage, Gini, SEntropy,EFD, EPC,  PopREO, PopRSP, ACLT, APLT, ARP]
+    simple_metrics: [nDCGRendle2020]
   gpu: 0
   models:
     Random:
@@ -32,6 +32,7 @@ TEMPLATE = """experiment:
       similarity: cosine
       implementation: aiolli
       seed: 42
+      validation_metric: nDCGRendle2020@10
     EASER:
       meta:
         verbose: True
@@ -40,6 +41,7 @@ TEMPLATE = """experiment:
         hyper_opt_alg: tpe
       l2_norm: [uniform, 10, 10e7]
       seed: 42
+      validation_metric: nDCGRendle2020@10
     RP3beta:
       meta:
         hyper_max_evals: 10
@@ -50,4 +52,6 @@ TEMPLATE = """experiment:
       alpha: [uniform, 0, 2]
       beta: [uniform, 0, 2]
       normalize_similarity: [True, False]
-      seed: 42"""
+      seed: 42
+      validation_metric: nDCGRendle2020@10
+"""

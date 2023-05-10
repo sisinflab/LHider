@@ -34,7 +34,6 @@ def run(args: dict):
 
 
 def aggregate_results(folder: str, output_name: str = None):
-
     print('reading paths')
     aggregate_dir = os.path.join(folder, 'aggregate')
     if not os.path.exists(aggregate_dir):
@@ -65,3 +64,28 @@ def aggregate_results(folder: str, output_name: str = None):
         pickle.dump(results, result_file)
     print(f'aggregation written at \'{result_path}\'')
 
+
+def aggregate_scores(score_paths: list, output_folder: str):
+    print('reading score paths')
+    aggregate_scores = {}
+    for score_path in score_paths:
+        with open(score_path, 'rb') as file:
+            scores = pickle.load(file)
+            aggregate_scores.update(scores)
+            print(f'scores loaded from \'{score_path}\'')
+
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+        print(f'Folder \'{output_folder}\' has been created')
+
+    print('storing aggregation')
+    max_seed = max(aggregate_scores.keys())
+    min_seed = min(aggregate_scores.keys())
+    n = len(aggregate_scores)
+
+    output_path = os.path.join(output_folder, f'seed_{min_seed}_{max_seed}_n{n}.pk')
+
+    with open(output_path, 'wb') as file:
+        pickle.dump(aggregate_scores, file)
+
+    print(f'Aggregated scores stored at \'{output_path}\'')
