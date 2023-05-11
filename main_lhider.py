@@ -9,7 +9,7 @@ def read_arguments(args: argparse.Namespace):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', required=True, help='name of the dataset that is going to be anonymized')
-parser.add_argument('--eps_rr', required=False, type=float, default=0.1)
+parser.add_argument('--eps_rr', required=True, type=float)
 parser.add_argument('--eps_exp', required=False, type=float, nargs='+', help='exponential mechanism privacy budget')
 parser.add_argument('--seed', required=False, type=int, default=42, help='random seed')
 

@@ -19,6 +19,12 @@ def experiment_info(arguments: dict):
 def run(args: dict):
     experiment_info(args)
 
+    # check the fundamental directories
+    check_main_directories()
+
+    # dataset directory
+    dataset_name = args['dataset']
+
     for eps in args['eps']:
         print(f'Aggregating for eps: {eps}')
 

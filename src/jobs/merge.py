@@ -22,7 +22,7 @@ def run(args: dict):
     experiment_info(args)
 
     # check the fundamental directories
-    # check_main_directories()
+    check_main_directories()
 
     # loading files
     dataset_name = args['dataset']
@@ -32,7 +32,7 @@ def run(args: dict):
     merge_metrics(dataset_name=dataset_name, output_name=output_name)
 
 
-def merge_metrics(dataset_name: str, output_name:str = None):
+def merge_metrics(dataset_name: str, output_name: str = None):
     files_path = os.path.join(METRIC_DIR, dataset_name + "*", "*.tsv")
 
     if output_name:

@@ -19,6 +19,7 @@ def check_main_directories():
 def create_directory(dir_path: str):
     """
     Check that the directory exists, otherwise create it
+    @param dir_path: path of the directory to create
     @return: None
     """
     if not os.path.exists(dir_path):
@@ -38,11 +39,18 @@ def dataset_directory(dataset_name: str):
 
 
 def scores_directory(dataset_dir: str, eps: float):
+    """
+    Given the dataset directory and the value of epsilon return the score directory
+    @param dataset_dir: dataset directory path
+    @param eps: value of epsilon
+    @return: the path of the directory containing the scores
+    """
     eps_string = str(eps)
     scores_dir = os.path.join(dataset_dir, 'scores', 'eps_'+eps_string)
     if not os.path.exists(scores_dir):
         raise FileNotFoundError(f'Scores at {scores_dir} not found. Please, check that scores directory exists')
     return os.path.abspath(scores_dir)
+
 
 def scores_file_path(scores_dir: str):
     """

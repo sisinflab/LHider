@@ -87,8 +87,7 @@ def run(args: dict):
     ratings = compute_recommendations(data, model_name='itemknn')
 
     # generation parameters
-    change_prob, base_seed, start, end, batch, n_procs = \
-        args['change_prob'], args['base_seed'], args['start'], args['end'], args['batch'], args['proc']
+    base_seed, start, end, batch, n_procs = args['base_seed'], args['start'], args['end'], args['batch'], args['proc']
     assert end >= start
 
     if n_procs > 1:
