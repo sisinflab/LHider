@@ -13,8 +13,7 @@ def check_main_directories():
     @return: None
     """
     for path in MAIN_DIR:
-        if not os.path.exists(path):
-            os.makedirs(path)
+        create_directory(path)
 
 
 def create_directory(dir_path: str):

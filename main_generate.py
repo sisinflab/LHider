@@ -4,13 +4,13 @@ import multiprocessing as mp
 
 
 def read_arguments(argparse_arguments: argparse.Namespace):
-    job_arguments = ['dataset', 'change_prob', 'base_seed', 'start', 'end', 'batch', 'proc']
+    job_arguments = ['dataset', 'eps', 'base_seed', 'start', 'end', 'batch', 'proc']
     return {arg: argparse_arguments.__getattribute__(arg) for arg in job_arguments}
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', required=True)
-parser.add_argument('--change_prob', required=False, type=float, default=0.002)
+parser.add_argument('--eps', required=False, type=float, default=1)
 parser.add_argument('--base_seed', required=False, type=int, default=42)
 parser.add_argument('--start', required=False, type=int, default=0)
 parser.add_argument('--end', required=False, type=int, default=100)

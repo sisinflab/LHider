@@ -1,4 +1,3 @@
-import time
 import tqdm
 from src.loader import *
 from src.loader.paths import *
@@ -44,6 +43,7 @@ def dataset_path(dataset_name):
     """
     return os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'dataset.tsv'))
 
+
 def run(args: dict):
     """
     Run the generate dataset job
@@ -59,8 +59,13 @@ def run(args: dict):
     # paths
     d_name = args['dataset']
     d_path = dataset_path(d_name)
-    eps_rr = "eps_" + str(round(math.log((1 - args['change_prob'])/args['change_prob']), 0))
-    scores_folder = make_scores_folder(d_name, eps_rr)
+
+    # privacy budget and change probability
+    eps = float(args['eps'])
+    change_prob = 1 / (1 + math.exp(eps))
+
+    print(f'Change probability: {change_prob}')
+    scores_folder = make_scores_folder(d_name, f'eps_{eps}')
 
     # loading files
     loader = TsvLoader(path=d_path, return_type="csr")
@@ -125,14 +130,14 @@ def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.n
 
 def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, seed: int,
                  start: int, end: int, batch: int, result_dir: str, n_procs: int):
-    print('running multiprocessing batch')
-    print(f'n processes: {n_procs}')
-    print(f'scores will be stored at \'{result_dir}\'')
+    print('Running multiprocessing batch')
+    print(f'Num processes: {n_procs}')
+    print(f'Scores will be stored at \'{result_dir}\'')
 
     procs_batch = math.ceil((end - start) / n_procs)
     batch = min(procs_batch, batch)
 
-    print(f'batch size: {batch}')
+    print(f'Batch size: {batch}')
 
     procs_batches = ((idx, min(end, idx + procs_batch)) for idx in range(start, end, procs_batch))
 
@@ -155,7 +160,7 @@ def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, seed
                 score_paths.append(os.path.join(process_path, score))
     aggregate_scores(score_paths=score_paths, output_folder=result_dir)
 
-    # delete old scores
+    # delete old scores folders
     import shutil
     for process_path in procs_path:
         shutil.rmtree(process_path)
@@ -174,10 +179,11 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
                for incremental_seed in range(base_seed + start, base_seed + end, batch))
 
     # results accumulator
-    total_results = {}
+    aggregate_scores = {}
 
     # create randomizer class
     randomizer = RandomizeResponse(change_probability=change_probability, base_seed=base_seed)
+    batch_paths = []
 
     # compute all the batches - batch start and batch end are absolute seeds
     for batch_start, batch_end in batches:
@@ -194,14 +200,26 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
             batch_results[data_seed] = randomized_info
 
         # update total score results
-        total_results.update(batch_results)
+        aggregate_scores.update(batch_results)
 
         # store results
         batch_path = os.path.join(result_dir, f'batch_seed_{batch_start}_{batch_end}.pk')
         with open(batch_path, 'wb') as batch_file:
             pickle.dump(batch_results, batch_file)
+        # keep track of batch files
+        batch_paths.append(batch_path)
 
     # store final results
-    result_path = os.path.join(result_dir, f'seed_{start + base_seed}_{end + base_seed}.pk')
-    with open(result_path, 'wb') as batch_file:
-        pickle.dump(total_results, batch_file)
+    print('Storing aggregation')
+    max_seed = max(aggregate_scores.keys())
+    min_seed = min(aggregate_scores.keys())
+    n = len(aggregate_scores)
+
+    output_path = os.path.join(result_dir, f'seed_{min_seed}_{max_seed}_n{n}.pk')
+    with open(output_path, 'wb') as batch_file:
+        pickle.dump(aggregate_scores, batch_file)
+
+    # remove temporary batch results files
+    for bp in batch_paths:
+        os.remove(bp)
+        print(f'File removed: \'{bp}\'')
