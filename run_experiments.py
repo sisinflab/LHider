@@ -1,6 +1,7 @@
-import os
+import glob
 import argparse
 from config_templates.training import TEMPLATE
+from src.loader.paths import *
 from elliot.run import run_experiment
 
 config_dir = 'config_files/'
@@ -9,14 +10,13 @@ RANDOM_SEED = 42
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--dataset', required=True, type=str)
-parser.add_argument('--eps', default=-1, type=float, nargs='+')
+parser.add_argument('--all',action='store_true')
 args = parser.parse_args()
 
-epsilon = args.eps
 
-dataset_list = []
-if epsilon != -1:
-    dataset_list = [f'{args.dataset}_eps{eps}' for eps in epsilon]
+if args.all:
+    dataset_list = [os.path.basename(absolute_path)
+                    for absolute_path in glob.glob(os.path.join(RESULT_DIR, f'{args.dataset}*'))]
 else:
     dataset_list = [f'{args.dataset}']
 
