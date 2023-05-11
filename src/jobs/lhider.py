@@ -23,7 +23,7 @@ def experiment_info(arguments: dict):
         print(f'{arg}: {value}')
 
 
-def run(args):
+def run(args: dict):
     # print information about the experiment
     experiment_info(args)
 
@@ -70,7 +70,7 @@ def run(args):
         print(f'Dataset stored at: \'{result_path}\'')
 
 
-def generate(data, change_probability, seed):
+def generate(data, change_probability: float, seed: int):
     ratings_generator = RandomizeResponse(change_probability=change_probability, base_seed=seed)
     return ratings_generator.privatize(data.values)
 
@@ -87,7 +87,7 @@ def exponential_mechanism(scores_path: str, eps: float):
     return chosen_seed, chosen_score
 
 
-def generated_dataset_result_path(data_name, eps_rr, eps_exp):
+def generated_dataset_result_path(data_name: str, eps_rr: float, eps_exp):
     result_folder = os.path.join(RESULT_DIR, data_name + '_' + 'epsrr' + str(eps_rr) + '_' + 'epsexp' + str(eps_exp))
     if not os.path.exists(result_folder):
         os.makedirs(result_folder)

@@ -41,7 +41,11 @@ def merge_metrics(dataset_name: str, output_name: str = None):
         output_path = os.path.join(METRIC_DIR, f"{dataset_name}_merged.tsv")
 
     print('files loading and merging')
-    for filename in glob.glob(files_path):
+
+    file_list = glob.glob(files_path)
+    assert len(file_list) != 0, f'No .tsv file to merge found.'
+
+    for filename in file_list:
         eps_rr = (re.findall('epsrr([0-9]*)', filename)[0]) if "epsrr" in str(filename) else 0
         eps_exp = (re.findall('epsexp([0-9]*)', filename)[0]) if "epsexp" in str(filename) else 0
         print(f'Reading: \'{filename}\'')
@@ -50,4 +54,4 @@ def merge_metrics(dataset_name: str, output_name: str = None):
         df.insert(1, 'eps_exp', eps_exp)
         df.to_csv(output_path, mode="a+", sep="\t", index=False, header=not os.path.exists(output_path))
 
-    print(f'merged metrics written at \'{output_path}\'')
+    print(f'Merged metrics written at \'{output_path}\'')

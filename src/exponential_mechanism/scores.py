@@ -96,7 +96,7 @@ class LoadScores(ScoreFunction):
         print(f'Scores found at: \'{path}\'')
 
         if dropna:
-            data = {k: v['score'] for k, v in data.items() if not (isnan(v['score']))}
+            data = {k: v for k, v in data.items() if not (isnan(v))}
 
         assert isinstance(data, dict)
 
