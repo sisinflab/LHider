@@ -4,6 +4,7 @@ PROJECT_PATH = os.path.abspath('.')
 DATA_DIR = os.path.join(PROJECT_PATH, 'data')
 RESULT_DIR = os.path.join(PROJECT_PATH, 'results')
 METRIC_DIR = os.path.join(PROJECT_PATH, 'metrics')
+CONFIG_DIR = os.path.join(PROJECT_PATH, 'config_files')
 MAIN_DIR = [RESULT_DIR]
 
 
@@ -46,7 +47,7 @@ def scores_directory(dataset_dir: str, eps: float):
     @return: the path of the directory containing the scores
     """
     eps_string = str(eps)
-    scores_dir = os.path.join(dataset_dir, 'scores', 'eps_'+eps_string)
+    scores_dir = os.path.join(dataset_dir, 'scores', 'eps_' + eps_string)
     if not os.path.exists(scores_dir):
         raise FileNotFoundError(f'Scores at {scores_dir} not found. Please, check that scores directory exists')
     return os.path.abspath(scores_dir)
@@ -61,7 +62,7 @@ def scores_file_path(scores_dir: str):
     files_in_dir = os.listdir(scores_dir)
     assert len(files_in_dir) == 1, 'More than one file found in the score directory. ' \
                                    f'Please, check the directory {files_in_dir}'
-    scores_file_path = os.path.abspath(os.path.join(scores_dir, files_in_dir[0]))
-    if not os.path.exists(scores_file_path):
-        raise FileNotFoundError(f'File not found at {scores_file_path}. Please, check your files.')
-    return scores_file_path
+    path = os.path.abspath(os.path.join(scores_dir, files_in_dir[0]))
+    if not os.path.exists(path):
+        raise FileNotFoundError(f'File not found at {path}. Please, check your files.')
+    return path
