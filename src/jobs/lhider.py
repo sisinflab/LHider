@@ -51,7 +51,7 @@ def run(args: dict):
 
     # privacy budgets
     eps_rr = float(args['eps_rr'])
-    esp_exp = args['eps_exp']
+    esp_exp = [float(e) for e in args['eps_exp']]
 
     # path of the folder containing the scores
     scores_dir = scores_directory(dataset_dir=dataset_dir, eps=eps_rr)
@@ -87,7 +87,7 @@ def exponential_mechanism(scores_path: str, eps: float):
     return chosen_seed, chosen_score
 
 
-def generated_dataset_result_path(data_name: str, eps_rr: float, eps_exp):
+def generated_dataset_result_path(data_name: str, eps_rr: float, eps_exp: float):
     result_folder = os.path.join(RESULT_DIR, data_name + '_' + 'epsrr' + str(eps_rr) + '_' + 'epsexp' + str(eps_exp))
     if not os.path.exists(result_folder):
         os.makedirs(result_folder)
