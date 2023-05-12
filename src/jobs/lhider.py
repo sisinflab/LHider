@@ -1,16 +1,13 @@
+import pandas as pd
 import math
-
 from src.loader import *
 from src.loader.paths import *
 from src.dataset.dataset import DPCrsMatrix
 from src.exponential_mechanism.mechanism import ExponentialMechanism
 from src.exponential_mechanism.scores import MatrixCosineSimilarity, LoadScores
 from src.randomize_response.mechanism import RandomizeResponse
-import pandas as pd
-import os
 
 GLOBAL_SEED = 42
-
 
 
 def experiment_info(arguments: dict):
@@ -44,10 +41,7 @@ def run(args: dict):
     create_directory(dataset_result_dir)
 
     # print dataset info
-    # TODO: implementare qui il metodo info della classe dataset
-    print(f'data ratings: {data.transactions}')
-    print(f'data users: {data.n_users}')
-    print(f'data items: {data.n_items}')
+    data.info()
 
     # privacy budgets
     eps_rr = float(args['eps_rr'])
@@ -88,7 +82,7 @@ def exponential_mechanism(scores_path: str, eps: float):
 
 
 def generated_dataset_result_path(data_name: str, eps_rr: float, eps_exp: float):
-    result_folder = os.path.join(RESULT_DIR, data_name + '_' + 'epsrr' + str(eps_rr) + '_' + 'epsexp' + str(eps_exp))
+    result_folder = os.path.join(DATA_DIR, data_name + '_' + 'epsrr' + str(eps_rr) + '_' + 'epsexp' + str(eps_exp))
     if not os.path.exists(result_folder):
         os.makedirs(result_folder)
     return os.path.join(result_folder, 'dataset.tsv')

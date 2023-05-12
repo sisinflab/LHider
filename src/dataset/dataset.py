@@ -512,7 +512,9 @@ class DPCrsMatrix(Dataset):
         return self.dataset[user].nonzero()[1]
 
     def info(self):
-        pass
+        print(f'data ratings: {self.transactions}')
+        print(f'data users: {self.n_users}')
+        print(f'data items: {self.n_items}')
 
     def copy_values(self):
         return DPCrsMatrix(self.dataset.copy())
