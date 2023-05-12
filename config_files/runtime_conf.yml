@@ -2,7 +2,7 @@ experiment:
   dataset: facebook_books
   data_config:
     strategy: dataset
-    dataset_path: ../results/facebook_books/dataset.tsv
+    dataset_path: ../data/facebook_books/dataset.tsv
   top_k: 10
   splitting:
     test_splitting:
