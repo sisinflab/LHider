@@ -2,7 +2,7 @@ TEMPLATE = """experiment:
   dataset: {dataset}
   data_config:
     strategy: dataset
-    dataset_path: ../results/{dataset}/dataset.tsv
+    dataset_path: ../data/{dataset}/dataset.tsv
   top_k: 10
   splitting:
     test_splitting:
