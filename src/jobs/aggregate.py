@@ -98,35 +98,3 @@ def aggregate_scores(score_paths: list, output_folder: str, delete: bool = False
 
     return output_path
 
-"""
-def aggregate_results(folder: str, output_name: str = None):
-    print('reading paths')
-    aggregate_dir = os.path.join(folder, 'aggregate')
-    if not os.path.exists(aggregate_dir):
-        os.makedirs(aggregate_dir)
-    folders = [os.path.join(folder, f) for f in os.listdir(folder)]
-    if aggregate_dir in folders:
-        folders.remove(aggregate_dir)
-
-    print('files loading and aggregation')
-    files = [os.path.join(f, file) for f in folders for file in os.listdir(f)]
-    results = dict()
-    for path in files:
-        print(f'Reading: \'{path}\'')
-        with open(path, 'rb') as file:
-            local_result = pickle.load(file)
-        results.update(local_result)
-
-    print('storing aggregation')
-    max_seed = max(results.keys())
-    min_seed = min(results.keys())
-
-    if output_name:
-        result_path = os.path.join(aggregate_dir, f'{output_name}.pk')
-    else:
-        result_path = os.path.join(aggregate_dir, f'seed_score_{min_seed}_{max_seed}.pk')
-
-    with open(result_path, 'wb') as result_file:
-        pickle.dump(results, result_file)
-    print(f'aggregation written at \'{result_path}\'')
-"""
