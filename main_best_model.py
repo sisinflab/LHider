@@ -18,7 +18,7 @@ def dataset_from_performance_file(file: str):
 
 def find_best_performance_files(dataset_name: str):
     path_format_string = os.path.join(RESULT_DIR,
-                                      f'{dataset_name}*',
+                                      f'{dataset_name}',
                                       'performance',
                                       'bestmodelparams_*.json')
     json_performance_files = glob.glob(path_format_string)

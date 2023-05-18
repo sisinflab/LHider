@@ -33,12 +33,13 @@ def run(args: dict):
 
 
 def merge_metrics(dataset_name: str, output_name: str = None):
-    files_path = os.path.join(METRIC_DIR, dataset_name + "*", "*.tsv")
+    files_path = os.path.join(METRIC_DIR, dataset_name, "*.tsv")
 
     if output_name:
         output_path = os.path.join(METRIC_DIR, f'{output_name}.tsv')
     else:
-        output_path = os.path.join(METRIC_DIR, f"{dataset_name}_merged.tsv")
+        base_name = dataset_name.split("_epsrr")[0]
+        output_path = os.path.join(METRIC_DIR, f"{base_name}_merged.tsv")
 
     print('files loading and merging')
 
