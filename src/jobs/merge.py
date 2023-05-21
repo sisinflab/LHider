@@ -44,7 +44,7 @@ def merge_metrics(dataset_name: str, output_name: str = None):
     print('files loading and merging')
 
     file_list = glob.glob(files_path)
-    assert len(file_list) != 0, f'No .tsv file to merge found.'
+    assert len(file_list) == 0, f'No .tsv file to merge found.'
 
     for filename in file_list:
         eps_rr = (re.findall('epsrr([0-9]*)', filename)[0]) if "epsrr" in str(filename) else 0
