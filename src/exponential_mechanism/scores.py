@@ -96,7 +96,13 @@ class LoadScores(ScoreFunction):
         print(f'Scores found at: \'{path}\'')
 
         if dropna:
-            data = {k: v for k, v in data.items() if not (isnan(v))}
+            # TODO: uniformare il tipo di struttura dati usata per salvare gli score
+            if type(data.values) == int:
+                print("int")
+                data = {k: v for k, v in data.items() if not (isnan(v))}
+            elif type(data.values) == dict:
+                print("dict")
+                data = {k: v['scores'] for k, v in data.items() if not (isnan(v['score']))}
 
         assert isinstance(data, dict)
 
@@ -105,7 +111,12 @@ class LoadScores(ScoreFunction):
 
     def score_function(self, x):
         assert x in self.data, f'Sample {x} not found in data.'
-        return self.data[x]
+        score = self.data[x]
+        # TODO: uniformare il tipo di struttura dati usata per salvare gli score
+        if type(score) == dict:
+            return score['score']
+        else:
+            return score
 
 
 class Scores:
