@@ -37,22 +37,28 @@ def merge_metrics(dataset_name: str, output_name: str = None):
 
     if output_name:
         output_path = os.path.join(METRIC_DIR, f'{output_name}.tsv')
+        latex_path = os.path.join(METRIC_DIR, f'{output_name}.tex')
     else:
         base_name = dataset_name.split("_epsrr")[0]
         output_path = os.path.join(METRIC_DIR, f"{base_name}_merged.tsv")
+        latex_path = os.path.join(METRIC_DIR, f"{dataset_name}.tex")
 
     print('files loading and merging')
 
     file_list = glob.glob(files_path)
-    assert len(file_list) == 0, f'No .tsv file to merge found.'
+    assert len(file_list) != 0, f'No .tsv file to merge found.'
 
     for filename in file_list:
         eps_rr = (re.findall('epsrr([0-9]*)', filename)[0]) if "epsrr" in str(filename) else 0
         eps_exp = (re.findall('epsexp([0-9]*)', filename)[0]) if "epsexp" in str(filename) else 0
         print(f'Reading: \'{filename}\'')
         df = pd.read_csv(filename, sep='\t')
+        df.model = df.model.str.replace("_(.*)", "", regex=True)
         df.insert(0, 'eps_rr', eps_rr)
         df.insert(1, 'eps_exp', eps_exp)
         df.to_csv(output_path, mode="a+", sep="\t", index=False, header=not os.path.exists(output_path))
+
+        # with open(latex_path, "w") as f:
+        #     f.write(df.to_latex(index=False, bold_rows=True))
 
     print(f'Merged metrics written at \'{output_path}\'')
