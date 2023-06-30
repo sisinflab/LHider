@@ -3,10 +3,10 @@ from src.run import run
 import multiprocessing as mp
 
 
-def read_arguments(args: argparse.Namespace):
-    arguments = ['dataset', 'change_prob', 'exp_eps', 'seed',
-                 'randomize_seed', 'start', 'end', 'batch', 'job', 'proc']
-    return {arg: args.__getattribute__(arg) for arg in arguments}
+# def read_arguments(args: argparse.Namespace):
+#     arguments = ['dataset', 'change_prob', 'exp_eps', 'seed',
+#                  'randomize_seed', 'start', 'end', 'batch', 'job', 'proc']
+#     return {arg: args.__getattribute__(arg) for arg in arguments}
 
 
 parser = argparse.ArgumentParser()
@@ -25,5 +25,5 @@ parser.add_argument('--final_path', required=False, type=str)
 from email_notifier.email_sender import EmailNotifier
 
 notifier = EmailNotifier()
-arguments = read_arguments(parser.parse_args())
+arguments = vars(parser.parse_args())
 notifier.notify(run, arguments, additional_body=str(arguments))

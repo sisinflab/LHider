@@ -2,9 +2,9 @@ import argparse
 from src.jobs.lhider import run
 
 
-def read_arguments(args: argparse.Namespace):
-    arguments = ['dataset', 'eps_rr', 'eps_exp', 'seed']
-    return {arg: args.__getattribute__(arg) for arg in arguments}
+# def read_arguments(args: argparse.Namespace):
+#     arguments = ['dataset', 'eps_rr', 'eps_exp', 'seed']
+#     return {arg: args.__getattribute__(arg) for arg in arguments}
 
 
 parser = argparse.ArgumentParser()
@@ -14,5 +14,5 @@ parser.add_argument('--eps_exp', required=False, type=float, nargs='+', default=
                     help='exponential mechanism privacy budget')
 parser.add_argument('--seed', required=False, type=int, default=42, help='random seed')
 
-args = parser.parse_args()
-run(read_arguments(args))
+args = vars(parser.parse_args())
+run(args)

@@ -3,10 +3,10 @@ from src.run import run, run_mp
 import multiprocessing as mp
 
 
-def read_arguments(args: argparse.Namespace):
-    arguments = ['dataset', 'change_prob', 'exp_eps', 'seed',
-                 'randomize_seed', 'start', 'end', 'batch', 'job', 'proc']
-    return {arg: args.__getattribute__(arg) for arg in arguments}
+# def read_arguments(args: argparse.Namespace):
+#     arguments = ['dataset', 'change_prob', 'exp_eps', 'seed',
+#                  'randomize_seed', 'start', 'end', 'batch', 'job', 'proc']
+#     return {arg: args.__getattribute__(arg) for arg in arguments}
 
 
 parser = argparse.ArgumentParser()
@@ -23,5 +23,5 @@ parser.add_argument('--proc', required=False, default=mp.cpu_count()-1, type=int
 parser.add_argument('--final_path', required=False, type=str)
 
 
-args = parser.parse_args()
-run(read_arguments(args))
+args = vars(parser.parse_args())
+run(args)

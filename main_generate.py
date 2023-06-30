@@ -3,9 +3,9 @@ from src.jobs.generate import run
 import multiprocessing as mp
 
 
-def read_arguments(argparse_arguments: argparse.Namespace):
-    job_arguments = ['dataset', 'eps', 'base_seed', 'start', 'end', 'batch', 'proc']
-    return {arg: argparse_arguments.__getattribute__(arg) for arg in job_arguments}
+# def read_arguments(argparse_arguments: argparse.Namespace):
+#     job_arguments = ['dataset', 'eps', 'base_seed', 'start', 'end', 'batch', 'proc']
+#     return {arg: argparse_arguments.__getattribute__(arg) for arg in job_arguments}
 
 
 parser = argparse.ArgumentParser()
