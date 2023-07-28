@@ -1,0 +1,2 @@
+# lanciare il pre-processing che consiste sia in kcore che in train-test splitting
+python main_preprocessing.py

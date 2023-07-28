@@ -5,6 +5,8 @@ DATA_DIR = os.path.join(PROJECT_PATH, 'data')
 RESULT_DIR = os.path.join(PROJECT_PATH, 'results')
 METRIC_DIR = os.path.join(PROJECT_PATH, 'metrics')
 CONFIG_DIR = os.path.join(PROJECT_PATH, 'config_files')
+RAW_DATA_FOLDER = 'data'
+DATASET_NAME = 'dataset.tsv'
 MAIN_DIR = [RESULT_DIR]
 
 
@@ -37,6 +39,32 @@ def dataset_directory(dataset_name: str):
     if not os.path.exists(dataset_dir):
         raise FileNotFoundError(f'Directory at {dataset_dir} not found. Please, check that dataset directory exists')
     return os.path.abspath(dataset_dir)
+
+
+def dataset_filepath(dataset_name: str):
+    """
+    Given the dataset name returns the path of the dataset file
+    @param dataset_name: name of the dataset
+    @return: the path of the directory containing the dataset data
+    """
+    dataset_dir = dataset_directory(dataset_name)
+    filepath = os.path.join(dataset_dir, DATASET_NAME)
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f'File at {filepath} not found. Please, check your files')
+    return os.path.abspath(filepath)
+
+
+def raw_dataset_filepath(dataset_name: str):
+    """
+    Given the dataset name returns the path of the dataset file
+    @param dataset_name: name of the dataset
+    @return: the path of the directory containing the dataset data
+    """
+    dataset_dir = dataset_directory(dataset_name)
+    filepath = os.path.join(dataset_dir, RAW_DATA_FOLDER, DATASET_NAME)
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f'File at {filepath} not found. Please, check your files')
+    return os.path.abspath(filepath)
 
 
 def scores_directory(dataset_dir: str, eps: float):
