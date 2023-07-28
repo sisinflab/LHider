@@ -3,13 +3,9 @@ from src.jobs.generate import run
 import multiprocessing as mp
 
 
-# def read_arguments(argparse_arguments: argparse.Namespace):
-#     job_arguments = ['dataset', 'eps', 'base_seed', 'start', 'end', 'batch', 'proc']
-#     return {arg: argparse_arguments.__getattribute__(arg) for arg in job_arguments}
-
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', required=True)
+parser.add_argument('--type', choices=['raw', 'clean', 'train', 'val', 'test'], default='clean')
 parser.add_argument('--eps', required=False, type=float, default=1)
 parser.add_argument('--base_seed', required=False, type=int, default=42)
 parser.add_argument('--start', required=False, type=int, default=0)
@@ -22,7 +18,7 @@ args = parser.parse_args()
 if args.mail:
     from email_notifier.email_sender import EmailNotifier
     notifier = EmailNotifier()
-    arguments = read_arguments(parser.parse_args())
+    arguments = vars(args)
     notifier.notify(run, arguments, additional_body=str(arguments))
 else:
-    run(read_arguments(args))
+    run(vars(args))

@@ -7,6 +7,13 @@ METRIC_DIR = os.path.join(PROJECT_PATH, 'metrics')
 CONFIG_DIR = os.path.join(PROJECT_PATH, 'config_files')
 RAW_DATA_FOLDER = 'data'
 DATASET_NAME = 'dataset.tsv'
+DATASET_NAME_BY_TYPE = {
+    'raw': os.path.join('data', 'dataset.tsv'),
+    'clean': 'dataset.tsv',
+    'train': 'train.tsv',
+    'val': 'val.tsv',
+    'test': 'test.tsv'
+}
 MAIN_DIR = [RESULT_DIR]
 
 
@@ -27,6 +34,7 @@ def create_directory(dir_path: str):
     """
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
+        print(f'Created directory at \'{dir_path}\'')
 
 
 def dataset_directory(dataset_name: str):
@@ -41,27 +49,16 @@ def dataset_directory(dataset_name: str):
     return os.path.abspath(dataset_dir)
 
 
-def dataset_filepath(dataset_name: str):
+def dataset_filepath(dataset_name: str, type='raw'):
     """
     Given the dataset name returns the path of the dataset file
     @param dataset_name: name of the dataset
+    @param type: type of dataset. Raw, clean, training, validation or test
     @return: the path of the directory containing the dataset data
     """
+    assert type in DATASET_NAME_BY_TYPE.keys(), f'Incorrect dataset type. Dataset type found {type}.'
     dataset_dir = dataset_directory(dataset_name)
-    filepath = os.path.join(dataset_dir, DATASET_NAME)
-    if not os.path.exists(filepath):
-        raise FileNotFoundError(f'File at {filepath} not found. Please, check your files')
-    return os.path.abspath(filepath)
-
-
-def raw_dataset_filepath(dataset_name: str):
-    """
-    Given the dataset name returns the path of the dataset file
-    @param dataset_name: name of the dataset
-    @return: the path of the directory containing the dataset data
-    """
-    dataset_dir = dataset_directory(dataset_name)
-    filepath = os.path.join(dataset_dir, RAW_DATA_FOLDER, DATASET_NAME)
+    filepath = os.path.join(dataset_dir, DATASET_NAME_BY_TYPE[type])
     if not os.path.exists(filepath):
         raise FileNotFoundError(f'File at {filepath} not found. Please, check your files')
     return os.path.abspath(filepath)
@@ -94,3 +91,38 @@ def scores_file_path(scores_dir: str):
     if not os.path.exists(path):
         raise FileNotFoundError(f'File not found at {path}. Please, check your files.')
     return path
+
+
+def dataset_result_directory(dataset_name: str, type: str) -> str:
+    """
+    @param dataset_name: name of the dataset
+    @return: path of the directory containing the results for the specific dataset
+    """
+    assert type in DATASET_NAME_BY_TYPE.keys(), f'Incorrect dataset type. Dataset type found {type}.'
+    dataset_result_dir = os.path.join(RESULT_DIR, dataset_name + '_' + type)
+    return dataset_result_dir
+
+
+def score_directory(dataset_name, eps_rr, type):
+    """
+    Returns the path of the scores folder
+    @param dataset_name: name of the dataset and name of the folder
+    @param eps_rr: epsilon value for randomized response
+    @param type: type of dataset
+    @return: path of the directory containing the scores
+    """
+    folder_path = os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'scores_' + type, eps_rr))
+    return folder_path
+
+
+def create_score_directory(dataset_name, eps_rr, type):
+    """
+    Create the folder where the scores will be stored
+    @param dataset_name: name of the dataset and name of the folder
+    @param eps_rr: epsilon value for randomized response
+    @param type: type of dataset
+    @return: path of the directory containing the scores
+    """
+    folder_path = score_directory(dataset_name, eps_rr, type)
+    create_directory(folder_path)
+    return folder_path

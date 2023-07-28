@@ -22,28 +22,6 @@ def experiment_info(arguments: dict):
         print(f'{arg}: {value}')
 
 
-def make_scores_folder(dataset_name, eps_rr):
-    """
-    Create the folder where the scores will be stored
-    @param dataset_name: name of the dataset and name of the folder
-    @return: path of the directory containing the scores
-    """
-    folder_path = os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'scores', eps_rr))
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path)
-        print(f'Scores directory has been created at \'{folder_path}\'')
-    return folder_path
-
-
-def dataset_path(dataset_name):
-    """
-    Given the name of the dataset return the path of the relative dataset file
-    @param dataset_name: name of the dataset
-    @return: path of the dataset
-    """
-    return os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'dataset.tsv'))
-
-
 def run(args: dict):
     """
     Run the generate dataset job
@@ -58,22 +36,19 @@ def run(args: dict):
 
     # paths
     d_name = args['dataset']
-    d_path = dataset_path(d_name)
+    d_type = args['type']
+    d_path = dataset_filepath(d_name, d_type)
 
     # privacy budget and change probability
     eps = float(args['eps'])
     change_prob = 1 / (1 + math.exp(eps))
 
     print(f'Change probability: {change_prob}')
-    scores_folder = make_scores_folder(d_name, f'eps_{eps}')
+    scores_folder = create_score_directory(d_name, f'eps_{eps}', d_type)
 
     # loading files
     loader = TsvLoader(path=d_path, return_type="csr")
     dataset = DPCrsMatrix(loader.load(), path=d_name)
-
-    # dataset result directory
-    dataset_result_dir = os.path.join(RESULT_DIR, dataset.name)
-    create_directory(dataset_result_dir)
 
     # print dataset info
     # TODO: implementare qui il metodo info della classe dataset
@@ -115,7 +90,8 @@ def compute_score(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     return scorer.score_function(b)
 
 
-def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, seed: int, difference: bool = True) -> [int, int]:
+def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, seed: int,
+                  difference: bool = True) -> [int, int]:
     generated_dataset = randomizer.privatize_np(input_data=data, relative_seed=seed)
     generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
     score = compute_score(ratings, generated_ratings)
@@ -168,7 +144,6 @@ def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, seed
 
 def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, base_seed: int,
               start: int, end: int, batch: int, result_dir: str):
-
     # check start and end
     assert end >= start
     assert batch > 0
@@ -195,7 +170,8 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
             # progress bar update
             iterator.set_description(f'running seed {data_seed} in batch {batch_start} - {batch_end}')
 
-            randomized_info = gen_and_score(data=data, ratings=ratings, seed=data_seed, randomizer=randomizer, difference=False)
+            randomized_info = gen_and_score(data=data, ratings=ratings, seed=data_seed, randomizer=randomizer,
+                                            difference=False)
             batch_results[data_seed] = randomized_info
 
         # update total score results

@@ -1,2 +1,4 @@
 # lanciare il pre-processing che consiste sia in kcore che in train-test splitting
 python main_preprocessing.py
+# genera score
+--dataset facebook_books --eps 1 --end 100000 --batch 1000

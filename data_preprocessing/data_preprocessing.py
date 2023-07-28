@@ -7,7 +7,7 @@ from src.loader.paths import *
 def run(dataset_name, core):
     print(f'\n***** {dataset_name} data preprocessing *****\n'.upper())
 
-    dataset_path = raw_dataset_filepath(dataset_name)
+    dataset_path = dataset_filepath(dataset_name, type='raw')
     dataset = load_dataset(dataset_path)
     print(f'Dataset loaded from {dataset_path}')
     print(f'\n***** {dataset_name} iterative k-core *****\n'.upper())
