@@ -4,8 +4,6 @@ senders:
 
 receivers:
   - alberto.mancino@poliba.it
-  - a.difazio@studenti.poliba.it
-  - antonio.ferrara@poliba.it
 
 messages:
   ok:
