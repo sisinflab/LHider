@@ -1,9 +1,9 @@
 TEMPLATE = """experiment:
-  dataset: {dataset}
-  path_output_rec_performance: ./metrics/{dataset}
+  dataset: {file}
+  path_output_rec_performance: ./metrics/{file}
   data_config:
     strategy: dataset
-    dataset_path: ../data/{dataset}/dataset.tsv
+    dataset_path: ../data/{dataset}/generated/{file}.tsv
   top_k: 10
   splitting:
     test_splitting:

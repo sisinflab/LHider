@@ -33,13 +33,14 @@ def run(args: dict):
 
 
 def merge_metrics(dataset_name: str, output_name: str = None):
-    files_path = os.path.join(METRIC_DIR, dataset_name, "*.tsv")
+    files_path = os.path.join(METRIC_DIR, f'{dataset_name}*', "*.tsv")
 
     if output_name:
         output_path = os.path.join(METRIC_DIR, f'{output_name}.tsv')
         latex_path = os.path.join(METRIC_DIR, f'{output_name}.tex')
     else:
-        base_name = dataset_name.split("_epsrr")[0]
+        # base_name = dataset_name.split("_epsrr")[0]
+        base_name = dataset_name
         output_path = os.path.join(METRIC_DIR, f"{base_name}_merged.tsv")
         latex_path = os.path.join(METRIC_DIR, f"{dataset_name}.tex")
 
@@ -58,7 +59,7 @@ def merge_metrics(dataset_name: str, output_name: str = None):
         df.insert(1, 'eps_exp', eps_exp)
         df.to_csv(output_path, mode="a+", sep="\t", index=False, header=not os.path.exists(output_path))
 
-        # with open(latex_path, "w") as f:
-        #     f.write(df.to_latex(index=False, bold_rows=True))
+        with open(latex_path, "w") as f:
+            f.write(df.to_latex(index=False, bold_rows=True))
 
     print(f'Merged metrics written at \'{output_path}\'')

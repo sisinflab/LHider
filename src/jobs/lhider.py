@@ -29,10 +29,11 @@ def run(args: dict):
 
     # dataset directory
     dataset_name = args['dataset']
+    dataset_type = args['type']
     dataset_dir = os.path.join(DATA_DIR, dataset_name)
 
     # loading files
-    dataset_path = os.path.join(dataset_dir, 'dataset.tsv')
+    dataset_path = dataset_filepath(dataset_name, dataset_type)
     loader = TsvLoader(path=dataset_path, return_type="csr")
     data = DPCrsMatrix(loader.load(), path=dataset_path, data_name=dataset_name)
 
@@ -48,7 +49,7 @@ def run(args: dict):
     esp_exp = [float(e) for e in args['eps_exp']]
 
     # path of the folder containing the scores
-    scores_dir = scores_directory(dataset_dir=dataset_dir, eps=eps_rr)
+    scores_dir = scores_directory(dataset_dir=dataset_dir, eps=eps_rr, type=dataset_type)
     scores_path = scores_file_path(scores_dir=scores_dir)
 
     # transform privacy budget value in a feedback change probability for the LHider mechanism
@@ -59,7 +60,7 @@ def run(args: dict):
         print(f'Selected a dataset with score {c_score} and seed {c_seed}')
         gen_dataset = generate(data=data, change_probability=change_prob, seed=c_seed - GLOBAL_SEED)
         gen_dataframe = pd.DataFrame(zip(gen_dataset.nonzero()[0], gen_dataset.nonzero()[1]))
-        result_path = generated_dataset_result_path(data_name=data.name, eps_rr=eps_rr, eps_exp=eps_)
+        result_path = generated_result_path(data_name=data.name, type=dataset_type, eps_rr=eps_rr, eps_exp=eps_)
         gen_dataframe.to_csv(result_path, sep='\t', header=False, index=False)
         print(f'Dataset stored at: \'{result_path}\'')
 
@@ -81,8 +82,4 @@ def exponential_mechanism(scores_path: str, eps: float):
     return chosen_seed, chosen_score
 
 
-def generated_dataset_result_path(data_name: str, eps_rr: float, eps_exp: float):
-    result_folder = os.path.join(DATA_DIR, data_name + '_' + 'epsrr' + str(eps_rr) + '_' + 'epsexp' + str(eps_exp))
-    if not os.path.exists(result_folder):
-        os.makedirs(result_folder)
-    return os.path.join(result_folder, 'dataset.tsv')
+

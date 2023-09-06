@@ -4,7 +4,7 @@ from src.loader.paths import *
 from config_templates.best import TEMPLATE
 
 
-def run(dataset_name: str, best_json: str, metrics):
+def run(dataset_name: str, dataset_file: str, best_json: str, metrics):
     if not os.path.exists(best_json):
         FileNotFoundError(f'File not found at {best_json}. Please, check your files.')
 
@@ -18,7 +18,7 @@ def run(dataset_name: str, best_json: str, metrics):
         beta = best_model[5]['configuration']['beta']
         normalize_similarity = best_model[5]['configuration']['normalize_similarity']
 
-    config = TEMPLATE.format(dataset=dataset_name, cutoffs=cutoffs, metrics=metrics, neighbors=neighbors, l2=l2,
+    config = TEMPLATE.format(dataset=dataset_name, file=dataset_file, cutoffs=cutoffs, metrics=metrics, neighbors=neighbors, l2=l2,
                              neighborhood=neighborhood, alpha=alpha, beta=beta,
                              normalize_similarity=normalize_similarity)
 
@@ -26,7 +26,7 @@ def run(dataset_name: str, best_json: str, metrics):
     with open(config_path, 'w') as file:
         file.write(config)
 
-    metrics_path = os.path.join(os.getcwd(), "metrics", dataset_name)
+    metrics_path = os.path.join(os.getcwd(), "metrics", dataset_file)
     os.makedirs(metrics_path, exist_ok=True)
 
     run_experiment(config_path)

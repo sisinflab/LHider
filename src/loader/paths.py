@@ -3,6 +3,7 @@ import os
 PROJECT_PATH = os.path.abspath('.')
 DATA_DIR = os.path.join(PROJECT_PATH, 'data')
 RESULT_DIR = os.path.join(PROJECT_PATH, 'results')
+GENERATED_DIR = os.path.join(PROJECT_PATH, 'generated')
 METRIC_DIR = os.path.join(PROJECT_PATH, 'metrics')
 CONFIG_DIR = os.path.join(PROJECT_PATH, 'config_files')
 RAW_DATA_FOLDER = 'data'
@@ -64,7 +65,20 @@ def dataset_filepath(dataset_name: str, type='raw'):
     return os.path.abspath(filepath)
 
 
-def scores_directory(dataset_dir: str, eps: float):
+# def scores_directory(dataset_dir: str, eps: float):
+#     """
+#     Given the dataset directory and the value of epsilon return the score directory
+#     @param dataset_dir: dataset directory path
+#     @param eps: value of epsilon
+#     @return: the path of the directory containing the scores
+#     """
+#     eps_string = str(eps)
+#     scores_dir = os.path.join(dataset_dir, 'scores', 'eps_' + eps_string)
+#     if not os.path.exists(scores_dir):
+#         raise FileNotFoundError(f'Scores at {scores_dir} not found. Please, check that scores directory exists')
+#     return os.path.abspath(scores_dir)
+
+def scores_directory(dataset_dir: str, eps: float, type = 'raw'):
     """
     Given the dataset directory and the value of epsilon return the score directory
     @param dataset_dir: dataset directory path
@@ -72,7 +86,7 @@ def scores_directory(dataset_dir: str, eps: float):
     @return: the path of the directory containing the scores
     """
     eps_string = str(eps)
-    scores_dir = os.path.join(dataset_dir, 'scores', 'eps_' + eps_string)
+    scores_dir = os.path.join(dataset_dir, f'scores_{type}', 'eps_' + eps_string)
     if not os.path.exists(scores_dir):
         raise FileNotFoundError(f'Scores at {scores_dir} not found. Please, check that scores directory exists')
     return os.path.abspath(scores_dir)
@@ -102,6 +116,11 @@ def dataset_result_directory(dataset_name: str, type: str) -> str:
     dataset_result_dir = os.path.join(RESULT_DIR, dataset_name + '_' + type)
     return dataset_result_dir
 
+def generated_result_path(data_name: str, eps_rr: float, eps_exp: float, type = 'raw'):
+    result_folder = os.path.join(DATA_DIR, data_name, 'generated')
+    if not os.path.exists(result_folder):
+        os.makedirs(result_folder)
+    return os.path.join(result_folder, f'{data_name}_{type}_epsrr{str(eps_rr)}_epsexp{str(eps_exp)}.tsv')
 
 def score_directory(dataset_name, eps_rr, type):
     """
