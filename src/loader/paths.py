@@ -78,7 +78,7 @@ def dataset_filepath(dataset_name: str, type='raw'):
 #         raise FileNotFoundError(f'Scores at {scores_dir} not found. Please, check that scores directory exists')
 #     return os.path.abspath(scores_dir)
 
-def scores_directory(dataset_dir: str, eps: float, type = 'raw'):
+def scores_directory(dataset_dir: str, eps: float, type = 'clean'):
     """
     Given the dataset directory and the value of epsilon return the score directory
     @param dataset_dir: dataset directory path

@@ -16,14 +16,13 @@ def dataset_from_performance_file(file: str):
     return os.path.normpath(file).split(os.sep)[-3]
 
 
-def find_best_performance_files(dataset_name: str):
+def find_best_performance_files(dataset, dataset_name: str):
     path_format_string = os.path.join(RESULT_DIR,
                                       f'{dataset_name}',
                                       'performance',
                                       'bestmodelparams_*.json')
     json_performance_files = glob.glob(path_format_string)
-    return [{'dataset_name': dataset_from_performance_file(file=j), 'best_json': j}
-            for j in json_performance_files]
+    return [{'dataset_name': dataset, 'best_json': j} for j in json_performance_files]
 
 
 parser = argparse.ArgumentParser()
@@ -38,5 +37,5 @@ args = parser.parse_args()
 
 dataset_name = f'{args.dataset}_{args.type}_epsrr{args.eps_rr}_epsexp{args.eps_exp}'
 
-for arg in find_best_performance_files(dataset_name=args.dataset):
+for arg in find_best_performance_files(dataset=args.dataset, dataset_name=dataset_name):
     run(**arg, dataset_file=dataset_name, metrics=args.metrics)

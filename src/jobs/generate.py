@@ -59,7 +59,8 @@ def run(args: dict):
     # recommendations returned as a np.array
     print(f'\nComputing recommendations')
     data = np.array(dataset.dataset.todense())
-    ratings = compute_recommendations(data, model_name='itemknn')
+    ratings = data
+    # ratings = compute_recommendations(data, model_name='itemknn')
 
     # generation parameters
     base_seed, start, end, batch, n_procs = args['base_seed'], args['start'], args['end'], args['batch'], args['proc']
@@ -93,7 +94,8 @@ def compute_score(a: np.ndarray, b: np.ndarray) -> np.ndarray:
 def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, seed: int,
                   difference: bool = True) -> [int, int]:
     generated_dataset = randomizer.privatize_np(input_data=data, relative_seed=seed)
-    generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
+    # generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
+    generated_ratings = generated_dataset
     score = compute_score(ratings, generated_ratings)
 
     if difference:
