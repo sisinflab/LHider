@@ -94,6 +94,15 @@ class MatrixManhattanDistance(ScoreFunction):
         return np.sum(np.abs(self.data - x))
 
 
+class MatrixEuclideanDistance(ScoreFunction):
+    def __init__(self, data):
+        self.sensitivity = 1
+        super(MatrixEuclideanDistance, self).__init__(data)
+
+    def score_function(self, x):
+        return np.sqrt(np.sum(np.power(self.data - x, 2)))
+
+
 class LoadScores(ScoreFunction):
 
     def __init__(self, path, sensitivity, dropna=True):
