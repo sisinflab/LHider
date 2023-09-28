@@ -85,6 +85,15 @@ class MatrixCosineSimilarity(ScoreFunction):
                        / (np.sum(self.data*self.data, axis=1) ** .5 * np.sum((x * x), axis=1) ** .5))
 
 
+class MatrixManhattanDistance(ScoreFunction):
+    def __init__(self, data):
+        self.sensitivity = 1
+        super(MatrixManhattanDistance, self).__init__(data)
+
+    def score_function(self, x):
+        return np.sum(np.abs(self.data - x))
+
+
 class LoadScores(ScoreFunction):
 
     def __init__(self, path, sensitivity, dropna=True):

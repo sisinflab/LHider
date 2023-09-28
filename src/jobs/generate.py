@@ -3,7 +3,7 @@ from src.loader import *
 from src.loader.paths import *
 from src.recommender.neighbours import ItemKNNDense, ItemKNNSparse
 from src.dataset.dataset import *
-from src.exponential_mechanism.scores import MatrixCosineSimilarity
+from src.exponential_mechanism.scores import MatrixManhattanDistance
 from src.randomize_response.mechanism import RandomizeResponse
 import multiprocessing as mp
 import os
@@ -87,7 +87,7 @@ def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
 
 
 def compute_score(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-    scorer = MatrixCosineSimilarity(a)
+    scorer = MatrixManhattanDistance(a)
     return scorer.score_function(b)
 
 
