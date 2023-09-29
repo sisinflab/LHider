@@ -3,13 +3,20 @@ from src.loader import *
 from src.loader.paths import *
 from src.recommender.neighbours import ItemKNNDense, ItemKNNSparse
 from src.dataset.dataset import *
-from src.exponential_mechanism.scores import MatrixManhattanDistance
+from src.exponential_mechanism.scores import MatrixManhattanDistance, MatrixEuclideanDistance, MatrixUserCosineSimilarity, MatrixItemCosineSimilarity
 from src.randomize_response.mechanism import RandomizeResponse
 import multiprocessing as mp
 import os
 import pickle
 from src.jobs.aggregate import aggregate_scores
 
+
+scorer_type = {
+    'manhattan': MatrixManhattanDistance,
+    'euclidean': MatrixEuclideanDistance,
+    'cosineUser': MatrixUserCosineSimilarity,
+    'cosineItem': MatrixItemCosineSimilarity
+}
 
 def experiment_info(arguments: dict):
     """
@@ -44,7 +51,8 @@ def run(args: dict):
     change_prob = 1 / (1 + math.exp(eps))
 
     print(f'Change probability: {change_prob}')
-    scores_folder = create_score_directory(d_name, f'eps_{eps}', d_type)
+    score_type = args['score_type']
+    scores_folder = create_score_directory(d_name, f'eps_{eps}', d_type, score_type)
 
     # loading files
     loader = TsvLoader(path=d_path, return_type="csr")
@@ -67,9 +75,9 @@ def run(args: dict):
     assert end >= start
 
     if n_procs > 1:
-        run_batch_mp(data, ratings, change_prob, base_seed, start, end, batch, scores_folder, n_procs)
+        run_batch_mp(data, ratings, change_prob, score_type, base_seed, start, end, batch, scores_folder, n_procs)
     else:
-        run_batch(data, ratings, change_prob, base_seed, start, end, batch, scores_folder)
+        run_batch(data, ratings, change_prob, score_type, base_seed, start, end, batch, scores_folder)
 
 
 def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
@@ -86,17 +94,17 @@ def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
     return model.fit()
 
 
-def compute_score(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-    scorer = MatrixManhattanDistance(a)
+def compute_score(a: np.ndarray, b: np.ndarray, score_type: str) -> np.ndarray:
+    scorer = scorer_type[score_type](a)
     return scorer.score_function(b)
 
 
-def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, seed: int,
+def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, score_type:str,  seed: int,
                   difference: bool = True) -> [int, int]:
     generated_dataset = randomizer.privatize_np(input_data=data, relative_seed=seed)
     # generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
     generated_ratings = generated_dataset
-    score = compute_score(ratings, generated_ratings)
+    score = compute_score(ratings, generated_ratings, score_type)
 
     if difference:
         diff = np.sum(data != generated_dataset)
@@ -105,7 +113,7 @@ def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.n
     return score
 
 
-def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, seed: int,
+def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, score_type: str, seed: int,
                  start: int, end: int, batch: int, result_dir: str, n_procs: int):
     print('Running multiprocessing batch')
     print(f'Num processes: {n_procs}')
@@ -122,7 +130,7 @@ def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, seed
     for path in procs_path:
         if not os.path.exists(path):
             os.makedirs(path)
-    args = ((data, ratings, change_prob, seed, b[0], b[1], batch, path)
+    args = ((data, ratings, change_prob, score_type, seed, b[0], b[1], batch, path)
             for b, path in zip(procs_batches, procs_path))
 
     with mp.Pool(n_procs) as pool:
@@ -144,7 +152,7 @@ def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, seed
         print(f'Folder removed: \'{process_path}\'')
 
 
-def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, base_seed: int,
+def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, score_type: str, base_seed: int,
               start: int, end: int, batch: int, result_dir: str):
     # check start and end
     assert end >= start
@@ -172,7 +180,7 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
             # progress bar update
             iterator.set_description(f'running seed {data_seed} in batch {batch_start} - {batch_end}')
 
-            randomized_info = gen_and_score(data=data, ratings=ratings, seed=data_seed, randomizer=randomizer,
+            randomized_info = gen_and_score(data=data, ratings=ratings, score_type=score_type, seed=data_seed, randomizer=randomizer,
                                             difference=False)
             batch_results[data_seed] = randomized_info
 

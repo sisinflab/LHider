@@ -7,6 +7,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', required=True)
     parser.add_argument('--type', choices=['raw', 'clean', 'train', 'val', 'test'], default='clean')
+    parser.add_argument('--score_type', choices=['manhattan', 'euclidean', 'cosineUser', 'cosineItem'], default='manhattan')
     parser.add_argument('--eps', required=False, type=float, default=1)
     parser.add_argument('--base_seed', required=False, type=int, default=42)
     parser.add_argument('--start', required=False, type=int, default=0)

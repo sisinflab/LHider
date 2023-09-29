@@ -75,14 +75,23 @@ class Distance(ScoreFunction):
         return cosine_similarity(arrays[0].reshape(1, -1), arrays[1].reshape(1, -1))[0][0]
 
 
-class MatrixCosineSimilarity(ScoreFunction):
+class MatrixUserCosineSimilarity(ScoreFunction):
     def __init__(self, data):
         self.sensitivity = 1
-        super(MatrixCosineSimilarity, self).__init__(data)
+        super(MatrixUserCosineSimilarity, self).__init__(data)
 
     def score_function(self, x):
         return np.mean(np.sum(self.data * x, axis=1)
                        / (np.sum(self.data*self.data, axis=1) ** .5 * np.sum((x * x), axis=1) ** .5))
+
+class MatrixItemCosineSimilarity(ScoreFunction):
+    def __init__(self, data):
+        self.sensitivity = 1
+        super(MatrixItemCosineSimilarity, self).__init__(data)
+
+    def score_function(self, x):
+        return np.mean(np.sum(self.data.T * x.T, axis=1)
+                       / (np.sum(self.data.T * self.data.T, axis=1) ** .5 * np.sum((x.T * x.T), axis=1) ** .5))
 
 
 class MatrixManhattanDistance(ScoreFunction):
