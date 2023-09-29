@@ -41,7 +41,7 @@ def run(args: dict):
                          delete=True)
 
 
-def scores_files_in_directory(directory: str):
+def scores_files_in_directory(directory: str) -> list:
     """
     Returns the path of the files containing the scores in the selected directory
     @param directory: path of the directory containing scores
@@ -51,7 +51,7 @@ def scores_files_in_directory(directory: str):
     return glob.glob(os.path.join(directory, 'seed_*.pk'))
 
 
-def aggregate_scores(score_paths: list, output_folder: str, delete: bool = False):
+def aggregate_scores(score_paths: list, output_folder: str, delete: bool = False) -> str:
     """
     Given a list of paths of scores files, aggregates them and stores the aggregate result
     @param score_paths: list of score paths

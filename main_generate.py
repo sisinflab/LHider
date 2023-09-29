@@ -2,6 +2,7 @@ import argparse
 from src.jobs.generate import run
 import multiprocessing as mp
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', required=True)

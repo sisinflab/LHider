@@ -1,4 +1,8 @@
 # lanciare il pre-processing che consiste sia in kcore che in train-test splitting
 python main_preprocessing.py
 # genera score
---dataset facebook_books --eps 1 --end 100000 --batch 1000
+--dataset facebook_books -type clean --eps 1 --end 100000 --batch 1000
+# aggregare gli score (al momento l'aggregazione avviene in automatico dopo aver generato gli score)
+--dataset facebook_books --eps 1 2 3
+# selezionare il dataset con il meccanismo esponenziale
+--dataset facebook_boos --type clean --eps_rr 1 --eps_exp 1 2 3 4 5 6
