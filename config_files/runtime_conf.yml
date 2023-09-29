@@ -2,7 +2,7 @@ experiment:
   dataset: yahoo_movies_clean_epsrr1.0_epsexp1.0
   data_config:
     strategy: dataset
-    dataset_path: ../data/yahoo_movies/generated/yahoo_movies_clean_epsrr1.0_epsexp1.0.tsv
+    dataset_path: /home/alberto/PycharmProjects/LHiderExperiments/data/yahoo_movies/generated/yahoo_movies_clean_epsrr1.0_epsexp1.0.tsv
   top_k: 10
   splitting:
     test_splitting:
