@@ -11,7 +11,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--dataset', required=True, type=str)
-    parser.add_argument('--type', choices=['raw', 'clean', 'train', 'val', 'test'], default='clean')
+    parser.add_argument('--type', choices=['raw', 'clean', 'train'], default='clean')
     parser.add_argument('--eps_rr', required=True, type=float, help='privacy budget of generated datasets')
     parser.add_argument('--eps_exp', required=True, type=float, help='exponential mechanism privacy budget')
     parser.add_argument('--seed', required=False, type=int, default=42, help='random seed')
