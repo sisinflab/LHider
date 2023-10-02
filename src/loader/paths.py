@@ -78,6 +78,7 @@ def synthetic_dataset_filepath(dataset_name: str, type: str, eps_rr: float, eps_
         f'dataset at \'{dataset_path}\' not found'
     return dataset_path
 
+
 def scores_file_path(scores_dir: str):
     """
     Given a scores directory searches for the scores file path
