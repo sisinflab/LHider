@@ -19,8 +19,9 @@ def run(args: dict):
         assert 'eps_exp' in args, 'eps_exp parameter missing'
         eps_rr = args['eps_rr']
         eps_exp = args['eps_exp']
-        dataset_path = synthetic_dataset_filepath(dataset_name, dataset_type, eps_rr, eps_exp)
-        dataset_name = synthetic_dataset_name(dataset_name, dataset_type, eps_rr, eps_exp)
+        score_type = args['score_type']
+        dataset_path = synthetic_dataset_filepath(dataset_name, dataset_type, score_type, eps_rr, eps_exp)
+        dataset_name = synthetic_dataset_name(dataset_name, dataset_type, score_type, eps_rr, eps_exp)
 
     # edit the config file
     config = TEMPLATE_PATH.format(dataset=dataset_name, path=dataset_path)

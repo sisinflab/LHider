@@ -33,7 +33,7 @@ def run(dataset_name: str, dataset_file: str, best_json: str, metrics):
     with open(config_path, 'w') as file:
         file.write(config)
 
-    metrics_path = os.path.join(os.getcwd(), "../metrics", dataset_file)
+    metrics_path = os.path.join(os.getcwd(), "metrics", dataset_file)
     os.makedirs(metrics_path, exist_ok=True)
 
     run_experiment(config_path)

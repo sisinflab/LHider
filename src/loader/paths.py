@@ -65,14 +65,14 @@ def dataset_filepath(dataset_name: str, type='raw'):
     return os.path.abspath(filepath)
 
 
-def synthetic_dataset_name(dataset_name: str, type: str, eps_rr: float, eps_exp: float):
-    return f'{dataset_name}_{type}_epsrr{eps_rr}_epsexp{eps_exp}'
+def synthetic_dataset_name(dataset_name: str, type: str, score_type:str, eps_rr: float, eps_exp: float):
+    return f'{dataset_name}_{type}_{score_type}_epsrr{eps_rr}_epsexp{eps_exp}'
 
 
-def synthetic_dataset_filepath(dataset_name: str, type: str, eps_rr: float, eps_exp: float):
+def synthetic_dataset_filepath(dataset_name: str, type: str, score_type: str, eps_rr: float, eps_exp: float):
     dataset_dir = dataset_directory(dataset_name)
     generated_dir = os.path.join(dataset_dir, 'generated')
-    dataset_name = synthetic_dataset_name(dataset_name, type, eps_rr, eps_exp)
+    dataset_name = synthetic_dataset_name(dataset_name, type, score_type, eps_rr, eps_exp)
     dataset_path = os.path.join(generated_dir, dataset_name) + '.tsv'
     assert os.path.exists(dataset_path), \
         f'dataset at \'{dataset_path}\' not found'
