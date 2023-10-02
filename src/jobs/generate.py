@@ -1,7 +1,5 @@
-import os
-import tqdm
-import pickle
 import multiprocessing as mp
+from . import experiment_info
 from src.loader import *
 from src.loader.paths import *
 from src.recommender.neighbours import ItemKNNDense, ItemKNNSparse
@@ -9,19 +7,6 @@ from src.dataset.dataset import *
 from src.exponential_mechanism.scores import *
 from src.randomize_response.mechanism import RandomizeResponse
 from src.jobs.aggregate import aggregate_scores
-
-
-
-
-def experiment_info(arguments: dict):
-    """
-    Print information about the parameters of the experiments
-    @param arguments: dictionary containing the parameters
-    @return: None
-    """
-    print('Running generation job in dense configuration')
-    for arg, value in arguments.items():
-        print(f'{arg}: {value}')
 
 
 def run(args: dict):
@@ -42,6 +27,8 @@ def run(args: dict):
     d_path = dataset_filepath(d_name, d_type)
 
     # privacy budget and change probability
+    # probability of making a change in the dataset based on the privacy budget
+    # prob = frac{1, (1 + e^{eps})}
     eps = float(args['eps'])
     change_prob = 1 / (1 + math.exp(eps))
 
@@ -54,10 +41,7 @@ def run(args: dict):
     dataset = DPCrsMatrix(loader.load(), path=d_name)
 
     # print dataset info
-    # TODO: implementare qui il metodo info della classe dataset
-    print(f'data ratings: {dataset.transactions}')
-    print(f'data users: {dataset.n_users}')
-    print(f'data items: {dataset.n_items}')
+    dataset.info()
 
     # recommendations returned as a np.array
     print(f'\nComputing recommendations')

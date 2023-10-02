@@ -128,26 +128,29 @@ def generated_result_path(data_name: str, eps_rr: float, eps_exp: float, type: s
     return os.path.join(result_folder, f'{data_name}_{type}_{score_type}_epsrr{str(eps_rr)}_epsexp{str(eps_exp)}.tsv')
 
 
-def score_directory(dataset_name, eps_rr, type, score_type):
+def score_directory(dataset_name, eps_rr, dataset_type, score_type):
     """
     Returns the path of the scores folder
     @param dataset_name: name of the dataset and name of the folder
     @param eps_rr: epsilon value for randomized response
-    @param type: type of dataset
+    @param dataset_type: type of dataset
+    @param score_type: type of score (manhattan, euclidean, ...)
     @return: path of the directory containing the scores
     """
-    folder_path = os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'scores_' + type, score_type, eps_rr))
+    eps = f'eps_{eps_rr}'
+    folder_path = os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'scores', dataset_type, score_type, eps))
     return folder_path
 
 
-def create_score_directory(dataset_name, eps_rr, type, score_type):
+def create_score_directory(dataset_name, eps_rr, dataset_type, score_type):
     """
     Create the folder where the scores will be stored
     @param dataset_name: name of the dataset and name of the folder
     @param eps_rr: epsilon value for randomized response
-    @param type: type of dataset
+    @param dataset_type: type of dataset (clean, raw, train)
+    @param score_type: type of score (manhattan, euclidean, ...)
     @return: path of the directory containing the scores
     """
-    folder_path = score_directory(dataset_name, eps_rr, type, score_type)
+    folder_path = score_directory(dataset_name, eps_rr, dataset_type, score_type)
     create_directory(folder_path)
     return folder_path
