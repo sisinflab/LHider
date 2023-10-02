@@ -1,5 +1,5 @@
 import argparse
-from src.jobs.generate import run
+from src.jobs.score import run
 import multiprocessing as mp
 
 
