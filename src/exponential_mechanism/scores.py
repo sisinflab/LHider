@@ -1,6 +1,6 @@
 import tqdm
 from sklearn.metrics.pairwise import cosine_similarity
-from math import prod, isnan
+from math import isnan
 import numpy as np
 import scipy
 import pickle
@@ -200,7 +200,7 @@ class Scores:
         self.data = {k: round(v, decimals) for k, v in self.data.items()}
 
 
-SCORER_TYPE = {
+SCORERS = {
     'manhattan': MatrixManhattanDistance,
     'euclidean': MatrixEuclideanDistance,
     'cosineUser': MatrixUserCosineSimilarity,

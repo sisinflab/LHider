@@ -1,12 +1,11 @@
 import multiprocessing as mp
-from . import experiment_info
+import os.path
+from src.jobs import experiment_info
 from src.loader import *
 from src.loader.paths import *
-from src.recommender.neighbours import ItemKNNDense, ItemKNNSparse
 from src.dataset.dataset import *
 from src.exponential_mechanism.scores import *
 from src.randomize_response.mechanism import RandomizeResponse
-from src.jobs.aggregate import aggregate_scores
 
 
 def run(args: dict):
@@ -46,53 +45,29 @@ def run(args: dict):
     # recommendations returned as a np.array
     print(f'\nComputing recommendations')
     data = np.array(dataset.dataset.todense())
-    ratings = data
-    # ratings = compute_recommendations(data, model_name='itemknn')
 
     # generation parameters
     base_seed, start, end, batch, n_procs = args['base_seed'], args['start'], args['end'], args['batch'], args['proc']
     assert end >= start
 
     if n_procs > 1:
-        run_batch_mp(data, ratings, change_prob, score_type, base_seed, start, end, batch, scores_folder, n_procs)
+        run_batch_mp(data, change_prob, score_type, base_seed, start, end, batch, scores_folder, n_procs)
     else:
-        run_batch(data, ratings, change_prob, score_type, base_seed, start, end, batch, scores_folder)
-
-
-def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
-    """
-    Compute the recommendation for a given model
-    @param data: np.ndarray of the data
-    @param model_name: string with the name of the model to compute the recommendation
-    @return: np.ndarray containing the recommendation for the given data
-    """
-    MODEL_NAMES = ['itemknn']
-    MODELS = {'itemknn': ItemKNNDense}
-    assert model_name in MODEL_NAMES, f'Model missing. Model name {model_name}'
-    model = MODELS[model_name](data, k=20)
-    return model.fit()
+        run_batch(data, change_prob, score_type, base_seed, start, end, batch, scores_folder)
 
 
 def compute_score(a: np.ndarray, b: np.ndarray, score_type: str) -> np.ndarray:
-    scorer = SCORER_TYPE[score_type](a)
+    scorer = SCORERS[score_type](a)
     return scorer.score_function(b)
 
 
-def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, ratings: np.ndarray, score_type:str,  seed: int,
-                  difference: bool = True) -> [int, int]:
+def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, score_type: str, seed: int) -> [int, int]:
     generated_dataset = randomizer.privatize_np(input_data=data, relative_seed=seed)
-    # generated_ratings = compute_recommendations(generated_dataset, 'itemknn')
-    generated_ratings = generated_dataset
-    score = compute_score(ratings, generated_ratings, score_type)
-
-    if difference:
-        diff = np.sum(data != generated_dataset)
-        return {"score": score, "diff": diff}
-
+    score = compute_score(data, generated_dataset, score_type)
     return score
 
 
-def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, score_type: str, seed: int,
+def run_batch_mp(data: np.ndarray, change_prob: float, score_type: str, seed: int,
                  start: int, end: int, batch: int, result_dir: str, n_procs: int):
     print('Running multiprocessing batch')
     print(f'Num processes: {n_procs}')
@@ -109,7 +84,7 @@ def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, scor
     for path in procs_path:
         if not os.path.exists(path):
             os.makedirs(path)
-    args = ((data, ratings, change_prob, score_type, seed, b[0], b[1], batch, path)
+    args = ((data, change_prob, score_type, seed, b[0], b[1], batch, path)
             for b, path in zip(procs_batches, procs_path))
 
     with mp.Pool(n_procs) as pool:
@@ -131,7 +106,7 @@ def run_batch_mp(data: np.ndarray, ratings: np.ndarray, change_prob: float, scor
         print(f'Folder removed: \'{process_path}\'')
 
 
-def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, score_type: str, base_seed: int,
+def run_batch(data: np.ndarray, change_probability: float, score_type: str, base_seed: int,
               start: int, end: int, batch: int, result_dir: str):
     # check start and end
     assert end >= start
@@ -140,9 +115,6 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
     # compute batches indices
     batches = ((incremental_seed, min(incremental_seed + batch, base_seed + end))
                for incremental_seed in range(base_seed + start, base_seed + end, batch))
-
-    # results accumulator
-    aggregate_scores = {}
 
     # create randomizer class
     randomizer = RandomizeResponse(change_probability=change_probability, base_seed=base_seed)
@@ -159,12 +131,8 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
             # progress bar update
             iterator.set_description(f'running seed {data_seed} in batch {batch_start} - {batch_end}')
 
-            randomized_info = gen_and_score(data=data, ratings=ratings, score_type=score_type, seed=data_seed, randomizer=randomizer,
-                                            difference=False)
-            batch_results[data_seed] = randomized_info
-
-        # update total score results
-        aggregate_scores.update(batch_results)
+            score = gen_and_score(data=data, score_type=score_type, seed=data_seed, randomizer=randomizer)
+            batch_results[data_seed] = score
 
         # store results
         batch_path = os.path.join(result_dir, f'batch_seed_{batch_start}_{batch_end}.pk')
@@ -173,17 +141,63 @@ def run_batch(data: np.ndarray, ratings: np.ndarray, change_probability: float, 
         # keep track of batch files
         batch_paths.append(batch_path)
 
-    # store final results
+    aggregate_scores(score_paths=batch_paths, output_folder=result_dir, delete=True)
+
+
+def scores_output_file(output_folder, scores):
+    """
+    Given the output folder and a collection of scores, returns the path of the file containing the scores
+    @param output_folder: folder that will contain the scores
+    @param scores: dictionary containing all the scores
+    @return: a path
+    """
+    max_seed = max(scores.keys())
+    min_seed = min(scores.keys())
+    n = len(scores)
+    output_path = os.path.join(output_folder, f'seed_{min_seed}_{max_seed}_n{n}.pk')
+    return os.path.abspath(output_path)
+
+
+def aggregate_scores(score_paths: list, output_folder: str, delete: bool = False) -> str:
+    """
+    Given a list of paths of scores files, aggregates them and stores the aggregate result
+    @param score_paths: list of score paths
+    @param output_folder: path of the folder where the results will be stored
+    @param delete: if true deletes aggregate files
+    @return: path of the stored aggregate result
+    """
+    # check that score files exist:
+    for score_path in score_paths:
+        if not os.path.exists(score_path):
+            raise FileNotFoundError(f'Score file not found at \'{score_path}\'. ')
+
+    if len(score_paths) <= 1:
+        print(f'Only one score file found: \'{score_paths[0]}\'')
+        return score_paths[0]
+
+    # check that output folder exists, otherwise create it
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+        print(f'Output folder \'{output_folder}\' has been created')
+
+    print('Reading score paths')
+    aggregated_scores = {}
+    for score_path in score_paths:
+        with open(score_path, 'rb') as file:
+            scores = pickle.load(file)
+            aggregated_scores.update(scores)
+            print(f'Scores loaded from \'{score_path}\'')
+
     print('Storing aggregation')
-    max_seed = max(aggregate_scores.keys())
-    min_seed = min(aggregate_scores.keys())
-    n = len(aggregate_scores)
+    output_path = scores_output_file(output_folder=output_folder, scores=aggregated_scores)
 
-    output_path = os.path.join(result_dir, f'seed_{min_seed}_{max_seed}_n{n}.pk')
-    with open(output_path, 'wb') as batch_file:
-        pickle.dump(aggregate_scores, batch_file)
+    with open(output_path, 'wb') as file:
+        pickle.dump(aggregated_scores, file)
+    print(f'Aggregated scores stored at \'{output_path}\'')
 
-    # remove temporary batch results files
-    for bp in batch_paths:
-        os.remove(bp)
-        print(f'File removed: \'{bp}\'')
+    # remove old score files
+    if delete:
+        for score_path in score_paths:
+            os.remove(score_path)
+
+    return output_path
