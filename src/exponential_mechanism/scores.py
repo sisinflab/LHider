@@ -7,7 +7,6 @@ import pickle
 import os
 import pandas as pd
 
-
 class ScoreFunction:
     def __init__(self, data):
         self.sensitivity = None
@@ -77,8 +76,8 @@ class Distance(ScoreFunction):
 
 class MatrixUserCosineSimilarity(ScoreFunction):
     def __init__(self, data):
-        self.sensitivity = 1
         super(MatrixUserCosineSimilarity, self).__init__(data)
+        self.sensitivity = 1
 
     def score_function(self, x):
         return np.mean(np.sum(self.data * x, axis=1)
@@ -86,8 +85,8 @@ class MatrixUserCosineSimilarity(ScoreFunction):
 
 class MatrixItemCosineSimilarity(ScoreFunction):
     def __init__(self, data):
-        self.sensitivity = 1
         super(MatrixItemCosineSimilarity, self).__init__(data)
+        self.sensitivity = 1
 
     def score_function(self, x):
         return np.mean(np.sum(self.data.T * x.T, axis=1)
@@ -96,8 +95,8 @@ class MatrixItemCosineSimilarity(ScoreFunction):
 
 class MatrixManhattanDistance(ScoreFunction):
     def __init__(self, data):
-        self.sensitivity = 1
         super(MatrixManhattanDistance, self).__init__(data)
+        self.sensitivity = 1
 
     def score_function(self, x):
         return np.sum(np.abs(self.data - x))
@@ -105,9 +104,8 @@ class MatrixManhattanDistance(ScoreFunction):
 
 class MatrixEuclideanDistance(ScoreFunction):
     def __init__(self, data):
-
-        self.sensitivity = 1
         super(MatrixEuclideanDistance, self).__init__(data)
+        self.sensitivity = 1
 
     def score_function(self, x):
         return np.sqrt(np.sum(np.power(self.data - x, 2)))
@@ -115,9 +113,8 @@ class MatrixEuclideanDistance(ScoreFunction):
 
 class MatrixJaccardDistance(ScoreFunction):
     def __init__(self, data):
-
-        self.sensitivity = 1 / self.data.size
         super(MatrixJaccardDistance, self).__init__(data)
+        self.sensitivity = 1 / self.data.size
 
     def score_function(self, x):
         return np.sum((self.data == 1) == (x == 1)) / (np.sum((self.data == 1) == (x == 1)) + np.sum(self.data != x))
@@ -187,3 +184,12 @@ class Scores:
 
     def decimal(self, decimals):
         self.data = {k: round(v, decimals) for k, v in self.data.items()}
+
+
+SCORER_TYPE = {
+    'manhattan': MatrixManhattanDistance,
+    'euclidean': MatrixEuclideanDistance,
+    'cosineUser': MatrixUserCosineSimilarity,
+    'cosineItem': MatrixItemCosineSimilarity,
+    'jaccard': MatrixJaccardDistance
+}

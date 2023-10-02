@@ -79,15 +79,17 @@ def synthetic_dataset_filepath(dataset_name: str, type: str, eps_rr: float, eps_
     return dataset_path
 
 
-def scores_directory(dataset_dir: str, eps: float, type = 'clean'):
+def scores_directory(dataset_dir: str, eps: float, score_type: str, type: str = 'clean'):
     """
     Given the dataset directory and the value of epsilon return the score directory
     @param dataset_dir: dataset directory path
     @param eps: value of epsilon
+    @param score_type: type of score
+    @param type: type of dataset
     @return: the path of the directory containing the scores
     """
     eps_string = str(eps)
-    scores_dir = os.path.join(dataset_dir, f'scores_{type}', 'eps_' + eps_string)
+    scores_dir = os.path.join(dataset_dir, f'scores_{type}', score_type, 'eps_' + eps_string)
     if not os.path.exists(scores_dir):
         raise FileNotFoundError(f'Scores at {scores_dir} not found. Please, check that scores directory exists')
     return os.path.abspath(scores_dir)
@@ -111,6 +113,7 @@ def scores_file_path(scores_dir: str):
 def dataset_result_directory(dataset_name: str, type: str) -> str:
     """
     @param dataset_name: name of the dataset
+    @param type: type of dataset
     @return: path of the directory containing the results for the specific dataset
     """
     assert type in DATASET_NAME_BY_TYPE.keys(), f'Incorrect dataset type. Dataset type found {type}.'
@@ -118,11 +121,11 @@ def dataset_result_directory(dataset_name: str, type: str) -> str:
     return dataset_result_dir
 
 
-def generated_result_path(data_name: str, eps_rr: float, eps_exp: float, type = 'raw'):
+def generated_result_path(data_name: str, eps_rr: float, eps_exp: float, type: str, score_type: str):
     result_folder = os.path.join(DATA_DIR, data_name, 'generated')
     if not os.path.exists(result_folder):
         os.makedirs(result_folder)
-    return os.path.join(result_folder, f'{data_name}_{type}_epsrr{str(eps_rr)}_epsexp{str(eps_exp)}.tsv')
+    return os.path.join(result_folder, f'{data_name}_{type}_{score_type}_epsrr{str(eps_rr)}_epsexp{str(eps_exp)}.tsv')
 
 
 def score_directory(dataset_name, eps_rr, type, score_type):

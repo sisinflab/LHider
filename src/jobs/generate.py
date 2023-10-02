@@ -11,13 +11,6 @@ from src.randomize_response.mechanism import RandomizeResponse
 from src.jobs.aggregate import aggregate_scores
 
 
-scorer_type = {
-    'manhattan': MatrixManhattanDistance,
-    'euclidean': MatrixEuclideanDistance,
-    'cosineUser': MatrixUserCosineSimilarity,
-    'cosineItem': MatrixItemCosineSimilarity,
-    'jaccard': MatrixJaccardDistance
-}
 
 
 def experiment_info(arguments: dict):
@@ -97,7 +90,7 @@ def compute_recommendations(data: np.ndarray, model_name: str) -> np.ndarray:
 
 
 def compute_score(a: np.ndarray, b: np.ndarray, score_type: str) -> np.ndarray:
-    scorer = scorer_type[score_type](a)
+    scorer = SCORER_TYPE[score_type](a)
     return scorer.score_function(b)
 
 
