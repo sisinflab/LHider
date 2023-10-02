@@ -53,6 +53,7 @@ class Dataset:
         self._binary = False
 
         # metrics
+        self._size = None
         self._space_size_log = None
         self._shape_log = None
         self._density = None
@@ -199,6 +200,10 @@ class Dataset:
     @property
     def transactions(self):
         return self._transactions
+
+    @property
+    def size(self):
+        return self.n_items * self.n_users
 
     @property
     def space_size_log(self):

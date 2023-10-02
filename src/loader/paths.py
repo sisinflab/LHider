@@ -78,23 +78,6 @@ def synthetic_dataset_filepath(dataset_name: str, type: str, eps_rr: float, eps_
         f'dataset at \'{dataset_path}\' not found'
     return dataset_path
 
-
-def scores_directory(dataset_dir: str, eps: float, score_type: str, type: str = 'clean'):
-    """
-    Given the dataset directory and the value of epsilon return the score directory
-    @param dataset_dir: dataset directory path
-    @param eps: value of epsilon
-    @param score_type: type of score
-    @param type: type of dataset
-    @return: the path of the directory containing the scores
-    """
-    eps_string = str(eps)
-    scores_dir = os.path.join(dataset_dir, f'scores_{type}', score_type, 'eps_' + eps_string)
-    if not os.path.exists(scores_dir):
-        raise FileNotFoundError(f'Scores at {scores_dir} not found. Please, check that scores directory exists')
-    return os.path.abspath(scores_dir)
-
-
 def scores_file_path(scores_dir: str):
     """
     Given a scores directory searches for the scores file path

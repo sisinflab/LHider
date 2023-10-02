@@ -51,7 +51,7 @@ def run(args: dict):
     # path of the folder containing the scores
     scores_type = args['score_type']
     scorer = SCORER_TYPE[scores_type](data)
-    scores_dir = scores_directory(dataset_dir=dataset_dir, eps=eps_rr, score_type=scores_type, type=dataset_type)
+    scores_dir = score_directory(dataset_name=dataset_name, eps_rr=eps_rr, score_type=scores_type, dataset_type=dataset_type)
     scores_path = scores_file_path(scores_dir=scores_dir)
 
     # transform privacy budget value in a feedback change probability for the LHider mechanism
