@@ -67,6 +67,44 @@ def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, score_type: s
     return score
 
 
+def run_batch(data: np.ndarray, change_probability: float, score_type: str, base_seed: int,
+              start: int, end: int, batch: int, result_dir: str):
+    # check start and end
+    assert end >= start
+    assert batch > 0
+
+    # compute batches indices
+    batches = ((incremental_seed, min(incremental_seed + batch, base_seed + end))
+               for incremental_seed in range(base_seed + start, base_seed + end, batch))
+
+    # create randomizer class
+    randomizer = RandomizeResponse(change_probability=change_probability, base_seed=base_seed)
+    batch_paths = []
+
+    # compute all the batches - batch start and batch end are absolute seeds
+    for batch_start, batch_end in batches:
+        # batch results accumulator
+        batch_results = dict()
+        # progress bar
+        iterator = tqdm.tqdm(range(batch_start, batch_end))
+
+        for data_seed in iterator:
+            # progress bar update
+            iterator.set_description(f'running seed {data_seed} in batch {batch_start} - {batch_end}')
+
+            score = gen_and_score(data=data, score_type=score_type, seed=data_seed, randomizer=randomizer)
+            batch_results[data_seed] = score
+
+        # store results
+        batch_path = os.path.join(result_dir, f'batch_seed_{batch_start}_{batch_end}.pk')
+        with open(batch_path, 'wb') as batch_file:
+            pickle.dump(batch_results, batch_file)
+        # keep track of batch files
+        batch_paths.append(batch_path)
+
+    aggregate_scores(score_paths=batch_paths, output_folder=result_dir, delete=True)
+
+
 def run_batch_mp(data: np.ndarray, change_prob: float, score_type: str, seed: int,
                  start: int, end: int, batch: int, result_dir: str, n_procs: int):
     print('Running multiprocessing batch')
@@ -104,44 +142,6 @@ def run_batch_mp(data: np.ndarray, change_prob: float, score_type: str, seed: in
     for process_path in procs_path:
         shutil.rmtree(process_path)
         print(f'Folder removed: \'{process_path}\'')
-
-
-def run_batch(data: np.ndarray, change_probability: float, score_type: str, base_seed: int,
-              start: int, end: int, batch: int, result_dir: str):
-    # check start and end
-    assert end >= start
-    assert batch > 0
-
-    # compute batches indices
-    batches = ((incremental_seed, min(incremental_seed + batch, base_seed + end))
-               for incremental_seed in range(base_seed + start, base_seed + end, batch))
-
-    # create randomizer class
-    randomizer = RandomizeResponse(change_probability=change_probability, base_seed=base_seed)
-    batch_paths = []
-
-    # compute all the batches - batch start and batch end are absolute seeds
-    for batch_start, batch_end in batches:
-        # batch results accumulator
-        batch_results = dict()
-        # progress bar
-        iterator = tqdm.tqdm(range(batch_start, batch_end))
-
-        for data_seed in iterator:
-            # progress bar update
-            iterator.set_description(f'running seed {data_seed} in batch {batch_start} - {batch_end}')
-
-            score = gen_and_score(data=data, score_type=score_type, seed=data_seed, randomizer=randomizer)
-            batch_results[data_seed] = score
-
-        # store results
-        batch_path = os.path.join(result_dir, f'batch_seed_{batch_start}_{batch_end}.pk')
-        with open(batch_path, 'wb') as batch_file:
-            pickle.dump(batch_results, batch_file)
-        # keep track of batch files
-        batch_paths.append(batch_path)
-
-    aggregate_scores(score_paths=batch_paths, output_folder=result_dir, delete=True)
 
 
 def scores_output_file(output_folder, scores):
