@@ -1,13 +1,15 @@
 import argparse
 from src.jobs.score import run
+from src.jobs.score import SCORERS
 import multiprocessing as mp
 
+possible_scores = list(SCORERS.keys())
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', required=True)
-    parser.add_argument('--type', choices=['raw', 'clean', 'train', 'val', 'test'], default='clean')
-    parser.add_argument('--score_type', choices=['manhattan', 'euclidean', 'cosineUser', 'cosineItem', 'jaccard'], default='manhattan')
+    parser.add_argument('--type', choices=['raw', 'clean', 'train'], default='clean')
+    parser.add_argument('--score_type', choices=possible_scores, default='manhattan')
     parser.add_argument('--eps', required=False, type=float, default=1)
     parser.add_argument('--base_seed', required=False, type=int, default=42)
     parser.add_argument('--start', required=False, type=int, default=0)
