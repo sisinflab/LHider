@@ -14,7 +14,6 @@ def run(dataset_name: str, dataset_file: str, best_json: str, metrics):
     with open(best_json, "r") as json_file:
         best_model = json.load(json_file)
 
-
         for obj in best_model:
             cutoffs = obj.get('default_validation_cutoff', cutoffs)
             conf = obj.get('configuration', {})

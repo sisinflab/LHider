@@ -1,13 +1,13 @@
+import os
 import tqdm
+import pickle
+import multiprocessing as mp
 from src.loader import *
 from src.loader.paths import *
 from src.recommender.neighbours import ItemKNNDense, ItemKNNSparse
 from src.dataset.dataset import *
-from src.exponential_mechanism.scores import MatrixManhattanDistance, MatrixEuclideanDistance, MatrixUserCosineSimilarity, MatrixItemCosineSimilarity
+from src.exponential_mechanism.scores import *
 from src.randomize_response.mechanism import RandomizeResponse
-import multiprocessing as mp
-import os
-import pickle
 from src.jobs.aggregate import aggregate_scores
 
 
@@ -15,8 +15,10 @@ scorer_type = {
     'manhattan': MatrixManhattanDistance,
     'euclidean': MatrixEuclideanDistance,
     'cosineUser': MatrixUserCosineSimilarity,
-    'cosineItem': MatrixItemCosineSimilarity
+    'cosineItem': MatrixItemCosineSimilarity,
+    'jaccard': MatrixJaccardDistance
 }
+
 
 def experiment_info(arguments: dict):
     """
