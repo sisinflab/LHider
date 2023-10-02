@@ -108,7 +108,9 @@ class MatrixManhattanDistance(ScoreFunction):
         self.max = self.data.size
 
     def score_function(self, x):
-        return np.sum(np.abs(self.data - x))
+        scores = np.sum(np.abs(self.data - x))
+        normalized_scores = self.normalize(scores)
+        return 1 - normalized_scores
 
 
 class MatrixEuclideanDistance(ScoreFunction):
@@ -118,7 +120,9 @@ class MatrixEuclideanDistance(ScoreFunction):
         self.max = np.sqrt(self.data.size)
 
     def score_function(self, x):
-        return np.sqrt(np.sum(np.power(self.data - x, 2)))
+        scores = np.sqrt(np.sum(np.power(self.data - x, 2)))
+        normalized_scores = self.normalize(scores)
+        return 1 - normalized_scores
 
 
 class MatrixJaccardDistance(ScoreFunction):
