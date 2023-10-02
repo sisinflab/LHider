@@ -7,13 +7,20 @@ import pickle
 import os
 import pandas as pd
 
+
 class ScoreFunction:
     def __init__(self, data):
         self.sensitivity = None
         self.data = data
+        self.max = None
 
     def score_function(self, x):
         pass
+
+    def normalize(self, score):
+        assert self.max, f'max value is not defined for {self.__class__.__name__} class'
+        return score / self.max
+
 
     def __call__(self, x):
         return self.score_function(x)
@@ -83,6 +90,7 @@ class MatrixUserCosineSimilarity(ScoreFunction):
         return np.mean(np.sum(self.data * x, axis=1)
                        / (np.sum(self.data*self.data, axis=1) ** .5 * np.sum((x * x), axis=1) ** .5))
 
+
 class MatrixItemCosineSimilarity(ScoreFunction):
     def __init__(self, data):
         super(MatrixItemCosineSimilarity, self).__init__(data)
@@ -97,6 +105,7 @@ class MatrixManhattanDistance(ScoreFunction):
     def __init__(self, data):
         super(MatrixManhattanDistance, self).__init__(data)
         self.sensitivity = 1
+        self.max = self.data.size
 
     def score_function(self, x):
         return np.sum(np.abs(self.data - x))
@@ -106,6 +115,7 @@ class MatrixEuclideanDistance(ScoreFunction):
     def __init__(self, data):
         super(MatrixEuclideanDistance, self).__init__(data)
         self.sensitivity = 1
+        self.max = np.sqrt(self.data.size)
 
     def score_function(self, x):
         return np.sqrt(np.sum(np.power(self.data - x, 2)))

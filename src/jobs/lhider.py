@@ -4,7 +4,7 @@ from src.loader import *
 from src.loader.paths import *
 from src.dataset.dataset import DPCrsMatrix
 from src.exponential_mechanism.mechanism import ExponentialMechanism
-from src.exponential_mechanism.scores import MatrixCosineSimilarity, LoadScores
+from src.exponential_mechanism.scores import *
 from src.randomize_response.mechanism import RandomizeResponse
 
 GLOBAL_SEED = 42
@@ -49,18 +49,20 @@ def run(args: dict):
     esp_exp = [float(e) for e in args['eps_exp']]
 
     # path of the folder containing the scores
-    scores_dir = scores_directory(dataset_dir=dataset_dir, eps=eps_rr, type=dataset_type)
+    scores_type = args['score_type']
+    scorer = SCORER_TYPE[scores_type](data)
+    scores_dir = scores_directory(dataset_dir=dataset_dir, eps=eps_rr, score_type=scores_type, type=dataset_type)
     scores_path = scores_file_path(scores_dir=scores_dir)
 
     # transform privacy budget value in a feedback change probability for the LHider mechanism
     change_prob = 1 / (1 + math.exp(eps_rr))
 
     for eps_ in esp_exp:
-        c_seed, c_score = exponential_mechanism(scores_path=scores_path, eps=eps_)
+        c_seed, c_score = exponential_mechanism(scores_path=scores_path, eps=eps_, sensitivity=scorer.sensitivity)
         print(f'Selected a dataset with score {c_score} and seed {c_seed}')
         gen_dataset = generate(data=data, change_probability=change_prob, seed=c_seed - GLOBAL_SEED)
         gen_dataframe = pd.DataFrame(zip(gen_dataset.nonzero()[0], gen_dataset.nonzero()[1]))
-        result_path = generated_result_path(data_name=data.name, type=dataset_type, eps_rr=eps_rr, eps_exp=eps_)
+        result_path = generated_result_path(data_name=data.name, type=dataset_type, score_type=scores_type, eps_rr=eps_rr, eps_exp=eps_)
         gen_dataframe.to_csv(result_path, sep='\t', header=False, index=False)
         print(f'Dataset stored at: \'{result_path}\'')
 
@@ -70,11 +72,11 @@ def generate(data, change_probability: float, seed: int):
     return ratings_generator.privatize(data.values)
 
 
-def exponential_mechanism(scores_path: str, eps: float):
+def exponential_mechanism(scores_path: str, eps: float, sensitivity: float):
     if not os.path.exists(scores_path):
         raise FileNotFoundError(f'Scores not found at \'{scores_path}\'')
 
-    score_function = LoadScores(scores_path, sensitivity=1)
+    score_function = LoadScores(scores_path, sensitivity=sensitivity)
     possible_output_seeds = list(score_function.data.keys())
     mech = ExponentialMechanism(score_function, eps)
     chosen_seed = mech.privatize(possible_output_seeds)
