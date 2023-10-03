@@ -7,6 +7,10 @@ from elliot.run import run_experiment
 def run(args: dict):
     # print information about the experiment
     experiment_info(args)
+
+    # check the fundamental directories
+    check_main_directories()
+
     dataset_name = args['dataset']
     dataset_type = args['type']
 

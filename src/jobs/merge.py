@@ -24,8 +24,13 @@ def run(args: dict):
     # check the fundamental directories
     check_main_directories()
 
-    # loading files
     dataset_name = args['dataset']
+    dataset_type = args['type']
+    eps_rr = args['eps_rr']
+    eps_exp = args['eps_exp']
+    score_type = args['score_type']
+
+    # loading files
     output_name = args['output']
 
     # merge metrics in directory
@@ -39,10 +44,8 @@ def merge_metrics(dataset_name: str, output_name: str = None):
         output_path = os.path.join(METRIC_DIR, f'{output_name}.tsv')
         latex_path = os.path.join(METRIC_DIR, f'{output_name}.tex')
     else:
-        # base_name = dataset_name.split("_epsrr")[0]
-        base_name = dataset_name
-        output_path = os.path.join(METRIC_DIR, f"{base_name}_merged.tsv")
-        latex_path = os.path.join(METRIC_DIR, f"{dataset_name}.tex")
+        output_path = os.path.join(METRIC_DIR, f"{dataset_name}_merged.tsv")
+        latex_path = os.path.join(METRIC_DIR, f"{dataset_name}_merged.tex")
 
     print('files loading and merging')
 

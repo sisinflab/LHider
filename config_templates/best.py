@@ -55,7 +55,7 @@ TEMPLATE = """experiment:
 
 TEMPLATE_PATH = """experiment:
   dataset: {dataset}
-  path_output_rec_performance: ./metrics/{dataset}
+  path_output_rec_performance: {output_path}
   data_config:
     strategy: dataset
     dataset_path: {path}

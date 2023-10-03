@@ -5,9 +5,6 @@ from elliot.run import run_experiment
 from src.loader.paths import *
 from config_templates.best import TEMPLATE_PATH
 
-DEFAULT_METRICS = ["nDCGRendle2020", "Recall", "HR", "nDCG", "Precision", "F1", "MAP", "MAR", "ItemCoverage", "Gini",
-                   "SEntropy", "EFD", "EPC", "PopREO", "PopRSP", "ACLT", "APLT", "ARP"]
-
 
 def find_best_performance_files(dataset_name: str) -> str:
     path_format_string = os.path.join(RESULT_DIR, f'{dataset_name}', 'performance', 'bestmodelparams_*.json')
@@ -16,7 +13,6 @@ def find_best_performance_files(dataset_name: str) -> str:
     if not json_performance_files:
         raise FileNotFoundError(f'No model parameters file found. Please, check your files.')
 
-    print(max(json_performance_files, key=os.path.getctime))
     return max(json_performance_files, key=os.path.getctime)
 
 
@@ -64,16 +60,18 @@ def run(args: dict):
             beta = conf.get('beta', beta)
             normalize_similarity = conf.get('normalize_similarity', normalize_similarity)
 
+    # path of the output folder
+    metrics_path = os.path.join(METRIC_DIR, dataset_name)
+
     # best configuration file
-    config = TEMPLATE_PATH.format(dataset=dataset_name, path=dataset_path, cutoffs=cutoffs, metrics=metrics,
-                             neighbors=neighbors, l2=l2, neighborhood=neighborhood, alpha=alpha, beta=beta,
-                             normalize_similarity=normalize_similarity)
+    config = TEMPLATE_PATH.format(dataset=dataset_name, output_path=metrics_path, path=dataset_path, cutoffs=cutoffs,
+                                  metrics=metrics, neighbors=neighbors, l2=l2, neighborhood=neighborhood, alpha=alpha,
+                                  beta=beta, normalize_similarity=normalize_similarity)
 
     config_path = os.path.join(CONFIG_DIR, 'best_conf.yml')
     with open(config_path, 'w') as file:
         file.write(config)
 
-    metrics_path = os.path.join(os.getcwd(), "metrics", dataset_name)
     os.makedirs(metrics_path, exist_ok=True)
 
     run_experiment(config_path)

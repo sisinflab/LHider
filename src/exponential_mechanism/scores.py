@@ -104,7 +104,7 @@ class MatrixItemCosineSimilarity(ScoreFunction):
 class MatrixManhattanDistance(ScoreFunction):
     def __init__(self, data):
         super(MatrixManhattanDistance, self).__init__(data)
-        self.sensitivity = 1
+        self.sensitivity = 1 / self.data.size
         self.max = self.data.size
 
     def score_function(self, x):
@@ -116,7 +116,7 @@ class MatrixManhattanDistance(ScoreFunction):
 class MatrixEuclideanDistance(ScoreFunction):
     def __init__(self, data):
         super(MatrixEuclideanDistance, self).__init__(data)
-        self.sensitivity = 1
+        self.sensitivity = 1 / np.sqrt(self.data.size)
         self.max = np.sqrt(self.data.size)
 
     def score_function(self, x):
@@ -128,7 +128,7 @@ class MatrixEuclideanDistance(ScoreFunction):
 class MatrixJaccardDistance(ScoreFunction):
     def __init__(self, data):
         super(MatrixJaccardDistance, self).__init__(data)
-        self.sensitivity = 1 / (np.sum(self.data) -1)
+        self.sensitivity = 1 / (np.sum(self.data.transactions) - 1)
 
     def score_function(self, x):
         return np.sum((self.data == 1) == (x == 1)) / (np.sum((self.data == 1) == (x == 1)) + np.sum(self.data != x))
