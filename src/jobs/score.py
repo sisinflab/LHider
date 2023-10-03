@@ -148,6 +148,7 @@ def scores_output_file(output_folder, scores):
     """
     Given the output folder and a collection of scores, returns the path of the file containing the scores
     @param output_folder: folder that will contain the scores
+    @param output_folder: folder that will contain the scores
     @param scores: dictionary containing all the scores
     @return: a path
     """
