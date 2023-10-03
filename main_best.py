@@ -1,16 +1,10 @@
 import argparse
 from src.jobs.recommendations import run
-from config_templates.training import TEMPLATE
-from src.loader.paths import *
-from elliot.run import run_experiment
 
 """
 This script runs the recommendations for the given dataset with the recommendation models in the configuration file
 If the original dataset is selected, recommendations will be computed on the non-synthetic dataset
 """
-
-config_dir = 'config_files/'
-RANDOM_SEED = 42
 
 
 if __name__ == "__main__":

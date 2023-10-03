@@ -128,7 +128,7 @@ class MatrixEuclideanDistance(ScoreFunction):
 class MatrixJaccardDistance(ScoreFunction):
     def __init__(self, data):
         super(MatrixJaccardDistance, self).__init__(data)
-        self.sensitivity = 1 / np.sum(self.data)
+        self.sensitivity = 1 / (np.sum(self.data) -1)
 
     def score_function(self, x):
         return np.sum((self.data == 1) == (x == 1)) / (np.sum((self.data == 1) == (x == 1)) + np.sum(self.data != x))
