@@ -15,7 +15,6 @@ class ExponentialMechanism:
 
     def probabilities(self, output):
         exponent = (self.eps * self.scores(output)) / (2 * self.sensitivity)
-        exponent = exponent.astype('float128')
         probabilities = np.exp(exponent)
         probabilities = probabilities / np.sum(probabilities)
         return probabilities

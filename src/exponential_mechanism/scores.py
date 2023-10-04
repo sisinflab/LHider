@@ -106,7 +106,6 @@ class MatrixManhattanDistance(ScoreFunction):
         super(MatrixManhattanDistance, self).__init__(data)
         self.sensitivity = 1 / self.data.size
         self.max = self.data.size
-        print(self.sensitivity)
 
     def score_function(self, x):
         scores = np.sum(np.abs(self.data - x))
