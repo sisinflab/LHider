@@ -42,9 +42,9 @@ def run(args: dict):
     # print dataset info
     dataset.info()
 
-    # recommendations returned as a np.array
-    print(f'\nComputing recommendations')
+    # dataset in np.array for score computation
     data = np.array(dataset.dataset.todense())
+
 
     # generation parameters
     base_seed, start, end, batch, n_procs = args['base_seed'], args['start'], args['end'], args['batch'], args['proc']

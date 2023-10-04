@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser.add_argument('--type', choices=['raw', 'clean', 'train', 'val', 'test'], default='clean')
     parser.add_argument('--score_type', choices=['manhattan', 'euclidean', 'cosineUser', 'cosineItem', 'jaccard'],
                         default='manhattan')
-    parser.add_argument('--eps_rr', required=True, type=float, help='privacy budget of generated datasets')
+    parser.add_argument('--eps_rr', required=False, type=float, help='privacy budget of generated datasets')
     parser.add_argument('--eps_exp', required=False, type=float, help='exponential mechanism privacy budget')
     parser.add_argument('--seed', required=False, type=int, default=42, help='random seed')
     parser.add_argument("--metrics", type=str, nargs='+', default=DEFAULT_METRICS)

@@ -14,7 +14,7 @@ class ExponentialMechanism:
         return np.array([self.score_function(x) for x in output])
 
     def probabilities(self, output):
-        probabilities = np.exp(self.eps * self.scores(output) / (2 * self.sensitivity))
+        probabilities = np.exp(np.float128(self.eps * self.scores(output) / (2 * self.sensitivity)))
         probabilities = probabilities / np.sum(probabilities)
         return probabilities
 

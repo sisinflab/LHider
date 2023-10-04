@@ -106,6 +106,7 @@ class MatrixManhattanDistance(ScoreFunction):
         super(MatrixManhattanDistance, self).__init__(data)
         self.sensitivity = 1 / self.data.size
         self.max = self.data.size
+        print(self.sensitivity)
 
     def score_function(self, x):
         scores = np.sum(np.abs(self.data - x))
@@ -126,12 +127,13 @@ class MatrixEuclideanDistance(ScoreFunction):
 
 
 class MatrixJaccardDistance(ScoreFunction):
-    def __init__(self, data):
+    def __init__(self, data: np.array):
         super(MatrixJaccardDistance, self).__init__(data)
-        self.sensitivity = 1 / (np.sum(self.data.transactions) - 1)
+        self.sensitivity = 1 / (np.sum(self.data == 1) - 1)
 
-    def score_function(self, x):
-        return np.sum((self.data == 1) == (x == 1)) / (np.sum((self.data == 1) == (x == 1)) + np.sum(self.data != x))
+    def score_function(self, x: np.array):
+        intersection = np.sum(np.logical_and((self.data == 1), (x == 1)))
+        return intersection / (intersection + np.sum(self.data != x))
 
 
 class LoadScores(ScoreFunction):
