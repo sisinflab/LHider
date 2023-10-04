@@ -18,7 +18,6 @@ class ExponentialMechanism:
         exponent = exponent.astype('float128')
         probabilities = np.exp(exponent)
         probabilities = probabilities / np.sum(probabilities)
-        probabilities = probabilities.astype('float64')
         return probabilities
 
     def privatize(self, output, probs=None):
