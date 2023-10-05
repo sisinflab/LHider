@@ -28,7 +28,7 @@ def run(args: dict):
 
     # compute recommendations on the original dataset
     if args['original']:
-        dataset_path = dataset_filepath(dataset_name)
+        dataset_path = dataset_filepath(dataset_name, dataset_type)
     # compute recommendations on the synthetic dataset
     else:
         assert 'eps_rr' in args, 'eps_rr parameter missing'

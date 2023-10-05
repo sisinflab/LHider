@@ -1,17 +1,26 @@
 from data_preprocessing.filters.basic import IterativeKCore
-from data_preprocessing.filters.dataset import Splitter
+from data_preprocessing.filters.dataset import Splitter, Binarize
 from data_preprocessing.filters.filter import load_dataset, store_dataset
 from src.loader.paths import *
 
 
-def run(dataset_name, core):
+def run(dataset_name, core, threshold=None):
     print(f'\n***** {dataset_name} data preprocessing *****\n'.upper())
 
     dataset_path = dataset_filepath(dataset_name, type='raw')
     dataset = load_dataset(dataset_path)
     print(f'Dataset loaded from {dataset_path}')
+
+    binarized_dataset = dataset
+
+    if threshold:
+        print(f'\n***** {dataset_name} binarization *****\n'.upper())
+
+        binarizer = Binarize(dataset=dataset, threshold=threshold)
+        binarized_dataset = binarizer.filter()['dataset']
+
     print(f'\n***** {dataset_name} iterative k-core *****\n'.upper())
-    kcore = IterativeKCore(dataset=dataset,
+    kcore = IterativeKCore(dataset=binarized_dataset,
                            core=core,
                            kcore_columns=['u', 'i'])
     filtered_dataset = kcore.filter()['dataset']
