@@ -201,6 +201,52 @@ class Scores:
         self.data = {k: round(v, decimals) for k, v in self.data.items()}
 
 
+class Score:
+
+    def __init__(self, scores: dict):
+        assert len(scores) > 0, "Scores not found."
+
+        self._scores: dict = scores
+        self._data: np.ndarray = np.array(list(scores.values()))
+
+    def drop_na(self):
+        data = self._scores.copy()
+        return {k: v for k, v in data.items() if not (isnan(v))}
+
+    def to_dataframe(self):
+        data = pd.DataFrame()
+        data['id'] = self._scores.keys()
+        data['scores'] = self._scores.values()
+        return data
+
+    def approx(self, decimals):
+        self._scores = {k: round(v, decimals) for k, v in self._scores.items()}
+
+    def mean(self):
+        """
+        @return: mean value of the scores
+        """
+        return self._data.mean()
+
+    def max(self):
+        """
+        @return: max value of the scores
+        """
+        return self._data.max()
+
+    def min(self):
+        """
+        @return: min value of the scores
+        """
+        return self._data.min()
+
+    def std(self):
+        """
+        @return: standard deviation of the scores
+        """
+        return self._data.std()
+
+
 SCORERS = {
     'manhattan': MatrixManhattanDistance,
     'euclidean': MatrixEuclideanDistance,
