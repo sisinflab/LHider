@@ -138,3 +138,17 @@ def create_score_directory(dataset_name, eps_rr, dataset_type, score_type):
     folder_path = score_directory(dataset_name, eps_rr, dataset_type, score_type)
     create_directory(folder_path)
     return folder_path
+
+
+def score_analysis_dir(dataset_name, dataset_type):
+    return os.path.join(RESULT_DIR, 'score_analysis', dataset_name, dataset_type)
+
+
+def metrics_name(dataset_name, data_type):
+    return 'metrics' + '_' + dataset_name + '_' + data_type
+
+
+def metrics_path(dataset_name, data_type):
+    stats_name = metrics_name(dataset_name=dataset_name, data_type=data_type)
+    return os.path.join(score_analysis_dir(dataset_name, data_type), stats_name + '.tsv')
+

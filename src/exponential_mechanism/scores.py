@@ -203,11 +203,31 @@ class Scores:
 
 class Score:
 
-    def __init__(self, scores: dict):
+    def __init__(self, scores: dict,
+                 dataset_name=None,
+                 dataset_type=None,
+                 score_type=None,
+                 eps=None,
+                 generations=None):
         assert len(scores) > 0, "Scores not found."
 
         self._scores: dict = scores
-        self._data: np.ndarray = np.array(list(scores.values()))
+        self._dataset_name = str(dataset_name)
+        self._dataset_type = str(dataset_type)
+        self._score_type = str(score_type)
+        self._eps = str(eps)
+        if generations is None:
+            generations = len(scores)
+        assert generations <= len(scores)
+        self._gen = generations
+
+        selected_keys = list(scores.keys())[:self._gen]
+        self._scores = {k: self._scores[k] for k in selected_keys}
+
+        self._data: np.ndarray = np.array(list(self._scores.values()))
+
+    def __len__(self):
+        return len(self._data)
 
     def drop_na(self):
         data = self._scores.copy()
@@ -245,6 +265,27 @@ class Score:
         @return: standard deviation of the scores
         """
         return self._data.std()
+
+    @property
+    def data(self):
+        """
+        @return: the numpy array containing the scores
+        """
+        return self._data
+
+    def score_name(self, decimal:int =None):
+        name = ''
+        if self._dataset_name:
+            name += self._dataset_name
+        if self._dataset_type:
+            name += '_' + self._dataset_type
+        if self._score_type:
+            name += '_' + self._score_type
+        if self._eps:
+            name += '_' + self._eps
+        if decimal:
+            name += '_' + str(decimal)
+        return name
 
 
 SCORERS = {

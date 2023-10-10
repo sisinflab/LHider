@@ -85,9 +85,9 @@ class Dataset:
 
         # columns >= 2
         self._user_col = self.columns[0]
-        print(f'{self.__class__.__name__}: column 0 set as user column')
+        # print(f'{self.__class__.__name__}: column 0 set as user column')
         self._item_col = self.columns[1]
-        print(f'{self.__class__.__name__}: column 1 set as item column')
+        # print(f'{self.__class__.__name__}: column 1 set as item column')
 
         if self.n_columns > 2:
             self._ratings_col = self.columns[2]
@@ -123,7 +123,7 @@ class Dataset:
                 raise KeyError('dataset must have at least two columns for auto-setting user column')
 
             self._user_col = self.columns[0]
-            print(f'{self.__class__.__name__}: first column set as user column')
+            # print(f'{self.__class__.__name__}: first column set as user column')
         return self._user_col
 
     @property
@@ -135,7 +135,7 @@ class Dataset:
                 raise KeyError('dataset must have at least two columns for auto-setting item column')
 
             self._item_col = self.columns[1]
-            print(f'{self.__class__.__name__}: second column set as item column')
+            # print(f'{self.__class__.__name__}: second column set as item column')
         return self._item_col
 
     @property
