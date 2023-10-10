@@ -152,3 +152,9 @@ def metrics_path(dataset_name, data_type):
     stats_name = metrics_name(dataset_name=dataset_name, data_type=data_type)
     return os.path.join(score_analysis_dir(dataset_name, data_type), stats_name + '.tsv')
 
+
+def metrics_over_generations_path(dataset_name, data_type, gen_min, gen_max, gen_step):
+    stats_output_folder = score_analysis_dir(dataset_name, data_type)
+    create_directory(stats_output_folder)
+    return os.path.join(stats_output_folder, f'metrics_from_g{gen_min}_to_g{gen_max}_with_g{gen_step}.tsv')
+

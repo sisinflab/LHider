@@ -1,3 +1,4 @@
+import pandas as pd
 from matplotlib import pyplot as plt
 from collections import Counter
 from src.loader.loaders import *
@@ -47,8 +48,8 @@ def score_plot(score: Score, decimal=4):
     return x
 
 
-def run(dataset_name: str, data_type: str, score_type: str, eps: str, decimal: int,
-        generations: int = None, show=False, store=False):
+def compute_metrics(dataset_name: str, data_type: str, score_type: str, eps: str, decimal: int,
+                    generations: int = None, show=False, store=False):
     d_name = dataset_name
     d_type = data_type
     s_type = score_type
@@ -95,26 +96,46 @@ def run(dataset_name: str, data_type: str, score_type: str, eps: str, decimal: i
     return metrics
 
 
-datasets = ['facebook_books']
-data_types = ['clean']
-score_types = ['jaccard', 'euclidean']
-epss = ['1.0']
-decimals = [3]
-generations = list(range(100, 100000, 100))
+def metrics_over_generations(dataset_name: str, data_type: str, score_type: str, eps: str,
+                             gen_min: int, gen_max: int, gen_step: int):
+    d_name = dataset_name
+    d_type = data_type
+    s_type = score_type
+    eps = eps
+    g_min = gen_min
+    g_max = gen_max
+    g_step = gen_step
 
-result = []
-for d in datasets:
-    for d_t in data_types:
-        for s_t in score_types:
-            for e in epss:
-                for g in generations:
-                    metrics = []
-                    for dec in decimals:
-                        metrics = run(dataset_name=d, data_type=d_t, score_type=s_t, eps=e, decimal=dec, generations=g)
-                    result.append(metrics)
+    generations = list(range(g_min, g_max, g_step))
 
-        stats = pd.DataFrame(result, columns=['dataset', 'data_type', 'eps', 'transactions', 'size',
-                                              'score_type', 'n_scores', 'min', 'max', 'mean', 'std'])
-        stats_path = metrics_path(dataset_name=d, data_type=d_t)
-        stats.to_csv(stats_path, sep='\t')
-        print(f'Metrics stored at \'{stats_path}\' for {d} type {d_t}')
+    # output directory
+    o_dir = score_analysis_dir(dataset_name=d_name, dataset_type=d_type)
+
+    create_directory(o_dir)
+
+    score_loader = ScoreLoader(dataset_name=d_name,
+                               dataset_type=d_type,
+                               score_type=s_type,
+                               eps=eps)
+    score_values = score_loader.load()
+
+    metrics = []
+    for g in generations:
+        scores = Score(score_values,
+                       dataset_name=d_name,
+                       dataset_type=d_type,
+                       score_type=s_type,
+                       eps=eps,
+                       generations=g)
+        # metrics = ['dataset', 'data_type', 'eps', 'score_type', 'generations', 'min', 'max', 'mean', 'std']
+        metrics.append([d_name, d_type, eps, s_type, g, scores.min(), scores.max(), scores.mean(), scores.std()])
+
+    stats = pd.DataFrame(metrics, columns=['dataset', 'data_type', 'eps', 'score_type', 'generations',
+                                           'min', 'max', 'mean', 'std'])
+    stats_output_folder = score_analysis_dir(d_name, d_type)
+    stats_output_path = metrics_over_generations_path(d_name, d_type, g_min, g_max, g_step)
+    stats.to_csv(stats_output_path, sep='\t', index=False, decimal=',')
+    print(f'Metrics file stored at \'{stats_output_path}\'')
+
+
+metrics_over_generations('facebook_books', 'clean', 'manhattan', '1.0', 100, 100000, 1000)
