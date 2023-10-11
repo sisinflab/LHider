@@ -158,3 +158,9 @@ def metrics_over_generations_path(dataset_name, data_type, gen_min, gen_max, gen
     create_directory(stats_output_folder)
     return os.path.join(stats_output_folder, f'metrics_from_g{gen_min}_to_g{gen_max}_with_g{gen_step}.tsv')
 
+
+def threshold_over_generations_path(dataset_name, data_type, gen_min, gen_max, gen_step):
+    stats_output_folder = score_analysis_dir(dataset_name, data_type)
+    create_directory(stats_output_folder)
+    return os.path.join(stats_output_folder, f'threshold_from_g{gen_min}_to_g{gen_max}_with_g{gen_step}.tsv')
+

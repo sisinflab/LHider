@@ -287,6 +287,9 @@ class Score:
             name += '_' + str(decimal)
         return name
 
+    def values_over_threshold(self, thresh):
+        return sum(self._data > thresh)
+
 
 SCORERS = {
     'manhattan': MatrixManhattanDistance,
