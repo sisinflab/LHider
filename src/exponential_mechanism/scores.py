@@ -246,25 +246,36 @@ class Score:
         """
         @return: mean value of the scores
         """
-        return self._data.mean()
-
+        if len(self._data) == 0:
+            return 0
+        else:
+            return self._data.mean()
     def max(self):
         """
         @return: max value of the scores
         """
-        return self._data.max()
+        if len(self._data) == 0:
+            return 0
+        else:
+            return self._data.max()
 
     def min(self):
         """
         @return: min value of the scores
         """
-        return self._data.min()
+        if len(self._data) == 0:
+            return 0
+        else:
+            return self._data.min()
 
     def std(self):
         """
         @return: standard deviation of the scores
         """
-        return self._data.std()
+        if len(self._data) == 0:
+            return 0
+        else:
+            return self._data.std()
 
     @property
     def data(self):
