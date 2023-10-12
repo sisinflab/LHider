@@ -1,3 +1,5 @@
+import math
+
 from matplotlib import pyplot as plt
 from collections import Counter
 from src.loader.loaders import *
@@ -47,7 +49,8 @@ def score_plot(score: Score, decimal=4):
     return x
 
 
-def compute_metrics(dataset_name: str, data_type: str, score_type: str, eps: str, decimal: int, show=False, store=False):
+def compute_metrics(dataset_name: str, data_type: str, score_type: str, eps: str, decimal: int, show=False,
+                    store=False):
     d_name = dataset_name
     d_type = data_type
     s_type = score_type
@@ -137,7 +140,7 @@ def metrics_over_generations(dataset_name: str, data_type: str, score_type: str,
 
 
 def over_generation_plot(metrics: list, dataset_name: str, data_type: str, score_type: str, eps: str,
-                         gen_min: int, gen_max: int, gen_step: int, store: bool=True, show: bool=True):
+                         gen_min: int, gen_max: int, gen_step: int, store: bool = True, show: bool = True):
     """
     Given a list of metrics it produces a plot that shows the values of the metrics over the generations.
     If the metrics are more than one, then the metrics are plotted in the same plot
@@ -175,7 +178,6 @@ def over_generation_plot(metrics: list, dataset_name: str, data_type: str, score
         values = stats['generations'].to_list(), stats[m].to_list()
         plt.plot(*values, label=m)
 
-
     if store:
         # output directory
         o_dir = score_analysis_dir(d_name, d_type)
@@ -192,7 +194,6 @@ def over_generation_plot(metrics: list, dataset_name: str, data_type: str, score
 
 def over_generation_utility(dataset_name, data_type, score_type, eps,
                             threshold: float, gen_min: int, gen_max: int, gen_step: int):
-
     d_name = dataset_name
     d_type = data_type
     s_type = score_type
@@ -232,8 +233,52 @@ def over_generation_utility(dataset_name, data_type, score_type, eps,
     return stats
 
 
-over_generation_utility(dataset_name='facebook_books', data_type='clean', score_type='jaccard', eps='1.0',
-                        threshold=0.0344, gen_min=1000, gen_max=100000, gen_step=1000)
+def compare_metric_with_manhattan(dataset_name, data_type, score_type: list, eps, generations: int= None):
+    d_name = dataset_name
+    d_type = data_type
+    s_type = score_type
+    eps = eps
+    g = generations
+
+    score_loader = ScoreLoader(dataset_name=d_name,
+                               dataset_type=d_type,
+                               score_type='manhattan',
+                               eps=eps)
+    manhattan_score_values = score_loader.load()
+
+    score_loader = ScoreLoader(dataset_name=d_name,
+                               dataset_type=d_type,
+                               score_type=s_type,
+                               eps=eps)
+    score_values = score_loader.load()
+
+    # associate to each score the corresponding manhattan distance score
+    score_and_man = [(s, manhattan_score_values[k]) for k, s in score_values.items() if k in manhattan_score_values]
+    score_and_man = sorted(score_and_man, key=lambda x: x[0])
+
+    print(f'{len(score_and_man)} scores have been paired with the corresponding manhattan distance')
+
+    log_score_and_man = [(math.log(s), math.log(m)) for s, m in score_and_man]
+
+    x, y = list(zip(*score_and_man))
+    log_x, log_y = list(zip(*log_score_and_man))
+
+    plt.plot(x, y)
+    plt.show()
+    plt.clf()
+
+    plt.plot(log_x, log_y)
+    plt.show()
+    plt.clf()
+
+
+    print()
+
+
+compare_metric_with_manhattan(dataset_name='facebook_books', data_type='clean', score_type='jaccard', eps='1.0')
+
+# over_generation_utility(dataset_name='facebook_books', data_type='clean', score_type='jaccard', eps='1.0',
+#                         threshold=0.0344, gen_min=1000, gen_max=100000, gen_step=1000)
 
 
 # over_generation_plot(metrics=['min', 'mean', 'max'], dataset_name='facebook_books', data_type='clean', score_type='manhattan', eps='1.0',
