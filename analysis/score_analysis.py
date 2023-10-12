@@ -64,10 +64,14 @@ class ScoreAnalyzer:
 
         self._score_distribution_output_dir = os.path.join(self._output_dir, 'score_distribution')
         self._metrics_over_generation_output_dir = os.path.join(self._output_dir, 'over_generations')
+        self._utility_output_dir = os.path.join(self._output_dir, 'utility_over_generations')
 
         self.dataset_path = dataset_filepath(self._dataset_name, self._data_type)
         loader = TsvLoader(self.dataset_path)
         self.dataset = DPDataFrame(loader.load())
+
+        self._accepted_metrics = {'min', 'max', 'mean', 'std'}
+
 
     def load_score_values(self, dataset_name: str = None, dataset_type: str = None, score_type: str = None, eps: str = None):
 
@@ -220,7 +224,6 @@ class ScoreAnalyzer:
         return stats
 
     def plot_metrics_over_generation(self, metrics:list, gen_min: int = None, gen_max: int = None, gen_step: int = None, show=False, store=False):
-        ACCEPTED_METRICS = {'min', 'max', 'mean', 'std'}
 
         g_min, g_max, g_step = self.default_generation_values(gen_min, gen_max, gen_step)
 
@@ -232,7 +235,7 @@ class ScoreAnalyzer:
             stats = self.metrics_over_generation(g_min, g_max, g_step)
 
         for m in metrics:
-            assert m in ACCEPTED_METRICS, f'Unknown metric \'{m}\''
+            assert m in self._accepted_metrics, f'Unknown metric \'{m}\''
             values = stats['generations'].to_list(), stats[m].to_list()
             plt.plot(*values, label=m)
 
@@ -248,7 +251,62 @@ class ScoreAnalyzer:
             plt.show()
         plt.clf()
 
+    def default_threshold(self):
+        return self._scores.max() - (self._scores.max() - self._scores.min()) * 0.15
 
+    def over_generation_utility_path(self, threshold):
+        o_dir = self._utility_output_dir
+        create_directory(o_dir)
+        return os.path.join(o_dir, f'{threshold}.tsv')
+
+    def over_generation_utility(self, threshold: float = None, gen_min: int = None, gen_max: int = None, gen_step: int = None, show = False, store_plot = False, store = True):
+
+        g_min, g_max, g_step = self.default_generation_values(gen_min, gen_max, gen_step)
+
+        if threshold is None:
+            threshold = self.default_threshold()
+        th = threshold
+
+        o_dir = self._utility_output_dir
+        create_directory(o_dir)
+
+        result = []
+        generations = list(range(g_min, g_max, g_step))
+        for g in generations:
+            scores = self.score_object(self._score_values, generations=g)
+            result.append(scores.values_over_threshold(thresh=th))
+        stats = pd.DataFrame(zip(generations, result), columns=['generations', 'optimal_scores'])
+
+        if store_plot or show:
+            plt.plot(generations, result)
+
+        if store_plot:
+            plot_file = os.path.join(self._utility_output_dir, f'plot_{threshold}')
+            plt.savefig(plot_file)
+            print(f'Plot stored at \'{plot_file}\'')
+
+        if show:
+            plt.show()
+
+        if store:
+            o_file = self.over_generation_utility_path(threshold=th)
+            stats.to_csv(o_file, sep='\t', index=False, decimal=',')
+            print(f'Values of threshold file stored at \'{o_file}\'')
+
+        plt.clf()
+        return stats
+
+    def compare_metric_with_manhattan(self, generations: int = None):
+
+        manhattan_score_values = self.load_score_values(score_type='manhattan')
+
+        # associate to each score the corresponding manhattan distance score
+        score_and_man = [(s, manhattan_score_values[k]) for k, s in score_values.items() if k in manhattan_score_values]
+        score_and_man = sorted(score_and_man, key=lambda x: x[0])
+
+        #TODO: finire questa e aggiungere a tutti i plot creati le label, così quando li apriamo ci ricordiamo
+        # di cosa si parla
+        # una volta finita questa funzione cancellare tutte le funzioni esterne
 # def score_distribution(dataset_name: str, data_type: str, score_type: str, eps: str, decimal: int, show=False,
 #                        store=False):
 #     d_name = dataset_name
@@ -390,48 +448,47 @@ class ScoreAnalyzer:
 #
 #     if show:
 #         plt.show()
-
-
-def over_generation_utility(dataset_name, data_type, score_type, eps,
-                            threshold: float, gen_min: int, gen_max: int, gen_step: int):
-    d_name = dataset_name
-    d_type = data_type
-    s_type = score_type
-    eps = eps
-    th = threshold
-    g_min = gen_min
-    g_max = gen_max
-    g_step = gen_step
-
-    stats_output_path = metrics_over_generations_path(d_name, d_type, g_min, g_max, g_step)
-
-    score_loader = ScoreLoader(dataset_name=d_name,
-                               dataset_type=d_type,
-                               score_type=s_type,
-                               eps=eps)
-    score_values = score_loader.load()
-
-    result = []
-    generations = list(range(g_min, g_max, g_step))
-    for g in generations:
-        scores = Score(score_values,
-                       dataset_name=d_name,
-                       dataset_type=d_type,
-                       score_type=s_type,
-                       eps=eps,
-                       generations=g)
-        result.append(scores.values_over_threshold(thresh=th))
-
-    stats = pd.DataFrame(zip(generations, result), columns=['generations', ''])
-
-    plt.plot(generations, result)
-    plt.show()
-
-    stats_output_path = threshold_over_generations_path(d_name, d_type, g_min, g_max, g_step)
-    stats.to_csv(stats_output_path, sep='\t', index=False, decimal=',')
-    print(f'Values of threshold file stored at \'{stats_output_path}\'')
-    return stats
-
+#
+# def over_generation_utility(dataset_name, data_type, score_type, eps,
+#                             threshold: float, gen_min: int, gen_max: int, gen_step: int):
+#     d_name = dataset_name
+#     d_type = data_type
+#     s_type = score_type
+#     eps = eps
+#     th = threshold
+#     g_min = gen_min
+#     g_max = gen_max
+#     g_step = gen_step
+#
+#     stats_output_path = metrics_over_generations_path(d_name, d_type, g_min, g_max, g_step)
+#
+#     score_loader = ScoreLoader(dataset_name=d_name,
+#                                dataset_type=d_type,
+#                                score_type=s_type,
+#                                eps=eps)
+#     score_values = score_loader.load()
+#
+#     result = []
+#     generations = list(range(g_min, g_max, g_step))
+#     for g in generations:
+#         scores = Score(score_values,
+#                        dataset_name=d_name,
+#                        dataset_type=d_type,
+#                        score_type=s_type,
+#                        eps=eps,
+#                        generations=g)
+#         result.append(scores.values_over_threshold(thresh=th))
+#
+#     stats = pd.DataFrame(zip(generations, result), columns=['generations', ''])
+#
+#     plt.plot(generations, result)
+#     plt.show()
+#
+#     stats_output_path = threshold_over_generations_path(d_name, d_type, g_min, g_max, g_step)
+#     stats.to_csv(stats_output_path, sep='\t', index=False, decimal=',')
+#     print(f'Values of threshold file stored at \'{stats_output_path}\'')
+#     return stats
+#
 
 def compare_metric_with_manhattan(dataset_name, data_type, score_type: list, eps, generations: int = None):
     d_name = dataset_name
@@ -487,6 +544,7 @@ def compare_metric_with_manhattan(dataset_name, data_type, score_type: list, eps
 # da fare: vedere come varia il numero di valori oltre una certa soglia al crescere delle generazioni
 
 analyzer = ScoreAnalyzer(dataset_name='facebook_books', data_type='clean', score_type='jaccard', eps='2.0')
-analyzer.score_distribution(decimal=4, plot=True, store_plot=True, store_stats=True)
-analyzer.metrics_over_generation()
-analyzer.plot_metrics_over_generation(metrics=['std'], store=True, show=True)
+# analyzer.score_distribution(decimal=4, plot=True, store_plot=True, store_stats=True)
+# analyzer.metrics_over_generation()
+# analyzer.plot_metrics_over_generation(metrics=['std'], store=True, show=True)
+analyzer.over_generation_utility(show=True)
