@@ -16,6 +16,7 @@ class Binarize(Filter):
         self._binary_threshold = threshold
 
     def filter_engine(self):
+        print(f'{self.__class__.__name__}: {self._binary_threshold} threshold')
         n_ratings = len(self._dataset)
         print(f'{self.__class__.__name__}: {n_ratings} transactions found')
         retained = self._dataset.r >= self._binary_threshold

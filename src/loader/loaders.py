@@ -44,12 +44,10 @@ class TsvLoader:
     def _load_crs(self, data):
         return csr_matrix(data.pivot(index=0, columns=1, values=2).fillna(0))
 
-    def find_the_right_path(self, path, relative_directory=None, main_directory=None):
+    def find_the_right_path(self, path, relative_directory: str = None, main_directory: str = None) -> str:
 
-        if relative_directory is None:
-            relative_directory = ''
-        if main_directory is None:
-            main_directory = ''
+        relative_directory = (relative_directory or '')
+        main_directory = (main_directory or '')
 
         for p in [path, relative_directory, main_directory]:
             assert isinstance(p, str), f'must be a string. Found {p} with type {type(p)}'
@@ -78,7 +76,7 @@ class ScoreLoader:
                                           score_type=score_type,
                                           eps_rr=eps)
 
-    def load(self):
+    def load(self) -> dict:
         score_path = scores_file_path(self._score_dir)
         with open(score_path, 'rb') as file:
             scores = pickle.load(file)
