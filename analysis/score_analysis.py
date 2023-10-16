@@ -7,50 +7,6 @@ from src.loader.paths import create_directory
 from src.dataset.dataset import DPDataFrame
 
 
-# def score_to_dataframe(scores: list, decimal: int = 4) -> pd.DataFrame:
-#     scores = [round(s, decimal) for s in scores]
-#     count_scores = Counter(scores)
-#     ordered_scores = sorted(scores)
-#     count_ordered_scores = {k: count_scores[k] for k in ordered_scores}
-#     return pd.DataFrame(data=count_ordered_scores.items(), columns=['score', 'freq'])
-
-
-# def score_discretize_and_count(score: Score, decimal: int = 4) -> (list, list):
-#     rounded_scores = np.round(score.data, decimal)
-#     count_scores = Counter(rounded_scores)
-#     ordered_scores = sorted(rounded_scores)
-#     count_ordered_scores = {k: count_scores[k] for k in ordered_scores}
-#     return list(count_ordered_scores.keys()), list(count_ordered_scores.values())
-
-
-# def show_plot(discrete_scores) -> None:
-#
-#     plt.plot(*discrete_scores)
-#     plt.show()
-#
-#
-# def store_plot(scores: Score, discrete_scores: tuple,
-#                decimal: int, output_dir: str, debug: bool = True) -> None:
-#
-#     plt.plot(*discrete_scores)
-#     output_file = os.path.join(output_dir, scores.score_name(decimal) + '.png')
-#     plt.savefig(output_file)
-#
-#     if debug:
-#         print(f'Plot stored at \'{output_file}\'')
-
-
-# def score_plot(score: Score, decimal: int = 4):
-#     rounded_scores = np.round(score.data, decimal)
-#     count_scores = Counter(rounded_scores)
-#     ordered_scores = sorted(rounded_scores)
-#     count_ordered_scores = {k: count_scores[k] for k in ordered_scores}
-#     x = plt.plot(list(count_ordered_scores.keys()),
-#                  list(count_ordered_scores.values()))
-#     plt.show()
-#     return x
-
-
 class ScoreAnalyzer:
     def __init__(self, dataset_name: str, data_type: str, score_type: str, eps: str):
         self._dataset_name = dataset_name

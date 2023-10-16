@@ -6,6 +6,7 @@ RESULT_DIR = os.path.join(PROJECT_PATH, 'results')
 GENERATED_DIR = os.path.join(PROJECT_PATH, 'generated')
 METRIC_DIR = os.path.join(PROJECT_PATH, 'metrics')
 CONFIG_DIR = os.path.join(PROJECT_PATH, 'config_files')
+ANALYSIS_DIR = os.path.join(PROJECT_PATH, 'score_analysis')
 RAW_DATA_FOLDER = 'data'
 DATASET_NAME = 'dataset.tsv'
 DATASET_NAME_BY_TYPE = {
@@ -141,7 +142,7 @@ def create_score_directory(dataset_name, eps_rr, dataset_type, score_type):
 
 
 def score_analysis_dir(dataset_name, dataset_type):
-    return os.path.join(RESULT_DIR, 'score_analysis', dataset_name, dataset_type)
+    return os.path.join(ANALYSIS_DIR, dataset_name, dataset_type)
 
 
 def metrics_name(dataset_name, data_type):
