@@ -136,7 +136,7 @@ class ScoreAnalyzer:
             stats.to_csv(output_file, sep='\t', index=False, decimal=',')
             print(f'Stats stored at \'{output_file}\'')
 
-    def score_distribution(self, decimal: int, plot: bool = True, store_plot: bool = False,
+    def score_distribution(self, decimal: int, show: bool = True, store_plot: bool = False,
                            store_stats: bool = False) -> None:
 
         discrete_scores = self.discrete_scores(decimal=decimal)
@@ -146,29 +146,28 @@ class ScoreAnalyzer:
         if store_stats or store_plot:
             create_directory(o_dir)
 
-        if plot or store_plot:
+        if show or store_plot:
             plt.clf()
             plt.plot(x, y)
             plt.title("Score Distribution")
             plt.xlabel("scores")
             plt.ylabel("number of datasets")
-            plt.show()
-            plt.clf()
 
         if store_plot:
-            if not plot:
-                plt.clf()
-                plt.plot(x, y)
-
-            output_file = os.path.join(o_dir, self._score_type + f'_{decimal}' + '.png')
+            output_file = os.path.join(o_dir, f'{self._score_type}_eps_{self._eps}_dec_{decimal}.png')
             plt.savefig(output_file)
             print(f'Plot stored at \'{output_file}\'')
+            plt.clf()
+
+        if show:
+            plt.show()
             plt.clf()
 
         if store_stats:
             metrics = [self._dataset_name, self._data_type, self._eps,
                        self.dataset.transactions, self.dataset.size, self._score_type,
-                       len(self._scores), self._scores.min(), self._scores.max(), self._scores.mean(), self._scores.std()]
+                       len(self._scores), self._scores.min(), self._scores.max(),
+                       self._scores.mean(), self._scores.std()]
             self.store_distribution_metrics(metrics)
 
     def metrics_generation_path(self, gen_min: int, gen_max: int, gen_step: int) -> str:
@@ -176,7 +175,7 @@ class ScoreAnalyzer:
         o_dir = self._metrics_over_generation_output_dir
         create_directory(o_dir)
 
-        return os.path.join(o_dir, f'{self._score_type}_{self._eps}_{gen_min}->{gen_max}-{gen_step}.tsv')
+        return os.path.join(o_dir, f'generations_{gen_min}_to_{gen_max}-{gen_step}.tsv')
 
     def default_generation_values(self, gen_min: int, gen_max: int, gen_step: int) -> (int, int, int):
 
@@ -224,7 +223,7 @@ class ScoreAnalyzer:
         return stats
 
     def plot_metrics_over_generation(self, metrics: list, gen_min: int = None, gen_max: int = None,
-                                     gen_step: int = None, show: bool = False, store: bool = False) -> None:
+                                     gen_step: int = None, show: bool = False, store_plot: bool = False) -> None:
 
         g_min, g_max, g_step = self.default_generation_values(gen_min, gen_max, gen_step)
 
@@ -248,11 +247,12 @@ class ScoreAnalyzer:
             plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), ncol=1)
             plt.tight_layout()
 
-        if store:
+        if store_plot:
             # output directory
             o_dir = self._metrics_over_generation_output_dir
             # output file
-            o_file = os.path.join(o_dir, f'plot_{self._score_type}_{self._eps}_{g_min}->{g_max}-{g_step}.png')
+            o_file = os.path.join(o_dir,
+                                  f'{self._score_type}_eps_{self._eps}_{"_".join(metrics)}_{g_min}_to_{g_max}-{g_step}.png')
             plt.savefig(o_file)
             print(f'Image stored at \'{o_file}\'')
 
@@ -266,11 +266,11 @@ class ScoreAnalyzer:
     def over_generation_utility_path(self, threshold: float) -> str:
         o_dir = self._utility_output_dir
         create_directory(o_dir)
-        return os.path.join(o_dir, f'{threshold}.tsv')
+        return os.path.join(o_dir, f'{self._score_type}_eps_{self._eps}_th_{threshold}.tsv')
 
     def over_generation_utility(self, threshold: float = None, gen_min: int = None, gen_max: int = None,
                                 gen_step: int = None, show: bool = False, store_plot: bool = False,
-                                store: bool = True) -> pd.DataFrame:
+                                store_stats: bool = True) -> pd.DataFrame:
 
         g_min, g_max, g_step = self.default_generation_values(gen_min, gen_max, gen_step)
 
@@ -294,14 +294,14 @@ class ScoreAnalyzer:
             plt.plot(generations, result)
 
         if store_plot:
-            plot_file = os.path.join(self._utility_output_dir, f'plot_{threshold}')
+            plot_file = os.path.join(self._utility_output_dir, f'{self._score_type}_eps_{self._eps}_th_{threshold}.png')
             plt.savefig(plot_file)
             print(f'Plot stored at \'{plot_file}\'')
 
         if show:
             plt.show()
 
-        if store:
+        if store_stats:
             o_file = self.over_generation_utility_path(threshold=th)
             stats.to_csv(o_file, sep='\t', index=False, decimal=',')
             print(f'Values of threshold file stored at \'{o_file}\'')
@@ -349,7 +349,8 @@ class ScoreAnalyzer:
             plt.tight_layout()
 
         if store_plot:
-            plot_file = os.path.join(self._compare_metric_with_manhattan_output_dir, f'plot_{self._eps}')
+            plot_file = os.path.join(self._compare_metric_with_manhattan_output_dir,
+                                     f'{self._score_type}_eps_{self._eps}.png')
             plt.savefig(plot_file)
             print(f'Plot stored at \'{plot_file}\'')
 
@@ -358,18 +359,13 @@ class ScoreAnalyzer:
 
         if store_stats:
             corr = np.corrcoef(x, y)[0][1]
-            stats = pd.DataFrame({'score1': f'{self._score_type}', 'score2': 'manhattan',
-                                  'correlation': corr, 'eps': self._eps}, index=[0])
-            self.store_metrics_corr(data=stats, file_name=self._score_type)
+            data = [self._dataset_name, self._data_type, self._eps, self._score_type, corr]
+            stats = pd.DataFrame([data],
+                                 columns=['dataset_name', 'data_type', 'eps', 'score_type', 'correlation'])
+            self.store_metrics_corr(data=stats, file_name='correlation_manhattan')
 
         plt.clf()
 
         print(f'{len(score_and_man)} scores have been paired with the corresponding manhattan distance')
 
 
-analyzer = ScoreAnalyzer(dataset_name='facebook_books', data_type='clean', score_type='jaccard', eps='2.0')
-# analyzer.compare_metric_with_manhattan(log=True, store_stats=True)
-# analyzer.score_distribution(decimal=4, plot=True, store_plot=False, store_stats=False)
-# analyzer.metrics_over_generation()
-# analyzer.plot_metrics_over_generation(metrics=['std'], store=False, show=True)
-# analyzer.over_generation_utility(show=True)

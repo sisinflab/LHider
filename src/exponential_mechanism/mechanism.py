@@ -17,14 +17,14 @@ class ExponentialMechanism:
     def probabilities(self, output):
         exponent = (self.eps * self.scores(output)) / (2 * self.sensitivity)
 
-        # exponent = exponent.tolist()
-        # exponent = [Decimal(e) for e in exponent]
-        # probabilities = [np.exp(e) for e in exponent]
-        # total = sum(probabilities)
-        # probabilities = [p / total for p in probabilities]
+        exponent = exponent.tolist()
+        exponent = [Decimal(e) for e in exponent]
+        probabilities = [np.exp(e) for e in exponent]
+        total = sum(probabilities)
+        probabilities = [p / total for p in probabilities]
 
-        probabilities = np.exp(exponent)
-        probabilities = probabilities / np.sum(probabilities)
+        # probabilities = np.exp(exponent)
+        # probabilities = probabilities / np.sum(probabilities)
         return probabilities
 
     def privatize(self, output, probs=None):

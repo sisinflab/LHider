@@ -51,7 +51,8 @@ def run(args: dict):
     # path of the folder containing the scores
     scores_type = args['score_type']
     scorer = SCORERS[scores_type](np.array(data.dataset.todense()))
-    scores_dir = score_directory(dataset_name=dataset_name, eps_rr=eps_rr, score_type=scores_type, dataset_type=dataset_type)
+    scores_dir = score_directory(dataset_name=dataset_name, eps_rr=eps_rr,
+                                 score_type=scores_type, dataset_type=dataset_type)
     scores_path = scores_file_path(scores_dir=scores_dir)
 
     # transform privacy budget value in a feedback change probability for the LHider mechanism
@@ -62,7 +63,8 @@ def run(args: dict):
         print(f'Selected a dataset with score {c_score} and seed {c_seed}')
         gen_dataset = generate(data=data, change_probability=change_prob, seed=c_seed - GLOBAL_SEED)
         gen_dataframe = pd.DataFrame(zip(gen_dataset.nonzero()[0], gen_dataset.nonzero()[1]))
-        result_path = generated_result_path(data_name=data.name, type=dataset_type, score_type=scores_type, eps_rr=eps_rr, eps_exp=eps_)
+        result_path = generated_result_path(data_name=data.name, type=dataset_type, score_type=scores_type,
+                                            eps_rr=eps_rr, eps_exp=eps_)
         gen_dataframe.to_csv(result_path, sep='\t', header=False, index=False)
         print(f'Dataset stored at: \'{result_path}\'')
 

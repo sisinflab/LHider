@@ -1,29 +1,25 @@
-import pandas as pd
-from src.loader.paths import metrics_path
-from analysis.score_analysis import  compute_metrics
+from analysis.score_analysis import ScoreAnalyzer
 
-datasets = ['facebook_books']
+datasets = ['facebook_books', 'yahoo_movies']
 data_types = ['clean']
 # score_types = ['jaccard', 'euclidean', 'manhattan']
-score_types = ['jaccard']
-# epss = ['1.0']
+score_types = ['jaccard', 'euclidean', 'manhattan']
 epss = ['0.5', '1.0', '2.0', '3.0', '5.0', '10.0']
+# epss = ['0.5', '1.0', '2.0', '3.0', '5.0', '10.0']
 decimals = [3]
-#generations = list(range(100, 100000, 100))
-generations = [None]
+metrics = ['min', 'max', 'mean', 'std']
 
-result = []
 for d in datasets:
     for d_t in data_types:
         for s_t in score_types:
             for e in epss:
-                metrics = []
                 for dec in decimals:
-                    metrics += compute_metrics(dataset_name=d, data_type=d_t, score_type=s_t, eps=e, decimal=dec)
-                    result.append(metrics)
+                    analyzer = ScoreAnalyzer(dataset_name=d, data_type=d_t, score_type=s_t,
+                                             eps=e)
+                    analyzer.compare_metric_with_manhattan(store_plot=True, store_stats=True)
+                    analyzer.over_generation_utility(store_plot=True, store_stats=True)
+                    analyzer.score_distribution(decimal=dec, store_plot=True, store_stats=True)
+                    analyzer.metrics_over_generation(store_stats=True)
 
-        stats = pd.DataFrame(result, columns=['dataset', 'data_type', 'eps', 'transactions', 'size',
-                                              'score_type', 'n_scores', 'min', 'max', 'mean', 'std'])
-        stats_path = metrics_path(dataset_name=d, data_type=d_t)
-        stats.to_csv(stats_path, sep='\t', index=False, decimal=',')
-        print(f'Metrics stored at \'{stats_path}\' for {d} type {d_t}')
+                    for m in metrics:
+                        analyzer.plot_metrics_over_generation(metrics=[m], store_plot=True)
