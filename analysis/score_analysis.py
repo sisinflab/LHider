@@ -1,7 +1,4 @@
 import math
-
-import numpy as np
-import pandas as pd
 from matplotlib import pyplot as plt
 from collections import Counter
 from src.loader.loaders import *
@@ -369,13 +366,9 @@ class ScoreAnalyzer:
 
         print(f'{len(score_and_man)} scores have been paired with the corresponding manhattan distance')
 
-# TODO: finire questa e aggiungere a tutti i plot creati le label, così quando li apriamo ci ricordiamo di cosa si parla
-# TODO: una volta finita questa funzione cancellare tutte le funzioni esterne
-
 
 analyzer = ScoreAnalyzer(dataset_name='facebook_books', data_type='clean', score_type='jaccard', eps='2.0')
 # analyzer.compare_metric_with_manhattan(log=True, store_stats=True)
-
 # analyzer.score_distribution(decimal=4, plot=True, store_plot=False, store_stats=False)
 # analyzer.metrics_over_generation()
 # analyzer.plot_metrics_over_generation(metrics=['std'], store=False, show=True)

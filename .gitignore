@@ -5,3 +5,9 @@
 /VirtualEnvironment
 /metrics
 /config_files
+/data
+
+!/data/*/dataset.tsv
+!/data/*/train.tsv
+!/data/*/test.tsv
+!/data/*/data

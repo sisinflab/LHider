@@ -55,3 +55,5 @@ urllib3==1.26.13
 Werkzeug==2.2.2
 wrapt==1.14.1
 zipp==3.11.0
+matplotlib~=3.7.1
+argparse~=1.4.0
