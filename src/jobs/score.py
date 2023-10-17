@@ -41,7 +41,7 @@ def run(args: dict):
     if random_gen:
         scores_folder = create_score_directory(d_name, "random", d_type, score_type)
     else:
-        scores_folder = create_score_directory(d_name, f'eps_{eps}', d_type, score_type)
+        scores_folder = create_score_directory(d_name, eps, d_type, score_type)
 
     # loading files
     loader = TsvLoader(path=d_path, return_type="csr")

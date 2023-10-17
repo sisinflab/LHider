@@ -1,4 +1,6 @@
 import math
+
+import pandas as pd
 from matplotlib import pyplot as plt
 from collections import Counter
 from src.loader.loaders import *
@@ -114,6 +116,10 @@ class ScoreAnalyzer:
             plt.savefig(output_file)
             print(f'Plot stored at \'{output_file}\'')
             plt.clf()
+            output_file = os.path.join(o_dir, f'{self._score_type}_eps_{self._eps}_dec_{decimal}.tsv')
+            df = pd.DataFrame(zip(x, y), columns=["score", "freq"]).sort_values(["score"])
+            print(f'Score frequency stored at \'{output_file}\'')
+            df.to_csv(output_file, sep="\t")
 
         if show:
             plt.show()
