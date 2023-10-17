@@ -122,8 +122,7 @@ def score_directory(dataset_name, eps_rr, dataset_type, score_type):
     @param score_type: type of score (manhattan, euclidean, ...)
     @return: path of the directory containing the scores
     """
-    eps = f'eps_{eps_rr}'
-    folder_path = os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'scores', dataset_type, score_type, eps))
+    folder_path = os.path.abspath(os.path.join(DATA_DIR, dataset_name, 'scores', dataset_type, score_type, eps_rr))
     return folder_path
 
 

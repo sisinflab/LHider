@@ -5,7 +5,7 @@ from src.loader import *
 from src.loader.paths import *
 from src.dataset.dataset import *
 from src.exponential_mechanism.scores import *
-from src.randomize_response.mechanism import RandomizeResponse
+from src.randomize_response.mechanism import RandomizeResponse, RandomGenerator
 
 
 def run(args: dict):
@@ -20,6 +20,9 @@ def run(args: dict):
     # check the fundamental directories
     check_main_directories()
 
+    # for random generation of dataset
+    random_gen = args['random']
+
     # paths
     d_name = args['dataset']
     d_type = args['type']
@@ -28,12 +31,17 @@ def run(args: dict):
     # privacy budget and change probability
     # probability of making a change in the dataset based on the privacy budget
     # prob = frac{1, (1 + e^{eps})}
+
     eps = float(args['eps'])
     change_prob = 1 / (1 + math.exp(eps))
 
     print(f'Change probability: {change_prob}')
     score_type = args['score_type']
-    scores_folder = create_score_directory(d_name, eps, d_type, score_type)
+
+    if random_gen:
+        scores_folder = create_score_directory(d_name, "random", d_type, score_type)
+    else:
+        scores_folder = create_score_directory(d_name, f'eps_{eps}', d_type, score_type)
 
     # loading files
     loader = TsvLoader(path=d_path, return_type="csr")
@@ -45,15 +53,14 @@ def run(args: dict):
     # dataset in np.array for score computation
     data = np.array(dataset.dataset.todense())
 
-
     # generation parameters
     base_seed, start, end, batch, n_procs = args['base_seed'], args['start'], args['end'], args['batch'], args['proc']
     assert end >= start
 
     if n_procs > 1:
-        run_batch_mp(data, change_prob, score_type, base_seed, start, end, batch, scores_folder, n_procs)
+        run_batch_mp(data, change_prob, score_type, base_seed, start, end, batch, scores_folder, n_procs, random_gen)
     else:
-        run_batch(data, change_prob, score_type, base_seed, start, end, batch, scores_folder)
+        run_batch(data, change_prob, score_type, base_seed, start, end, batch, scores_folder, random_gen)
 
 
 def compute_score(a: np.ndarray, b: np.ndarray, score_type: str) -> np.ndarray:
@@ -68,7 +75,7 @@ def gen_and_score(data: np.ndarray, randomizer: RandomizeResponse, score_type: s
 
 
 def run_batch(data: np.ndarray, change_probability: float, score_type: str, base_seed: int,
-              start: int, end: int, batch: int, result_dir: str):
+              start: int, end: int, batch: int, result_dir: str, random_gen: bool = False):
     # check start and end
     assert end >= start
     assert batch > 0
@@ -78,7 +85,11 @@ def run_batch(data: np.ndarray, change_probability: float, score_type: str, base
                for incremental_seed in range(base_seed + start, base_seed + end, batch))
 
     # create randomizer class
-    randomizer = RandomizeResponse(change_probability=change_probability, base_seed=base_seed)
+    if random_gen:
+        randomizer = RandomGenerator(base_seed=base_seed)
+    else:
+        randomizer = RandomizeResponse(change_probability=change_probability, base_seed=base_seed)
+
     batch_paths = []
 
     # compute all the batches - batch start and batch end are absolute seeds
@@ -106,7 +117,7 @@ def run_batch(data: np.ndarray, change_probability: float, score_type: str, base
 
 
 def run_batch_mp(data: np.ndarray, change_prob: float, score_type: str, seed: int,
-                 start: int, end: int, batch: int, result_dir: str, n_procs: int):
+                 start: int, end: int, batch: int, result_dir: str, n_procs: int, random_gen: bool = False):
     print('Running multiprocessing batch')
     print(f'Num processes: {n_procs}')
     print(f'Scores will be stored at \'{result_dir}\'')
@@ -122,7 +133,7 @@ def run_batch_mp(data: np.ndarray, change_prob: float, score_type: str, seed: in
     for path in procs_path:
         if not os.path.exists(path):
             os.makedirs(path)
-    args = ((data, change_prob, score_type, seed, b[0], b[1], batch, path)
+    args = ((data, change_prob, score_type, seed, b[0], b[1], batch, path, random_gen)
             for b, path in zip(procs_batches, procs_path))
 
     with mp.Pool(n_procs) as pool:

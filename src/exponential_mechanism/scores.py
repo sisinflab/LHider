@@ -21,7 +21,6 @@ class ScoreFunction:
         assert self.max, f'max value is not defined for {self.__class__.__name__} class'
         return score / self.max
 
-
     def __call__(self, x):
         return self.score_function(x)
 

@@ -16,6 +16,7 @@ if __name__ == "__main__":
     parser.add_argument('--end', required=False, type=int, default=100)
     parser.add_argument('--batch', required=False, type=int, default=10)
     parser.add_argument('--proc', required=False, default=mp.cpu_count()-1, type=int)
+    parser.add_argument('--random', action='store_true')
     parser.add_argument('--mail', action='store_true')
     args = parser.parse_args()
 

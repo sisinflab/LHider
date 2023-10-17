@@ -2,10 +2,18 @@ import numpy as np
 from scipy.sparse import csr_matrix
 
 
-class RandomizeResponse:
+class Generator:
+    def __init__(self, base_seed: int = 42):
+        self._base_seed = base_seed
+
+    def privatize_np(self, input_data: np.array, relative_seed: int = 0) -> np.ndarray:
+        pass
+
+
+class RandomizeResponse(Generator):
     def __init__(self, change_probability: float, base_seed: int = 42):
         self._change_probability = change_probability
-        self._base_seed = base_seed
+        super().__init__(base_seed)
 
     def privatize(self, input_data: csr_matrix, relative_seed: int = 0) -> csr_matrix:
         seed = self._base_seed + relative_seed
@@ -27,3 +35,14 @@ class RandomizeResponse:
         mask = np.random.choice([0, 1], p=[1 - self._change_probability, self._change_probability],
                                 size=input_data.shape)
         return np.logical_xor(input_data, mask).astype(int)
+
+
+class RandomGenerator(Generator):
+    def __init__(self, base_seed: int = 42):
+        super().__init__(base_seed)
+
+    def privatize_np(self, input_data: np.array, relative_seed: int = 0) -> np.ndarray:
+        data_seed = self._base_seed + relative_seed
+        np.random.seed(data_seed)
+        return np.random.randint(0, 2, size=input_data.shape)
+
