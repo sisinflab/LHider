@@ -86,12 +86,12 @@ class ScoreAnalyzer:
                                                  'score_type', 'generations', 'min', 'max', 'mean', 'std'])
 
         if os.path.exists(output_file):
-            stored_data = pd.read_csv(output_file, sep='\t', header=0, decimal=',')
+            stored_data = pd.read_csv(output_file, sep='\t', header=0)
             if not (np.array(stats) == stored_data.values).all(1).any():
-                pd.concat([stored_data, stats]).to_csv(output_file, sep='\t', index=False, decimal=',')
+                pd.concat([stored_data, stats]).to_csv(output_file, sep='\t', index=False)
                 print(f'Updated stats stored at \'{output_file}\'')
         else:
-            stats.to_csv(output_file, sep='\t', index=False, decimal=',')
+            stats.to_csv(output_file, sep='\t', index=False)
             print(f'Stats stored at \'{output_file}\'')
 
     def score_distribution(self, decimal: int, show: bool = True, store_plot: bool = False,
@@ -110,6 +110,7 @@ class ScoreAnalyzer:
             plt.title("Score Distribution")
             plt.xlabel("scores")
             plt.ylabel("number of datasets")
+            plt.tight_layout()
 
         if store_plot:
             output_file = os.path.join(o_dir, f'{self._score_type}_eps_{self._eps}_dec_{decimal}.png')
@@ -119,7 +120,7 @@ class ScoreAnalyzer:
             output_file = os.path.join(o_dir, f'{self._score_type}_eps_{self._eps}_dec_{decimal}.tsv')
             df = pd.DataFrame(zip(x, y), columns=["score", "freq"]).sort_values(["score"])
             print(f'Score frequency stored at \'{output_file}\'')
-            df.to_csv(output_file, sep="\t")
+            df.to_csv(output_file, sep="\t", index=False)
 
         if show:
             plt.show()
@@ -177,7 +178,7 @@ class ScoreAnalyzer:
         # output file
         if store_stats:
             o_file = self.metrics_generation_path(g_min, g_max, g_step)
-            stats.to_csv(o_file, sep='\t', index=False, decimal=',')
+            stats.to_csv(o_file, sep='\t', index=False)
             print(f'Metrics file stored at \'{o_file}\'')
         else:
             print(stats)
@@ -192,7 +193,7 @@ class ScoreAnalyzer:
         stats_path = self.metrics_generation_path(g_min, g_max, g_step)
 
         if os.path.exists(stats_path):
-            stats = pd.read_csv(stats_path, sep='\t', decimal=',', header=0)
+            stats = pd.read_csv(stats_path, sep='\t', header=0)
         else:
             stats = self.metrics_over_generation(g_min, g_max, g_step)
 
@@ -265,7 +266,7 @@ class ScoreAnalyzer:
 
         if store_stats:
             o_file = self.over_generation_utility_path(threshold=th)
-            stats.to_csv(o_file, sep='\t', index=False, decimal=',')
+            stats.to_csv(o_file, sep='\t', index=False)
             print(f'Values of threshold file stored at \'{o_file}\'')
 
         plt.clf()
@@ -279,12 +280,12 @@ class ScoreAnalyzer:
         output_file = os.path.join(o_dir, f'{file_name}.tsv')
 
         if os.path.exists(output_file):
-            stored_data = pd.read_csv(output_file, sep='\t', header=0, decimal=',')
+            stored_data = pd.read_csv(output_file, sep='\t', header=0)
             if not stored_data.equals(data):
-                pd.concat([stored_data, data]).to_csv(output_file, sep='\t', index=False, decimal=',')
+                pd.concat([stored_data, data]).to_csv(output_file, sep='\t', index=False)
                 print(f'Updated stats stored at \'{output_file}\'')
         else:
-            data.to_csv(output_file, sep='\t', index=False, decimal=',')
+            data.to_csv(output_file, sep='\t', index=False)
             print(f'Stats stored at \'{output_file}\'')
 
     def compare_metric_with_manhattan(self, log: bool = False, show: bool = False,

@@ -6,6 +6,7 @@
 /metrics
 /config_files
 /data
+/score_analysis
 
 !/data/*/dataset.tsv
 !/data/*/train.tsv
