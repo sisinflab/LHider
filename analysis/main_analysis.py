@@ -1,12 +1,12 @@
 from analysis.score_analysis import ScoreAnalyzer
 
-datasets = ['facebook_books', 'yahoo_movies']
+datasets = ['facebook_books']
 data_types = ['clean']
+score_types = ['jaccard']
 # score_types = ['jaccard', 'euclidean', 'manhattan']
-score_types = ['jaccard', 'euclidean', 'manhattan']
-epss = ['0.5', '1.0', '2.0', '3.0', '5.0', '10.0', "random"]
-# epss = ['random']
-decimals = [4]
+# epss = ['0.5', '1.0', '2.0', '3.0', '5.0', '10.0', "random"]
+epss = ['10.0']
+decimals = [6]
 metrics = ['min', 'max', 'mean', 'std']
 
 for d in datasets:
