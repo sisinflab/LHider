@@ -358,7 +358,7 @@ class DPDataFrame(Dataset):
     @property
     def density(self):
         if self._density is None:
-            self._density = self.transactions / (self._n_users * self._n_items)
+            self._density = self.transactions / (self.n_users * self.n_items)
         return self._density
 
     @property
@@ -371,7 +371,7 @@ class DPDataFrame(Dataset):
     def gini_item(self):
 
         def gini_item_term():
-            return (self._n_items + 1 - idx) / (self._n_items + 1) * self.sorted_items[item] / self._transactions
+            return (self.n_items + 1 - idx) / (self.n_items + 1) * self.sorted_items[item] / self._transactions
 
         gini_terms = 0
         for idx, (item, ratings) in enumerate(self.sorted_items.items()):
@@ -384,7 +384,7 @@ class DPDataFrame(Dataset):
     def gini_user(self):
 
         def gini_user_term():
-            return (self._n_users + 1 - idx) / (self._n_users + 1) * self.sorted_users[user] / self._transactions
+            return (self.n_users + 1 - idx) / (self.n_users + 1) * self.sorted_users[user] / self._transactions
 
         gini_terms = 0
         for idx, (user, ratings) in enumerate(self.sorted_users.items()):
@@ -529,6 +529,9 @@ class DPCrsMatrix(Dataset):
 
     def to_crs(self):
         return self.dataset
+
+    def to_dense(self):
+        return self.dataset.todense()
 
 
 class DPDataset:

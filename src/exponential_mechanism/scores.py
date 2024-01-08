@@ -100,6 +100,21 @@ class MatrixItemCosineSimilarity(ScoreFunction):
                        / (np.sum(self.data.T * self.data.T, axis=1) ** .5 * np.sum((x.T * x.T), axis=1) ** .5))
 
 
+class ManhattanDistance(ScoreFunction):
+    def __init__(self, data):
+        super(ManhattanDistance, self).__init__(data)
+        self.sensitivity = 1 / self.data.size
+        self.max = self.data.size
+
+    def __str__(self):
+        return 'manhattan_distance'
+
+    def score_function(self, x):
+        scores = np.sum(np.abs(self.data - x))
+        normalized_scores = self.normalize(scores)
+        return 1 - normalized_scores
+
+
 class MatrixManhattanDistance(ScoreFunction):
     def __init__(self, data):
         super(MatrixManhattanDistance, self).__init__(data)

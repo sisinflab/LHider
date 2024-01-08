@@ -35,6 +35,7 @@ class TsvLoader:
 
     def load(self):
         data = pd.read_csv(self.path, sep='\t', header=self.header, names=self.names)
+        print(f'Dataset loaded from \'{self.path}\'')
         return_function = self._return_functions[self._return_type]
         return return_function(data)
 
