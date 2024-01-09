@@ -35,7 +35,8 @@ def run(args: dict, **kwargs):
     mech = LHider(randomizer=randomizer,
                   n=args['reps'],
                   score='manhattan',
-                  eps_exp=args['eps_exp'])
+                  eps_exp=args['eps_exp'],
+                  seed=args['seed'])
 
     d = np.array(data.to_dense())
     r = mech.privatize_matrix(d).reshape(d.shape)

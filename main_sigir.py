@@ -18,12 +18,12 @@ seed = 42
 
 # dataset
 dataset_name = 'facebook_books'
-dataset_type = 'raw'
+dataset_type = 'train'
 
 
-for eps_phi in [1.0, 2.0, 5.0, 10.0]:
-      for reps in [1, 2, 5, 10]:
-            for eps_exp in [1.0, 2.0, 5.0, 10.0]:
+for eps_phi in [0.1, 0.5, 1, 2, 5]:
+      for reps in [1, 5, 10, 20, 50]:
+            for eps_exp in [0.1, 0.5, 1, 2, 5]:
                   # run
                   args = {
                         'dataset': dataset_name,
@@ -31,6 +31,7 @@ for eps_phi in [1.0, 2.0, 5.0, 10.0]:
                         'eps_phi': eps_phi,
                         'randomizer': randomizer,
                         'reps': reps,
-                        'eps_exp': eps_exp
+                        'eps_exp': eps_exp,
+                        'seed': seed
                   }
                   run(args)
