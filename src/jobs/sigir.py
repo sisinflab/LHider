@@ -1,5 +1,3 @@
-import os
-
 from . import experiment_info
 from src.loader.paths import *
 from src.loader import *
@@ -7,6 +5,7 @@ from src.dataset.dataset import *
 from src.randomize_response import *
 from src.lhider_mechanism import *
 from src.exponential_mechanism import *
+
 
 def run(args: dict, **kwargs):
 
@@ -30,7 +29,7 @@ def run(args: dict, **kwargs):
         'randomized': RandomizeResponse
     }
 
-    randomizer = RANDOMIZERS[args['randomizer']](epsilon=args['eps_phi'])
+    randomizer = RANDOMIZERS[args['randomizer']](epsilon=args['eps_phi'], base_seed=args['seed'])
     data[0].todense()
     mech = LHider(randomizer=randomizer,
                   n=args['reps'],
@@ -56,7 +55,6 @@ def run(args: dict, **kwargs):
     result.to_csv(file_path, sep='\t', header=False, index=False)
     print(f'File stored at \'{file_path}\'')
 
-    print()
 
 
 

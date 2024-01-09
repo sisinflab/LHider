@@ -1,6 +1,7 @@
 import numpy as np
 from src.exponential_mechanism import *
 
+
 class LHider:
     def __init__(self, randomizer, n, score, eps_exp, seed=42):
         self.seed = seed
