@@ -66,6 +66,3 @@ class RandomGenerator(Generator):
         data_seed = self._base_seed + relative_seed
         np.random.seed(data_seed)
         return np.random.randint(0, 2, size=input_data.shape)
-
-
-

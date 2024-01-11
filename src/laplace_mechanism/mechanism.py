@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import math
 from numpy.random import laplace
 
 
@@ -14,3 +15,30 @@ class LaplaceMechanism:
         np.random.seed(self._random_seed)
         random.seed(self._random_seed)
         return laplace(x, self._sensitivity/self._eps, n)
+
+
+class DiscreteLaplaceMechanism:
+    def __init__(self, eps, sensitivity, min_val, max_val, base_seed=42):
+        self._eps = eps
+        self._sensitivity = sensitivity
+        self._min_val = min_val
+        self._max_val = max_val
+        self._base_seed = base_seed
+        self._a = self._eps/self._sensitivity
+        self._samples = np.array(range(-50, 51))
+        self.probs = np.array([self.p(x) for x in self._samples])
+
+    def p(self, x):
+        ea = math.exp(-self._a)
+        a = (1 - ea) / (1 + ea)
+        b = math.exp(-self._a * x)
+        return a * b
+
+    def privatize(self):
+        pass
+
+    def privatize_np(self, input_data: np.array, relative_seed: int = 0) -> np.ndarray:
+        data_seed = self._base_seed + relative_seed
+        np.random.seed(data_seed)
+        noise = np.random.choice(self._samples, p=self.probs, size=input_data.shape)
+        return np.clip(input_data + noise, self._min_val, self._max_val)

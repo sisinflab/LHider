@@ -61,3 +61,36 @@ class Splitter(Filter):
         return {'train': self._train,
                 'test': self._test,
                 'val': self._val}
+
+
+class ZeroIndexing(Filter):
+
+    def __init__(self, dataset):
+        super(ZeroIndexing, self).__init__()
+        self._dataset = dataset.copy()
+
+        self._user_mapping = dict()
+        self._item_mapping = dict()
+
+        self._output = pd.DataFrame()
+
+    def filter_engine(self):
+
+        d = self._dataset
+        u = d.u.unique()
+        i = d.i.unique()
+
+        self._user_mapping = dict(zip(u, range(len(u))))
+        self._item_mapping = dict(zip(i, range(len(i))))
+
+        d.u = d.u.apply(lambda x: self._user_mapping[x])
+        d.i = d.i.apply(lambda x: self._item_mapping[x])
+
+        self._output = d.copy()
+
+    def filter_output(self):
+        return {
+            'dataset': self._output,
+            'u_map': self._user_mapping,
+            'i_map': self._item_mapping
+        }

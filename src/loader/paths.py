@@ -14,7 +14,8 @@ DATASET_NAME_BY_TYPE = {
     'clean': 'dataset.tsv',
     'train': 'train.tsv',
     'val': 'val.tsv',
-    'test': 'test.tsv'
+    'test': 'test.tsv',
+    'reindex': os.path.join('data', 'dataset_r.tsv')
 }
 MAIN_DIR = [RESULT_DIR]
 

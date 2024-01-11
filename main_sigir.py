@@ -14,16 +14,16 @@ print('eps_phi', eps_phi,
       'total eps', total_eps)
 
 # riproducibilità
-base_seed = 42
+base_seed = 100
 seed = base_seed
 
 # dataset
 dataset_name = 'facebook_books'
 dataset_type = 'train'
 
-for eps_phi in [0.1, 0.5, 1, 2, 5]:
-    for reps in [1, 5, 10, 20, 50]:
-        for eps_exp in [0.1, 0.5, 1, 2, 5]:
+for eps_phi in [100]:
+    for reps in [1]:
+        for eps_exp in [100]:
             seed += 1
             # run
             args = {
@@ -33,6 +33,8 @@ for eps_phi in [0.1, 0.5, 1, 2, 5]:
                 'randomizer': randomizer,
                 'reps': reps,
                 'eps_exp': eps_exp,
-                'seed': seed
+                'seed': seed,
+                'base_seed': 100,
+                'total_eps': eps_phi * reps + eps_exp
             }
             run(args)

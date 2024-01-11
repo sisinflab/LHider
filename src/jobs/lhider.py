@@ -30,7 +30,6 @@ def run(args: dict):
     # dataset directory
     dataset_name = args['dataset']
     dataset_type = args['type']
-    dataset_dir = os.path.join(DATA_DIR, dataset_name)
 
     # loading files
     dataset_path = dataset_filepath(dataset_name, dataset_type)

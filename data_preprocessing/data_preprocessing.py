@@ -1,5 +1,5 @@
 from data_preprocessing.filters.basic import IterativeKCore
-from data_preprocessing.filters.dataset import Splitter, Binarize
+from data_preprocessing.filters.dataset import Splitter, Binarize, ZeroIndexing
 from data_preprocessing.filters.filter import load_dataset, store_dataset
 from src.loader.paths import *
 
@@ -19,12 +19,19 @@ def run(dataset_name, core, threshold=None):
         binarizer = Binarize(dataset=dataset, threshold=threshold)
         binarized_dataset = binarizer.filter()['dataset']
 
+    # ITERATIVE K-CORE
     print(f'\n***** {dataset_name} iterative k-core *****\n'.upper())
     kcore = IterativeKCore(dataset=binarized_dataset,
                            core=core,
                            kcore_columns=['u', 'i'])
     filtered_dataset = kcore.filter()['dataset']
 
+    # RE-INDEXING
+    print(f'*** Reindexing {dataset_name} ***')
+    indexer = ZeroIndexing(dataset=filtered_dataset)
+    filtered_dataset = indexer.filter()['dataset']
+
+    # SPLITTING
     print(f'\n***** {dataset_name} train-test splitting *****\n'.upper())
 
     print(f'\nTransactions: {len(filtered_dataset)}')
@@ -38,6 +45,7 @@ def run(dataset_name, core, threshold=None):
     print(f'Final test set transactions: {len(splitting_results["test"])}')
     print(f'Final validation set transactions: {len(splitting_results["val"])}')
 
+    # STORE ON FILE
     data_folder = dataset_directory(dataset_name=dataset_name)
 
     store_dataset(data=filtered_dataset,
