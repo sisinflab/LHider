@@ -25,13 +25,20 @@ class DiscreteLaplaceMechanism:
         self._max_val = max_val
         self._base_seed = base_seed
         self._a = self._eps/self._sensitivity
-        self._samples = np.array(range(-50, 51))
+        self._samples = np.array(range(-1000, 1001))
         self.probs = np.array([self.p(x) for x in self._samples])
+        total = sum(self.probs)
+        diff = 1-total
+        if diff > 0.01:
+            raise ValueError
+        self.probs[np.where(self._samples == 0)[0][0]] += diff
+
 
     def p(self, x):
+        xv = abs(x)
         ea = math.exp(-self._a)
         a = (1 - ea) / (1 + ea)
-        b = math.exp(-self._a * x)
+        b = math.exp(-self._a * xv)
         return a * b
 
     def privatize(self):

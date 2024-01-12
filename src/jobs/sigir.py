@@ -5,7 +5,7 @@ from src.dataset.dataset import *
 from src.randomize_response import *
 from src.lhider_mechanism import *
 from src.exponential_mechanism import *
-
+from src.laplace_mechanism.mechanism import *
 
 def run(args: dict):
     # print information about the experiment
@@ -24,10 +24,16 @@ def run(args: dict):
     data = DPCrsMatrix(loader.load(), path=dataset_path, data_name=dataset_name)
 
     RANDOMIZERS = {
-        'randomized': RandomizeResponse
+        'randomized': RandomizeResponse,
+        'discretized': DiscreteLaplaceMechanism
     }
 
-    randomizer = RANDOMIZERS[args['randomizer']](epsilon=args['eps_phi'], base_seed=args['seed'])
+    # randomizer = RANDOMIZERS[args['randomizer']](epsilon=args['eps_phi'], base_seed=args['seed'])
+    randomizer = DiscreteLaplaceMechanism(eps=args['eps_phi'],
+                                          sensitivity=1,
+                                          base_seed=args['seed'],
+                                          min_val=0,
+                                          max_val=5)
     data[0].todense()
 
     mech = LHider(randomizer=randomizer,

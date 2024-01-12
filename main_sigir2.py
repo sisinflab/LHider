@@ -23,8 +23,8 @@ seed = base_seed
 dataset_name = 'yahoo_movies'
 dataset_type = 'train'
 
-for base_seed in range(100, 1001, 100):
-    for desired_eps in [0.01, 0.1, 0.5, 0.75, 1]:
+for base_seed in range(100, 101, 100):
+    for desired_eps in [1, 2, 3, 5, 10, 30]:
         for desired_gens in [1, 2, 5, 10, 50, 100]:
             for eps_exp in [100]:
                 seed += 1

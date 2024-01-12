@@ -4,7 +4,7 @@ from data_preprocessing.filters.filter import load_dataset, store_dataset
 from src.loader.paths import *
 
 
-def run(dataset_name, core, threshold=None):
+def run(dataset_name, core, threshold=None, binarize=True):
     print(f'\n***** {dataset_name} data preprocessing *****\n'.upper())
 
     dataset_path = dataset_filepath(dataset_name, type='raw')
@@ -13,11 +13,12 @@ def run(dataset_name, core, threshold=None):
 
     binarized_dataset = dataset
 
-    if threshold:
-        print(f'\n***** {dataset_name} binarization *****\n'.upper())
+    if binarize:
+        if threshold:
+            print(f'\n***** {dataset_name} binarization *****\n'.upper())
 
-        binarizer = Binarize(dataset=dataset, threshold=threshold)
-        binarized_dataset = binarizer.filter()['dataset']
+            binarizer = Binarize(dataset=dataset, threshold=threshold)
+            binarized_dataset = binarizer.filter()['dataset']
 
     # ITERATIVE K-CORE
     print(f'\n***** {dataset_name} iterative k-core *****\n'.upper())
