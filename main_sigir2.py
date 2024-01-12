@@ -1,4 +1,4 @@
-from src.jobs.sigir import run
+from src.jobs.sigir import run, run_explicit
 from composition import tight_adv_comp
 
 
@@ -46,4 +46,4 @@ for base_seed in range(100, 101, 100):
                     'base_seed': base_seed,
                     'total_eps': desired_eps
                 }
-                run(args)
+                run_explicit(args)
