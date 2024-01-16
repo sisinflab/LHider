@@ -17,10 +17,6 @@ def fun():
                 for eps_exp in [0.001, 0.005, 0.01, 0.05]:
                     seed += 1
 
-                    # items = 1034
-                    # delta = (1 / items) ** 1.1
-                    # new_eps = tight_adv_comp(desired_gens, desired_eps, delta)
-
                     total_eps = eph_phi + eps_exp
                     # run
                     args = {
