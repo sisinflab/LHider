@@ -22,6 +22,7 @@ def fun(*args, **kwargs):
         }
         run_recs(args)
 
+
 from email_notifier.email_sender import EmailNotifier
 notifier = EmailNotifier()
 arguments = {'Esperimento': 'raccomandazione'}
