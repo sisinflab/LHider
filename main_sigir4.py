@@ -2,7 +2,7 @@ from src.jobs.sigir import run_new_expo
 
 # definisci i parametri necessari
 randomizer = 'randomized'
-exp_score = 'manhattan'
+exp_score = 'jaccard'
 
 # dataset
 dataset_name = 'yahoo_movies'
@@ -28,7 +28,8 @@ def fun():
                         'eps_exp': eps_exp,
                         'seed': seed,
                         'base_seed': base_seed,
-                        'total_eps': total_eps
+                        'total_eps': total_eps,
+                        'score_type': exp_score
                     }
                     run_new_expo(args)
 

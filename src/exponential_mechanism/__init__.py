@@ -6,5 +6,7 @@ SCORES = {
     'euclidean': MatrixEuclideanDistance,
     'cosineUser': MatrixUserCosineSimilarity,
     'cosineItem': MatrixItemCosineSimilarity,
-    'jaccard': MatrixJaccardDistance
+    'jaccardMatrix': MatrixJaccardDistance,
+    'jaccard': JaccardDistance
+
 }

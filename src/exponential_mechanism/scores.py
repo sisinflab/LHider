@@ -115,6 +115,20 @@ class ManhattanDistance(ScoreFunction):
         normalized_scores = self.normalize(scores)
         return 1 - normalized_scores
 
+class JaccardDistance(ScoreFunction):
+    def __init__(self, data):
+        super(JaccardDistance, self).__init__(data)
+        self.sensitivity = 1 / (np.sum(self.data == 1) - 1)
+        self.max = 1
+        self.range = 1
+
+    def __str__(self):
+        return 'jaccard_distance'
+
+    def score_function(self, x):
+        intersection = np.sum(np.logical_and((self.data == 1), (x == 1)))
+        return intersection / (intersection + np.sum(self.data != x))
+
 
 class MatrixManhattanDistance(ScoreFunction):
     def __init__(self, data):

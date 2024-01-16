@@ -140,7 +140,7 @@ def run_new_expo(args: dict):
 
     mech = LHider(randomizer=randomizer,
                   n=args['reps'],
-                  score='manhattan',
+                  score=args['score_type'],
                   eps_exp=args['eps_exp'],
                   seed=args['seed'])
 
