@@ -69,5 +69,5 @@ def run(args):
         print(f'Created directory {output_dir}')
 
     output_path = os.path.join(output_dir, 'aggregated_results.tsv')
-    result.to_csv(output_path, sep='\t', header=True, index=False)
+    result.to_csv(output_path, sep='\t', header=True, index=False, decimal=',')
     print(f'Results stored at \'{output_path}\'')
