@@ -29,7 +29,7 @@ def run(args):
             data_name = file.replace('.tsv', '')
             dataset_path = os.path.join(result_dir, file)
 
-            dataset = pd.read_csv(dataset_path, sep='\t', header=None, names=['u', 'i'])
+            dataset = pd.read_csv(dataset_path, sep='\t', header=None, names=['u', 'i', 'r'])
             print(f'dataset loaded from \'{dataset_path}\'')
 
             splitter = Splitter(data=dataset,

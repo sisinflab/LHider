@@ -105,6 +105,7 @@ class ManhattanDistance(ScoreFunction):
         super(ManhattanDistance, self).__init__(data)
         self.sensitivity = 1 / self.data.size
         self.max = self.data.size
+        self.range = 1
 
     def __str__(self):
         return 'manhattan_distance'

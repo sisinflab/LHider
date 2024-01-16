@@ -1,19 +1,10 @@
-from src.jobs.sigir import run, run_explicit
+from src.jobs.sigir import run, run_explicit, run_new_expo
 from composition import tight_adv_comp
 
 
 # definisci i parametri necessari
-randomizer = 'discretized'
-eps_phi: float = 1.0
-reps = 5
-eps_exp: float = 1.0
+randomizer = 'randomized'
 exp_score = 'manhattan'
-total_eps = eps_phi * reps + eps_exp
-
-print('eps_phi', eps_phi,
-      'reps', reps,
-      'eps_exp', eps_exp,
-      'total eps', total_eps)
 
 # riproducibilità
 base_seed = 42
@@ -22,11 +13,14 @@ seed = base_seed
 # dataset
 dataset_name = 'yahoo_movies'
 dataset_type = 'train'
+from email_notifier.email_sender import EmailNotifier
 
-for base_seed in range(100, 101, 100):
-    for eph_phi in [1, 2, 3, 5, 10, 30]:
-        for reps in [1, 2, 5, 10, 50, 100]:
-            for eps_exp in [1, 3, 5, 10, 100]:
+notifier = EmailNotifier()
+arguments = {'Esperimento': 'generazione'}
+for base_seed in range(100, 1001, 100):
+    for eph_phi in [1, 2, 3, 5, 10, 15]:
+        for reps in [1, 10, 100, 1000]:
+            for eps_exp in [0.1, 0.2, 0.5, 0.75, 1]:
                 seed += 1
 
                 items = 1034
@@ -46,4 +40,4 @@ for base_seed in range(100, 101, 100):
                     'base_seed': base_seed,
                     'total_eps': eph_phi
                 }
-                run_explicit(args)
+                run_new_expo(args)

@@ -21,8 +21,21 @@ class LHider:
         randoms = [self.randomizer.privatize_np(data, relative_seed=idx) for idx in range(self.n)]
         return exponential.privatize(randoms)
 
+    def privatize_range(self, data: np.array, seed=42):
+        exponential = ExponentialMechanism(score_function=self._score(data),
+                                           epsilon=self.eps_exp,
+                                           random_seed=self.seed)
+        randoms = [self.randomizer.privatize_np(data, relative_seed=idx) for idx in range(self.n)]
+        return exponential.privatize_range(randoms)
+
     def privatize_matrix(self, data: np.array):
         result = self.privatize(data[0])
+        for row in data[1:]:
+            result = np.concatenate([result, self.privatize(row)])
+        return result
+
+    def privatize_matrix_range(self, data: np.array):
+        result = self.privatize_range(data[0])
         for row in data[1:]:
             result = np.concatenate([result, self.privatize(row)])
         return result

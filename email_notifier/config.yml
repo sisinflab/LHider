@@ -5,6 +5,7 @@ senders:
 receivers:
   - alberto.mancino@poliba.it
   - angela.difazio@poliba.it
+  - antonio.ferrara@poliba.it
 
 messages:
   ok:

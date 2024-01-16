@@ -3,17 +3,8 @@ from composition import tight_adv_comp
 
 
 # definisci i parametri necessari
-randomizer = 'discretized'
-eps_phi: float = 1.0
-reps = 5
-eps_exp: float = 1.0
+randomizer = 'randomized'
 exp_score = 'manhattan'
-total_eps = eps_phi * reps + eps_exp
-
-print('eps_phi', eps_phi,
-      'reps', reps,
-      'eps_exp', eps_exp,
-      'total eps', total_eps)
 
 # riproducibilità
 base_seed = 42
@@ -46,4 +37,4 @@ for base_seed in range(100, 101, 100):
                     'base_seed': base_seed,
                     'total_eps': eph_phi
                 }
-                run_explicit(args)
+                run(args)
