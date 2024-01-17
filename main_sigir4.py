@@ -11,7 +11,7 @@ dataset_type = 'train'
 
 def fun():
     for base_seed in range(100, 1001, 100):
-        seed = 0
+        seed = base_seed
         for eph_phi in [1, 2, 3, 5, 10, 15]:
             for reps in [10, 100, 1000]:
                 for eps_exp in [0.001, 0.005, 0.01, 0.05]:
