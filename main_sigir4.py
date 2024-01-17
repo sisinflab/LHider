@@ -2,7 +2,7 @@ from src.jobs.sigir import run_new_expo
 
 # definisci i parametri necessari
 randomizer = 'randomized'
-exp_score = 'jaccard'
+exp_score = 'manhattan'
 
 # dataset
 dataset_name = 'yahoo_movies'
@@ -10,7 +10,7 @@ dataset_type = 'train'
 
 
 def fun():
-    for base_seed in range(100, 1001, 100):
+    for base_seed in range(100, 301, 100):
         seed = base_seed
         for eph_phi in [1, 2, 3, 5, 10, 15]:
             for reps in [10, 100, 1000]:
