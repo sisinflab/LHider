@@ -2,7 +2,7 @@ from src.jobs.sigir import run_new_expo
 
 # definisci i parametri necessari
 randomizer = 'randomized'
-exp_score = 'manhattan'
+exp_score = 'jaccard'
 
 # dataset
 dataset_name = 'yahoo_movies'
