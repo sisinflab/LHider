@@ -21,7 +21,8 @@ def params_from_name(file_name: str):
 
 MODELS = {
     'EASER': 'EASEr',
-    'MostPop': 'MP'
+    'MostPop': 'MP',
+    'ItemKNN': 'ItemKNN'
 }
 
 
