@@ -1,6 +1,8 @@
 import numpy as np
 from decimal import Decimal
 
+import tqdm
+
 
 class ExponentialMechanism:
     def __init__(self, score_function, epsilon=0.5, random_seed=42):
@@ -13,7 +15,7 @@ class ExponentialMechanism:
         self.eps = epsilon
 
     def scores(self, output):
-        return np.array([self.score_function(x) for x in output])
+        return np.array([self.score_function(x) for x in tqdm.tqdm(output)])
 
     def probabilities(self, output):
         exponent = (self.eps * self.scores(output)) / (2 * self.sensitivity)
@@ -30,6 +32,19 @@ class ExponentialMechanism:
 
     def probabilities_range(self, output):
         exponent = (self.eps * self.scores(output)) / (2 * self.range)
+
+        exponent = exponent.tolist()
+        exponent = [Decimal(e) for e in exponent]
+        probabilities = [np.exp(e) for e in exponent]
+        total = sum(probabilities)
+        probabilities = [p / total for p in probabilities]
+
+        # probabilities = np.exp(exponent)
+        # probabilities = probabilities / np.sum(probabilities)
+        return probabilities
+
+    def probabilities_range_pre_computed_scores(self, scores):
+        exponent = (self.eps * scores) / (2 * self.range)
 
         exponent = exponent.tolist()
         exponent = [Decimal(e) for e in exponent]
@@ -58,5 +73,10 @@ class ExponentialMechanism:
         assert len(probs) == len(output),\
             f'{self.__class__.__name__}: output and probabilities must have the same length'
 
+        idx = np.random.choice(range(len(output)), p=probs)
+        return output[idx]
+
+    def run_exponential(self, output, scores):
+        probs = self.probabilities_range_pre_computed_scores(scores)
         idx = np.random.choice(range(len(output)), p=probs)
         return output[idx]

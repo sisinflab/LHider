@@ -67,14 +67,21 @@ class Distance(ScoreFunction):
 
         self.similarity_fun = similarity
         self.sensitivity = sensitivity
-        self.similarity_matrix = self.similarity_fun(data.values.T)
+        self.similarity_matrix = self.similarity_fun(data.T)
+        self.range = 1
 
     def score_function(self, generated_matrix):
         generated_matrix_similarity = self.similarity_fun(generated_matrix.T)
-        users_arrays = ((sum(self.similarity_matrix[self.data.user_items(u)]),
-                         sum(generated_matrix_similarity[generated_matrix[[u], :].indices]))
-                        for u in range(self.data.n_users))
-        return sum(map(self.user_similarity, tqdm.tqdm(users_arrays, total=self.data.users))) / self.data.n_users
+        prediction_similarities = cosine_similarity(self.similarity_matrix.dot(self.data.T > 0).T,
+                                                    generated_matrix_similarity.dot(generated_matrix.T > 0).T)
+        return np.mean(np.diag(prediction_similarities))
+
+    def score_function_old(self, generated_matrix):
+        generated_matrix_similarity = self.similarity_fun(generated_matrix.T)
+        users_arrays = ((sum(self.similarity_matrix[self.data[u].nonzero()[1]]),
+                         sum(generated_matrix_similarity[generated_matrix[u].nonzero()[1]]))
+                        for u in range(self.data.shape[0]))
+        return sum(map(self.user_similarity, tqdm.tqdm(users_arrays, total=self.data.shape[0]))) / self.data.shape[0]
 
     def user_similarity(self, arrays):
         return cosine_similarity(arrays[0].reshape(1, -1), arrays[1].reshape(1, -1))[0][0]
@@ -100,6 +107,21 @@ class MatrixItemCosineSimilarity(ScoreFunction):
                        / (np.sum(self.data.T * self.data.T, axis=1) ** .5 * np.sum((x.T * x.T), axis=1) ** .5))
 
 
+class CosineSimilarity(ScoreFunction):
+    def __init__(self, data):
+        super(CosineSimilarity, self).__init__(data)
+        self.sensitivity = 1
+        self.max = 1
+        self.range = 1
+
+    def __str__(self):
+        return 'cosine_similarity'
+
+    def score_function(self, x):
+        return np.sum(self.data * x, axis=1)\
+            / (np.sum(self.data*self.data, axis=1) ** .5 * np.sum((x * x), axis=1) ** .5)
+
+
 class ManhattanDistance(ScoreFunction):
     def __init__(self, data):
         super(ManhattanDistance, self).__init__(data)
@@ -114,6 +136,7 @@ class ManhattanDistance(ScoreFunction):
         scores = np.sum(np.abs(self.data - x))
         normalized_scores = self.normalize(scores)
         return 1 - normalized_scores
+
 
 class JaccardDistance(ScoreFunction):
     def __init__(self, data):
@@ -336,5 +359,6 @@ SCORERS = {
     'euclidean': MatrixEuclideanDistance,
     'cosineUser': MatrixUserCosineSimilarity,
     'cosineItem': MatrixItemCosineSimilarity,
-    'jaccard': MatrixJaccardDistance
+    'jaccard': MatrixJaccardDistance,
+    'itemknn': Distance
 }

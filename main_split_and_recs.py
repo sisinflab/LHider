@@ -6,7 +6,7 @@ def fun(*args, **kwargs):
     dataset_name = 'yahoo_movies'
     dataset_type = 'train'
 
-    for base_seed in range(400, 701, 100):
+    for base_seed in range(100, 1001, 100):
         args = {
             'dataset_name': dataset_name,
             'dataset_type': dataset_type,
@@ -14,7 +14,7 @@ def fun(*args, **kwargs):
         }
         run_split(args)
 
-    for base_seed in range(400, 701, 100):
+    for base_seed in range(100, 1001, 100):
         args = {
             'dataset_name': dataset_name,
             'dataset_type': dataset_type,
@@ -25,5 +25,5 @@ def fun(*args, **kwargs):
 
 from email_notifier.email_sender import EmailNotifier
 notifier = EmailNotifier()
-arguments = {'Esperimento': 'raccomandazione'}
+arguments = {'Esperimento': 'raccomandazioni manhattan eps laida'}
 notifier.notify(fun, additional_body=str(arguments))

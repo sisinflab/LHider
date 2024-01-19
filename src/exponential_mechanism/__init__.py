@@ -4,9 +4,10 @@ from .scores import *
 SCORES = {
     'manhattan': ManhattanDistance,
     'euclidean': MatrixEuclideanDistance,
-    'cosineUser': MatrixUserCosineSimilarity,
-    'cosineItem': MatrixItemCosineSimilarity,
+    'cosineMatrixUser': MatrixUserCosineSimilarity,
+    'cosineMatrixItem': MatrixItemCosineSimilarity,
     'jaccardMatrix': MatrixJaccardDistance,
-    'jaccard': JaccardDistance
-
+    'jaccard': JaccardDistance,
+    'cosineUser': CosineSimilarity,
+    'distance': Distance
 }

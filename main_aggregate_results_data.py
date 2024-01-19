@@ -7,7 +7,7 @@ dataset_type = 'train'
 
 results = None
 
-for base_seed in range(200, 801, 100):
+for base_seed in range(100, 1001, 100):
 
     results_dir = os.path.join(PROJECT_PATH, 'results_data', dataset_name + '_' + dataset_type, str(base_seed))
     results_path = os.path.join(results_dir, 'aggregated_results.tsv')

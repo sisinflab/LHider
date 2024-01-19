@@ -26,6 +26,18 @@ TEMPLATE = """experiment:
       l2_norm: [uniform, 10, 10e7]
       seed: 42
       validation_metric: nDCGRendle2020@10
+    ItemKNN:
+      meta:
+        save_recs: False
+        verbose: True
+        hyper_max_evals: 5
+        hyper_opt_alg: tpe
+      neighbors: [uniform, 5, 30]
+      similarity: cosine
+      implementation: aiolli
+      seed: 42
+      validation_metric: nDCGRendle2020@10
+
 """
 
 TEMPLATE_PATH = """experiment:
@@ -46,23 +58,4 @@ TEMPLATE_PATH = """experiment:
       meta:
         verbose: True
         save_recs: False
-    EASER:
-      meta:
-        verbose: True
-        save_recs: False
-        hyper_max_evals: 5
-        hyper_opt_alg: tpe
-      l2_norm: [uniform, 10, 10e5]
-      seed: 42
-    ItemKNN:
-      meta:
-        save_recs: False
-        verbose: True
-        hyper_max_evals: 5
-        hyper_opt_alg: tpe
-      neighbors: [uniform, 5, 30]
-      similarity: cosine
-      implementation: aiolli
-      seed: 42
-      validation_metric: nDCGRendle2020@10
 """

@@ -28,6 +28,20 @@ class LHider:
         randoms = [self.randomizer.privatize_np(data, relative_seed=idx) for idx in range(self.n)]
         return exponential.privatize_range(randoms)
 
+    def outputs(self, data: np.array):
+        return [self.randomizer.privatize_np(data, relative_seed=idx) for idx in range(self.n)]
+
+    def exp_mech(self, randoms, data: np.array):
+        exponential = ExponentialMechanism(score_function=self._score(data),
+                                           epsilon=self.eps_exp,
+                                           random_seed=self.seed)
+        return exponential
+
+    def set_exp_eps(self, eps, exp_mechanism):
+        self.eps_exp = eps
+        exp_mechanism.eps = eps
+
+
     def privatize_matrix(self, data: np.array):
         result = self.privatize(data[0])
         for row in data[1:]:
@@ -37,7 +51,7 @@ class LHider:
     def privatize_matrix_range(self, data: np.array):
         result = self.privatize_range(data[0])
         for row in data[1:]:
-            result = np.concatenate([result, self.privatize(row)])
+            result = np.concatenate([result, self.privatize_range(row)])
         return result
 
     def file_name(self, data_name: str):

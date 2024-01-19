@@ -16,9 +16,9 @@ arguments = {'Esperimento': 'generazione'}
 
 
 def fun(*args, **kwargs):
-    for base_seed in range(100, 1001, 100):
+    for base_seed in range(400, 701, 100):
         seed = base_seed
-        for eph_phi in [1, 2, 3, 5, 10, 15]:
+        for eph_phi in [4, 6, 8]:
             for eps_exp in [0.001, 0.005, 0.01, 0.05]:
                 seed += 1
                 reps = 1
