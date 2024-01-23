@@ -78,6 +78,8 @@ def run_explicit(args: dict):
     loader = TsvLoader(path=dataset_path, return_type="sparse")
     data = loader.load().todense()
 
+    print()
+
     RANDOMIZERS = {
         'randomized': RandomizeResponse,
         'discretized': DiscreteLaplaceMechanism
@@ -129,6 +131,22 @@ def run_new_expo(args: dict):
     loader = TsvLoader(path=dataset_path, return_type="sparse")
     data = loader.load().A
 
+    SCORES_PROPERTIES = {
+        'manhattan':
+            {
+                'sensitivity': lambda x: 1/sum(sum(x)),
+                'range': 1
+            },
+        'jaccard':
+            {
+                'sensitivity': 0,
+                'range': 1
+            }
+    }
+    sensitivity = SCORES_PROPERTIES[args['score_type']]['sensitivity'](data)
+    range = SCORES_PROPERTIES[args['score_type']]['range']
+    print()
+
     RANDOMIZERS = {
         'randomized': RandomizeResponse,
         'discretized': DiscreteLaplaceMechanism
@@ -137,7 +155,7 @@ def run_new_expo(args: dict):
     # randomizer = RANDOMIZERS[args['randomizer']](epsilon=args['eps_phi'], base_seed=args['seed'])
     if args['reps'] == 1:
         for eps_exp in args['eps_exp']:
-            total_eps = round(args['eps_phi'] + eps_exp, 10)
+            total_eps = round(args['eps_phi'] + (eps_exp / 2 * (1 + sensitivity / range)), 10)
             randomizer = RandomizeResponse(eps=total_eps,
                                            sensitivity=1,
                                            base_seed=args['seed'],
@@ -173,7 +191,7 @@ def run_new_expo(args: dict):
         scores_ = exponential_mech.scores(randoms)
 
         for eps_exp in args['eps_exp']:
-            total_eps = round(args['eps_phi'] + eps_exp, 10)
+            total_eps = round(args['eps_phi'] + (eps_exp / 2 * (1 + sensitivity / range)), 10)
 
             mech.set_exp_eps(eps_exp, exponential_mech)
             randomized = exponential_mech.run_exponential(randoms, scores_)

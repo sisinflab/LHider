@@ -9,5 +9,6 @@ SCORES = {
     'jaccardMatrix': MatrixJaccardDistance,
     'jaccard': JaccardDistance,
     'cosineUser': CosineSimilarity,
-    'distance': Distance
+    'distance': Distance,
+    'distance_user_based': DistanceUserBased
 }

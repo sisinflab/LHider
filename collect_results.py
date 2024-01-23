@@ -37,6 +37,8 @@ def run(args):
 
     result = None
     for dataset in os.listdir(result_dir):
+        if dataset == '.DS_Store':
+            continue
         dataset_dir = os.path.join(result_dir, dataset)
         perf_file = [x for x in os.listdir(dataset_dir) if 'rec_cutoff' in x][0]
         perf_path = os.path.join(dataset_dir, perf_file)

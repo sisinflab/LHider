@@ -87,6 +87,21 @@ class Distance(ScoreFunction):
         return cosine_similarity(arrays[0].reshape(1, -1), arrays[1].reshape(1, -1))[0][0]
 
 
+class DistanceUserBased(ScoreFunction):
+    def __init__(self, data, similarity=cosine_similarity, sensitivity=1):
+        super(DistanceUserBased, self).__init__(data)
+
+        self.similarity_fun = similarity
+        self.sensitivity = sensitivity
+        self.similarity_matrix = self.similarity_fun(data.T)
+        self.range = 1
+
+    def score_function(self, generated_matrix):
+        generated_matrix_similarity = self.similarity_fun(generated_matrix.T)
+        return 1 - np.max(np.abs(self.similarity_matrix - generated_matrix_similarity))
+
+
+
 class MatrixUserCosineSimilarity(ScoreFunction):
     def __init__(self, data):
         super(MatrixUserCosineSimilarity, self).__init__(data)
@@ -360,5 +375,5 @@ SCORERS = {
     'cosineUser': MatrixUserCosineSimilarity,
     'cosineItem': MatrixItemCosineSimilarity,
     'jaccard': MatrixJaccardDistance,
-    'itemknn': Distance
+    'itemknn': Distance,
 }
