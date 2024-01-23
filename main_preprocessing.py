@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     # Gift Cards
     data_path = os.path.join('data', 'gift', 'original', 'Gift_Cards.csv')
-    data = pd.read_csv(data_path, sep=',', header=None, engine='python', names=['u', 'i', 'r', 't'])
+    data = pd.read_csv(data_path, sep=',', header=None, engine='python', names=['i', 'u', 'r', 't'])
     output_folder = os.path.join('data', 'gift', 'data')
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
