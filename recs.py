@@ -9,6 +9,7 @@ from elliot.run import run_experiment
 from config_templates.short_training import TEMPLATE_PATH
 import tqdm
 from src.jobs.sigir import noisy_dataset_folder
+import psutil
 
 DEFAULT_METRICS = ["nDCGRendle2020", "Recall", "HR", "nDCG", "Precision", "F1", "MAP", "MAR", "ItemCoverage", "Gini",
                    "SEntropy", "EFD", "EPC", "PopREO", "PopRSP", "ACLT", "APLT", "ARP"]
@@ -61,3 +62,5 @@ def run(args):
                 conf_file.write(config)
 
             run_experiment(config_path)
+
+            print(psutil.Process(os.getpid()).open_files())
