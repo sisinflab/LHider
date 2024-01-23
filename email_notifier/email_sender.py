@@ -152,5 +152,4 @@ class EmailNotifier:
             self.send_ok(additional_body)
         except Exception as e:
             self.send_error(additional_body=additional_body, exception=e)
-
-
+            raise e
