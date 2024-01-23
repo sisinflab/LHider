@@ -5,7 +5,7 @@ randomizer = 'randomized'
 exp_score = 'manhattan'
 
 # dataset
-dataset_name = 'facebook_books'
+dataset_name = 'gift'
 dataset_type = 'train'
 
 
@@ -29,6 +29,4 @@ def fun():
                         'score_type': exp_score
                     }
                     run_new_expo(args)
-
-
 fun()
