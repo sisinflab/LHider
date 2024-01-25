@@ -1,5 +1,6 @@
 from src.jobs.sigir_itemknn import run_generation
-
+from split_generated import run as run_split
+from recs import run as run_recs
 # definisci i parametri necessari
 randomizer = 'randomized'
 exp_score = 'jaccard'
@@ -16,6 +17,8 @@ def fun():
         # run
         args = {
             'dataset': dataset_name,
+            'dataset_name': dataset_name,
+            'dataset_type': dataset_type,
             'type': dataset_type,
             'eps_phi': eph_phi,
             'randomizer': randomizer,
@@ -25,6 +28,8 @@ def fun():
             'seed': seed
         }
         run_generation(args)
+    run_split(args)
+    run_recs(args)
 
 from email_notifier.email_sender import EmailNotifier
 notifier = EmailNotifier()
