@@ -28,7 +28,7 @@ def fun():
             'generations': n,
             'seed': seed
         }
-        run_generation(args)
+        # run_generation(args)
     run_split(args)
     run_recs(args)
 
