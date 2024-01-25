@@ -2,12 +2,12 @@ import os
 from src.loader.paths import *
 import pandas as pd
 
-dataset_name = 'yahoo_movies'
+dataset_name = 'facebook_books'
 dataset_type = 'train'
 
 results = None
 
-for base_seed in range(100, 1001, 100):
+for base_seed in range(100, 4701, 100):
 
     results_dir = os.path.join(PROJECT_PATH, 'results_data', dataset_name + '_' + dataset_type, str(base_seed))
     results_path = os.path.join(results_dir, 'aggregated_results.tsv')

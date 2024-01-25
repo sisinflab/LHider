@@ -199,6 +199,50 @@ def run_new_expo(args: dict):
             print(mech.file_name(dataset_name))
             save_result(randomized, args, total_eps, eps_exp)
 
+
+def run_generation(args: dict):
+    # print information about the experiment
+    experiment_info(args)
+
+    # check for the existence of fundamental directories, otherwise create them
+    check_main_directories()
+
+    # dataset directory
+    dataset_name = args['dataset']
+    dataset_type = args['type']
+
+    # loading files
+    dataset_path = dataset_filepath(dataset_name, dataset_type)
+    loader = TsvLoader(path=dataset_path, return_type="sparse")
+    data = loader.load().A
+    randomizer = RandomizeResponse(eps=args['eps_phi'],
+                                   sensitivity=1,
+                                   base_seed=0,
+                                   min_val=0,
+                                   max_val=5)
+
+    score_type = args['score_type']
+    for actual_seed in range(args['seed'], args['generations']):
+        print(f'Genero dataset {dataset_name} {dataset_type} con seed \'{actual_seed}\'')
+        output = randomizer.privatize_np(data, relative_seed=actual_seed)
+        assert score_type in SCORES, f'Score type not found. Accepted scores: {SCORES.keys()}'
+        scorer = SCORES[score_type](data)
+        score = scorer.score_function(output)
+        save_generated(output, actual_seed, score, args)
+
+
+def save_generated(data, actual_seed, score, args):
+    result = from_csr_to_pandas(csr_matrix(data))
+    result_directory = noisy_dataset_folder(args['dataset'], args['type'], args['base_seed'])
+    if not (os.path.exists(result_directory)):
+        os.makedirs(result_directory)
+        print(f'Directory created at \'{result_directory}\'')
+    file_name = noisy_dataset_filename(args['randomizer'], args['eps_phi'], 1, score, actual_seed, args['eps_phi'])
+    file_path = os.path.join(result_directory, file_name + '.tsv')
+    result.to_csv(file_path, sep='\t', header=False, index=False)
+    print(f'File stored at \'{file_path}\'')
+    return file_path
+
 def save_result(dataset, args, total_eps, eps_exp):
     result = from_csr_to_pandas(csr_matrix(dataset))
 
@@ -226,6 +270,7 @@ def from_csr_to_pandas(data: csr_matrix, explicit=False):
 def noisy_dataset_filename(randomizer, eps_phi, reps, eps_exp, seed, total_eps):
     return '_'.join([str(randomizer), str(eps_phi), str(reps), str(eps_exp),
                      str(seed), str(total_eps)])
+
 
 
 def noisy_dataset_folder(dataset_name, dataset_type, base_seed):

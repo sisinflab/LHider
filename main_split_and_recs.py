@@ -6,7 +6,7 @@ def fun(*args, **kwargs):
     dataset_name = 'gift'
     dataset_type = 'train'
 
-    for base_seed in range(100, 5001, 100):
+    for base_seed in range(0, 1, 100):
         args = {
             'dataset_name': dataset_name,
             'dataset_type': dataset_type,
@@ -14,7 +14,7 @@ def fun(*args, **kwargs):
         }
         run_split(args)
 
-    for base_seed in range(100, 5001, 100):
+    for base_seed in range(0, 1, 100):
         args = {
             'dataset_name': dataset_name,
             'dataset_type': dataset_type,

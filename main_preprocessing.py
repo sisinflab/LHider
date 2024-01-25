@@ -4,8 +4,8 @@ from data_preprocessing.data_preprocessing import run
 import pandas as pd
 
 if __name__ == '__main__':
-    # run(dataset_name='facebook_books', core=5)
-    # run(dataset_name='yahoo_movies', core=10, threshold=3)
+    run(dataset_name='facebook_books', core=5)
+    run(dataset_name='yahoo_movies', core=10, threshold=3)
     # MovieLens
     # data_path = os.path.join('data', 'movielens', 'grouplens', 'ratings.dat')
     # data = pd.read_csv(data_path, sep='::', header=None, engine='python', names=['u', 'i', 'r', 't'])

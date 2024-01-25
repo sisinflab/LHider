@@ -5,7 +5,7 @@ dataset_type = 'train'
 
 
 def fun():
-    for base_seed in range(2200, 3601, 100):
+    for base_seed in range(100, 501, 100):
         args = {
             'dataset_name': dataset_name,
             'dataset_type': dataset_type,

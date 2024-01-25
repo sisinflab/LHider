@@ -62,7 +62,7 @@ TEMPLATE_PATH = """experiment:
       meta:
         verbose: True
         save_recs: False
-        hyper_max_evals: 10
+        hyper_max_evals: 5
         hyper_opt_alg: tpe
       l2_norm: [uniform, 10, 10e7]
       seed: 42

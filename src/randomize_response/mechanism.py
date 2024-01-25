@@ -12,7 +12,7 @@ class Generator:
 
 
 class RandomizeResponse(Generator):
-    def __init__(self, eps: float, base_seed: int = 42, **kwargs):
+    def __init__(self, eps: float, base_seed: int = 0, **kwargs):
         self.eps = eps
         self._change_probability = self.eps_to_prob()
         super().__init__(base_seed)
