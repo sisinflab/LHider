@@ -34,25 +34,30 @@ def run(args):
 
             splitter = Splitter(data=dataset,
                                 test_ratio=0.2)
-            splitting_results = splitter.filter()
+            try:
+                splitting_results = splitter.filter()
 
-            data_folder = os.path.join(generated_folder, data_name)
-            if os.path.exists(data_folder) is False:
-                os.makedirs(data_folder)
-                print(f'created directory \'{data_folder}\'')
+                data_folder = os.path.join(generated_folder, data_name)
+                if os.path.exists(data_folder) is False:
+                    os.makedirs(data_folder)
+                    print(f'created directory \'{data_folder}\'')
 
-            train = splitting_results["train"]
-            val = splitting_results["test"]
+                train = splitting_results["train"]
+                val = splitting_results["test"]
 
-            train['r'] = 1
-            val['r'] = 1
+                train['r'] = 1
+                val['r'] = 1
 
-            store_dataset(data=splitting_results["train"],
-                          folder=data_folder,
-                          name='train',
-                          message='training set')
+                store_dataset(data=splitting_results["train"],
+                              folder=data_folder,
+                              name='train',
+                              message='training set')
 
-            store_dataset(data=splitting_results["test"],
-                          folder=data_folder,
-                          name='validation',
-                          message='val set')
+                store_dataset(data=splitting_results["test"],
+                              folder=data_folder,
+                              name='validation',
+                              message='val set')
+            except Exception as e:
+                print(e)
+                print(f'DATASET NON SPLITTATO {dataset_name}')
+

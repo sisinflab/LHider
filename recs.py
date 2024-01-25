@@ -43,21 +43,25 @@ def run(args):
             train_path = os.path.join(data_folder, 'train.tsv')
             val_path = os.path.join(data_folder, 'validation.tsv')
 
-            assert os.path.exists(train_path)
-            assert os.path.exists(val_path)
-            assert os.path.exists(test_path)
+            try:
+                assert os.path.exists(train_path)
+                assert os.path.exists(val_path)
+                assert os.path.exists(test_path)
 
-            result_folder = os.path.join(output_folder, data_name)
-            os.makedirs(result_folder)
+                result_folder = os.path.join(output_folder, data_name)
+                os.makedirs(result_folder)
 
-            config = TEMPLATE_PATH.format(dataset=data_name,
-                                          output_path=result_folder,
-                                          train_path=train_path,
-                                          val_path=val_path,
-                                          test_path=test_path)
+                config = TEMPLATE_PATH.format(dataset=data_name,
+                                              output_path=result_folder,
+                                              train_path=train_path,
+                                              val_path=val_path,
+                                              test_path=test_path)
 
-            config_path = os.path.join(CONFIG_DIR, 'runtime.yml')
-            with open(config_path, 'w') as conf_file:
-                conf_file.write(config)
+                config_path = os.path.join(CONFIG_DIR, 'runtime.yml')
+                with open(config_path, 'w') as conf_file:
+                    conf_file.write(config)
 
-            run_experiment(config_path)
+                run_experiment(config_path)
+            except Exception as e:
+                print(e)
+                print(f'ATTENZIONE RACCOMANDAZIONE NON CALCOLATA PER {dataset_name}')
