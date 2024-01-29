@@ -32,8 +32,7 @@ def run(args):
     dataset_type = args['dataset_type']
     base_seed = args['base_seed']
 
-    result_dir = os.path.join(PROJECT_PATH, '../results_collection', dataset_name + '_' + dataset_type, str(base_seed))
-    # result_dir = os.path.join(PROJECT_PATH, 'generated_datasets/facebook_books_train/3.0_1.0_42/recs')
+    result_dir = os.path.join(PROJECT_PATH, 'results_collection', dataset_name + '_' + dataset_type, str(base_seed))
 
     result = None
     for dataset in os.listdir(result_dir):
@@ -57,7 +56,6 @@ def run(args):
                 vals[model + '_' + metric_name] = metric_value
 
         params = list(params_from_name(dataset))
-        #params = [os.path.basename(dataset_dir).split('_')[-1], 3.0, 1, 1.0]
         row_res = [params + list(vals.values())]
 
         columns = ['method', 'eps_phi', 'n', 'eps_exp', 'seed', 'total_eps'] + list(vals.keys())
@@ -69,7 +67,7 @@ def run(args):
             result = pd.concat([result, row_vals])
 
     # save
-    output_dir = os.path.join(PROJECT_PATH, '../results_data', dataset_name + '_' + dataset_type, str(base_seed))
+    output_dir = os.path.join(PROJECT_PATH, 'results_data', dataset_name + '_' + dataset_type, str(base_seed))
     if os.path.exists(output_dir) is False:
         os.makedirs(output_dir)
         print(f'Created directory {output_dir}')

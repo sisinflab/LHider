@@ -1,7 +1,7 @@
 import argparse
 from src.jobs.exponential import run as run_select
 
-n = 2
+n = 500
 folder = 0
 seed = 0
 dimensions = [10, 30, 50, 75, 100, 1000]

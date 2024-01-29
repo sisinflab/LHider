@@ -1,10 +1,10 @@
 import argparse
-from src.jobs.sigir_itemknn import run_generation
+from src.jobs.generate import run_generation
 from src.jobs.split_generated import run as run_split
 from src.jobs.recs import run as run_recs
 from utils.collect_results import run as run_collect
 
-n = 2
+n = 500
 folder = 0
 seed = 0
 
