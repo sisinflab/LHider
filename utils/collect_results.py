@@ -32,7 +32,7 @@ def run(args):
     dataset_type = args['dataset_type']
     base_seed = args['base_seed']
 
-    result_dir = os.path.join(PROJECT_PATH, 'results_collection', dataset_name + '_' + dataset_type, str(base_seed))
+    result_dir = os.path.join(PROJECT_PATH, '../results_collection', dataset_name + '_' + dataset_type, str(base_seed))
     # result_dir = os.path.join(PROJECT_PATH, 'generated_datasets/facebook_books_train/3.0_1.0_42/recs')
 
     result = None
@@ -69,7 +69,7 @@ def run(args):
             result = pd.concat([result, row_vals])
 
     # save
-    output_dir = os.path.join(PROJECT_PATH, 'results_data', dataset_name + '_' + dataset_type, str(base_seed))
+    output_dir = os.path.join(PROJECT_PATH, '../results_data', dataset_name + '_' + dataset_type, str(base_seed))
     if os.path.exists(output_dir) is False:
         os.makedirs(output_dir)
         print(f'Created directory {output_dir}')

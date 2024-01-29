@@ -204,9 +204,6 @@ def run_generation(args: dict):
     # print information about the experiment
     experiment_info(args)
 
-    # check for the existence of fundamental directories, otherwise create them
-    check_main_directories()
-
     # dataset directory
     dataset_name = args['dataset']
     dataset_type = args['type']

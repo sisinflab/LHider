@@ -1,14 +1,7 @@
-import argparse
-from utils.recs_best_model import run
-import os
-import pandas as pd
 from src.loader.paths import *
-from data_preprocessing.filters.dataset import Splitter
-from data_preprocessing.filters.filter import load_dataset, store_dataset
 from elliot.run import run_experiment
 from config_templates.short_training import TEMPLATE_PATH
 import tqdm
-from src.jobs.sigir import noisy_dataset_folder
 
 DEFAULT_METRICS = ["nDCGRendle2020", "Recall", "HR", "nDCG", "Precision", "F1", "MAP", "MAR", "ItemCoverage", "Gini",
                    "SEntropy", "EFD", "EPC", "PopREO", "PopRSP", "ACLT", "APLT", "ARP"]
@@ -32,6 +25,7 @@ def run(args):
     if os.path.exists(output_folder) is False:
         os.makedirs(output_folder)
         print(f'Created folder at \'{output_folder}\'')
+    print(f'Results will be stored at \'{output_folder}\'')
 
     for file in tqdm.tqdm(files):
         if '.tsv' in file:
