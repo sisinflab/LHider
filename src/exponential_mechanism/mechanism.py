@@ -56,6 +56,19 @@ class ExponentialMechanism:
         # probabilities = probabilities / np.sum(probabilities)
         return probabilities
 
+    def probabilities_pre_computed_scores(self, scores):
+        exponent = (self.eps * scores) / (2 * self.sensitivity)
+
+        exponent = exponent.tolist()
+        exponent = [Decimal(e) for e in exponent]
+        probabilities = [np.exp(e) for e in exponent]
+        total = sum(probabilities)
+        probabilities = [p / total for p in probabilities]
+
+        # probabilities = np.exp(exponent)
+        # probabilities = probabilities / np.sum(probabilities)
+        return probabilities
+
     def privatize(self, output, probs=None):
         # print(f'{self.__class__.__name__}: choosing between {len(output)} possible outputs')
         if probs is None:
@@ -78,5 +91,10 @@ class ExponentialMechanism:
 
     def run_exponential(self, output, scores):
         probs = self.probabilities_range_pre_computed_scores(scores)
+        idx = np.random.choice(range(len(output)), p=probs)
+        return output[idx]
+
+    def run_exponential_sensibile(self, output, scores):
+        probs = self.probabilities_pre_computed_scores(scores)
         idx = np.random.choice(range(len(output)), p=probs)
         return output[idx]

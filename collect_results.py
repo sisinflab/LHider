@@ -40,7 +40,10 @@ def run(args):
         if dataset == '.DS_Store':
             continue
         dataset_dir = os.path.join(result_dir, dataset)
-        perf_file = [x for x in os.listdir(dataset_dir) if 'rec_cutoff' in x][0]
+        perf_file = [x for x in os.listdir(dataset_dir) if 'rec_cutoff' in x]
+        if len(perf_file) == 0:
+            print(f'OCCHIO A {dataset}')
+        perf_file = perf_file[0]
         perf_path = os.path.join(dataset_dir, perf_file)
 
         perf = pd.read_csv(perf_path, sep='\t', header=0)

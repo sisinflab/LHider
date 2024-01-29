@@ -13,19 +13,6 @@ TEMPLATE = """experiment:
     simple_metrics: [nDCGRendle2020]
   gpu: 0
   models:
-    MostPop:
-      meta:
-        verbose: True
-        save_recs: False
-    EASER:
-      meta:
-        verbose: True
-        save_recs: False
-        hyper_max_evals: 10
-        hyper_opt_alg: tpe
-      l2_norm: [uniform, 10, 10e7]
-      seed: 42
-      validation_metric: nDCGRendle2020@10
     ItemKNN:
       meta:
         save_recs: False

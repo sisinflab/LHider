@@ -1,9 +1,9 @@
 from collect_results import run
 
-dataset_name = 'facebook_books'
+dataset_name = 'gift'
 dataset_type = 'train'
 
-for base_seed in range(100, 4701, 100):
+for base_seed in range(10, 11, 1):
     args = {
         'dataset_name': dataset_name,
         'dataset_type': dataset_type,
