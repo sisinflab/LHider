@@ -1,4 +1,4 @@
-TEMPLATE = """experiment:
+ TEMPLATE = """experiment:
   dataset: {file}
   path_output_rec_performance: ./metrics/{file}
   data_config:
