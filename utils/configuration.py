@@ -1,5 +1,4 @@
 import yaml
-import os
 from src.loader.paths import *
 
 def configuration_path(config_name):
