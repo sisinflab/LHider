@@ -2,18 +2,28 @@
 This is the official repository for the paper *Enhancing Utility in Differentially Private Recommendation Data Release with Exponential Mechanism*.
 
 
-The recommenders training and evaluation procedures have been developed on the reproducibility framework **Elliot**,
+The recommenders' training and evaluation procedures have been developed on the reproducibility framework **Elliot**,
 we suggest to refer to the official Github [page](https://github.com/sisinflab/elliot) and [documentation](https://elliot.readthedocs.io/en/latest/).
 
 ## Table of Contents
 
-
+- [Requirements](#requirements)
+  - [Installation guidelines](#installation-guidelines)
+- [Datasests](#datasets)
+- [Usage](#usage)
+  - [Preprocessing](#preprocessing)
+  - [Generate Datasets with Randomized Response](#generate-datasets-with-randomized-response)
+  - [Select Dataset with Exponential Mechanism](#select-dataset-with-exponential-mechanism)
+- [Baseline](#baseline)
+  - [Recommendation Baseline](#recommendation-baseline)
+  - [Subsample Exponential Mechanism](#subsample-exponential-mechanism)
+  - [Basic One-Time RAPPOR](#basic-one-time-rappor)
 
 ## Requirements
 
 This software has been executed on the operative system Ubuntu `20.04`.
 
-Please, make sure to have at least Python `3.8.0` installed on your system.
+Please have at least Python `3.8.0` installed on your system.
 
 ### Installation guidelines
 
@@ -28,46 +38,46 @@ pip install -r requirements.txt
 
 ## Datasets
 
-At `data/` you may find all the [files](https://github.com/sisinflab/LHider/tree/fumo/data) related to the datasets. Each dataset can be fund in `data/[DATASET_NAME]/data/dataset.tsv`
+At `data/`, you may find all the [files](https://github.com/sisinflab/LHider/tree/fumo/data) related to the datasets. Each dataset can be found in `data/[DATASET_NAME]/data/dataset.tsv`
 
-The dataset used in the paper are `gift`, `facebook_books`, `yahoo_movies`. 
+The datasets used in the paper are `gift`, `facebook_books`, and `yahoo_movies`. 
 ## Elliot Configuration Templates
 
-At `config_templates/` you may find the Elliot [configuration templates](https://github.com/sisinflab/LHider/tree/fumo/config_templates) used for setting the experiments. 
+At `config_templates/`, you may find the Elliot [configuration templates](https://github.com/sisinflab/LHider/tree/fumo/config_templates) used for setting the experiments. 
 
 The configuration template used for all the experiments is `short_training.py`.
 
 ## Usage
 
-Here we describe the steps to reproduce the results presented in the paper. 
+Here, we describe the steps to reproduce the results presented in the paper. 
 
 ### Preprocessing
 
-Run data preprocessing step with:
+Run the data preprocessing step with the following:
 
 ```bash
 python preprocessing.py
 ```
 
-This step binarize all the dataset and splits them in train and test set. The results will be stored in `data/[DATASET_NAME]` for each dataset.
+This step binarize all the datasets and splits them into train and test sets. The results will be stored in `data/[DATASET_NAME]` for each dataset.
 
 ### Generate Datasets with Randomized Response
 
-From the binarized datasets, 500 randomized version have been generated with:
+From the binarized datasets, 500 randomized versions have been generated with the following:
 
 ```bash
 python generate.py --dataset gift
 ```
 
-Perturbed dataset will be store in the directory `perturbed_dataset/[DATASET_NAME]_train/0`.
+The perturbed dataset will be stored in the directory `perturbed_dataset/[DATASET_NAME]_train/0`.
 
-Each perturbed datasets will be then splitted in train and validation set, that will be stored in `data/[DATASET_NAME]/generated_train/0`.
+Each perturbed dataset will be then split in train and validation set, which will be stored in `data/[DATASET_NAME]/generated_train/0`.
 
-Finally, recommendation performance for each dataset will be stored in `result_collection/[DATASET_NAME]_train/0/`.
+Finally, the recommendation performance for each dataset will be stored in `result_collection/[DATASET_NAME]_train/0/`.
 
 ### Select Dataset with Exponential Mechanism
 
-We can run the selection module with:
+We can run the selection module with the following:
 
 ```bash
 python selection.py --dataset gift
@@ -81,13 +91,13 @@ Here we describe the steps to reproduce the baseline presented in the paper.
 
 ### Recommendation Baseline
 
-To reproduce the recommendation performance for the original datasets run:
+To reproduce the recommendation performance for the original datasets, run:
 
 ```bash
 python baseline.py --dataset gift
 ```
 
-Result will be stored in `data/[DATASET_NAME]/baseline`.
+The result will be stored in `data/[DATASET_NAME]/baseline`.
 
 ### Subsample Exponential Mechanism
 
@@ -96,8 +106,8 @@ Run Subsample Exponential Mechanism with:
 python subsample.py --dataset gift
 ```
 
-The result will be stored in `results_data/[DATASET_NAME]_train/0/aggregated_results.tsv` .
+The result will be stored in `results_data/[DATASET_NAME]_train/0/aggregated_results.tsv`.
 
 ### Basic One-Time RAPPOR
 
-To run One-Time RAPPOR refer to [Generate Datasets with Randomized Response].
+To run One-Time RAPPOR, refer to [Generate Datasets with Randomized Response](#generate-datasets-with-randomized-response).
