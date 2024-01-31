@@ -1,6 +1,11 @@
-import os
 from data_preprocessing.data_preprocessing import run
-import pandas as pd
+import os
+from src.loader.paths import CONFIG_DIR
+
+# create configuration files directory
+if not os.path.exists(CONFIG_DIR):
+    os.makedirs(CONFIG_DIR)
+    print(f'Directory created at \'{CONFIG_DIR}\'')
 
 if __name__ == '__main__':
     # Facebook Books
