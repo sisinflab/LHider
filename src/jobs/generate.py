@@ -220,7 +220,7 @@ def run_generation(args: dict):
 
     score_type = args['score_type']
     for actual_seed in range(args['seed'], args['seed'] + args['generations']):
-        print(f'Genero dataset {dataset_name} {dataset_type} con seed \'{actual_seed}\'')
+        print(f'Generating a new random dataset {dataset_name} {dataset_type} with seed \'{actual_seed}\'')
         output = randomizer.privatize_np(data, relative_seed=actual_seed)
         assert score_type in SCORES, f'Score type not found. Accepted scores: {SCORES.keys()}'
         scorer = SCORES[score_type](data)

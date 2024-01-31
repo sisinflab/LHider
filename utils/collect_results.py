@@ -41,7 +41,7 @@ def run(args):
         dataset_dir = os.path.join(result_dir, dataset)
         perf_file = [x for x in os.listdir(dataset_dir) if 'rec_cutoff' in x]
         if len(perf_file) == 0:
-            print(f'OCCHIO A {dataset}')
+            print(f'Performance file missing for the dataset: {dataset}')
         perf_file = perf_file[0]
         perf_path = os.path.join(dataset_dir, perf_file)
 
