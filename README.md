@@ -38,13 +38,13 @@ pip install -r requirements.txt
 
 ## Datasets
 
-At `data/`, you may find all the [files](https://github.com/sisinflab/LHider/tree/fumo/data) related to the datasets. Each dataset can be found in `data/[DATASET_NAME]/data/dataset.tsv`
+At `data/`, you may find all the [files](https://github.com/sisinflab/LHider/tree/main/data) related to the datasets. Each dataset can be found in `data/[DATASET_NAME]/data/dataset.tsv`
 
 The datasets used in the paper are `Amazon Gift Card`, `Facebook Books` and `Yahoo! Movies` referred as
 `gift`, `facebook_books`, and `yahoo_movies`, respectively. 
 ## Elliot Configuration Templates
 
-At `config_templates/`, you may find the Elliot [configuration templates](https://github.com/sisinflab/LHider/tree/fumo/config_templates) used for setting the experiments. 
+At `config_templates/`, you may find the Elliot [configuration templates](https://github.com/sisinflab/LHider/tree/main/config_templates) used for setting the experiments. 
 
 The configuration template used for all the experiments is `training.py`.
 
