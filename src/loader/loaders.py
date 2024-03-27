@@ -20,14 +20,16 @@ class TsvLoader:
         return_types = {
             'dataframe': pd.DataFrame,
             'csr': csr_matrix,
-            'sparse': 'sparse'
+            'sparse': 'sparse',
+            'sparse_ml': 'sparse_ml'
         }
         return_type = return_types[return_type]
 
 
         self._return_functions = {pd.DataFrame: self._load_dataframe,
                                   csr_matrix: self._load_crs,
-                                  'sparse': self._load_sparse}
+                                  'sparse': self._load_sparse,
+                                  'sparse_ml': self._load_sparse_ml}
         self.accepted_types = self._return_functions.keys()
         assert return_type in self.accepted_types, f'{self.__class__.__name__}: return type not managed by the loader.'
         self._return_type = return_type
@@ -51,6 +53,9 @@ class TsvLoader:
         u, i, r = data[0], data[1], data[2]
         n_u, n_i = max(u) + 1, max(i) + 1
         return csr_matrix((r, (u, i)), shape=(n_u, n_i))
+
+    def _load_sparse_ml(self, data):
+        return csr_matrix(data)
 
     def find_the_right_path(self, path, relative_directory: str = None, main_directory: str = None) -> str:
 

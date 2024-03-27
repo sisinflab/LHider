@@ -22,11 +22,12 @@ def params_from_name(file_name: str):
 MODELS = {
     'EASER': 'EASEr',
     'MostPop': 'MP',
-    'ItemKNN': 'ItemKNN'
+    'ItemKNN': 'ItemKNN',
+    'LogReg': 'LogReg'
 }
 
 
-def run(args):
+def  run(args):
 
     dataset_name = args['dataset_name']
     dataset_type = args['dataset_type']

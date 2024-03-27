@@ -15,7 +15,7 @@ class ExponentialMechanism:
         self.eps = epsilon
 
     def scores(self, output):
-        return np.array([self.score_function(x) for x in tqdm.tqdm(output)])
+        return np.array([self.score_function(x) for x in output])
 
     def probabilities(self, output):
         exponent = (self.eps * self.scores(output)) / (2 * self.sensitivity)
@@ -44,9 +44,8 @@ class ExponentialMechanism:
         return probabilities
 
     def probabilities_range_pre_computed_scores(self, scores):
-        exponent = (self.eps * scores) / (2 * self.range)
+        exponent = (self.eps * scores)
 
-        exponent = exponent.tolist()
         exponent = [Decimal(e) for e in exponent]
         probabilities = [np.exp(e) for e in exponent]
         total = sum(probabilities)

@@ -207,16 +207,23 @@ def run_generation(args: dict):
     # dataset directory
     dataset_name = args['dataset']
     dataset_type = args['type']
+    return_type = args.get('return_type', 'sparse')
 
     # loading files
     dataset_path = dataset_filepath(dataset_name, dataset_type)
-    loader = TsvLoader(path=dataset_path, return_type="sparse")
+    loader = TsvLoader(path=dataset_path, return_type=return_type)
     data = loader.load().A
-    randomizer = RandomizeResponse(eps=args['eps_phi'],
-                                   sensitivity=1,
-                                   base_seed=0,
-                                   min_val=0,
-                                   max_val=5)
+
+    if args['randomizer'] == 'randomized':
+        randomizer = RandomizeResponse(eps=args['eps_phi'],
+                                       sensitivity=1,
+                                       base_seed=0,
+                                       min_val=0,
+                                       max_val=5)
+    elif args['randomizer'] == 'subsampled':
+        randomizer = RandomGenerator()
+    else:
+        print('randomizer not implemented')
 
     score_type = args['score_type']
     for actual_seed in range(args['seed'], args['seed'] + args['generations']):
@@ -229,7 +236,10 @@ def run_generation(args: dict):
 
 
 def save_generated(data, actual_seed, score, args):
-    result = from_csr_to_pandas(csr_matrix(data))
+    if args.get('ml_task'):
+        result = pd.DataFrame(data)
+    else:
+        result = from_csr_to_pandas(csr_matrix(data))
     result_directory = noisy_dataset_folder(args['dataset'], args['type'], args['base_seed'])
     if not (os.path.exists(result_directory)):
         os.makedirs(result_directory)

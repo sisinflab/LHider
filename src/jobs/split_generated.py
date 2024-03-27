@@ -11,6 +11,8 @@ def run(args):
 
     base_seed = args['base_seed']
 
+    column_names = args.get('column_names', ['u', 'i', 'r'])
+
     result_dir = noisy_dataset_folder(dataset_name, dataset_type, base_seed)
     files = os.listdir(result_dir)
 
@@ -29,7 +31,7 @@ def run(args):
             data_name = file.replace('.tsv', '')
             dataset_path = os.path.join(result_dir, file)
 
-            dataset = pd.read_csv(dataset_path, sep='\t', header=None, names=['u', 'i', 'r'])
+            dataset = pd.read_csv(dataset_path, sep='\t', header=None, names=column_names)
             print(f'dataset loaded from \'{dataset_path}\'')
 
             splitter = Splitter(data=dataset,

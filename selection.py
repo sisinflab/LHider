@@ -1,10 +1,9 @@
 import argparse
 from src.jobs.exponential import run as run_select
 
-n = 500
 folder = 0
 seed = 0
-dimensions = [10, 30, 50, 75, 100, 1000]
+dimensions = [1, 2, 4, 8, 16, 32, 64]
 
 
 def run(args):
@@ -13,12 +12,12 @@ def run(args):
         'dataset_name': args['dataset'],
         'dataset_type': 'train',
         'type': 'train',
-        'randomizer': 'randomized',
+        'randomizer': args['randomizer'],
         'base_seed': folder,
         'score_type': args['score_type'],
-        'generations': n,
         'seed': seed,
-        'dimensions': dimensions
+        'dimensions': dimensions,
+        'metrics': ['LogReg_ZeroOneUtility']
     }
     run_select(args)
 
@@ -27,6 +26,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', required=True)
     parser.add_argument('--score_type', default='jaccard')
+    parser.add_argument('--randomizer', default='randomized')
     arguments = parser.parse_args()
     run(vars(arguments))
 

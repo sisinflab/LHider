@@ -137,6 +137,20 @@ class CosineSimilarity(ScoreFunction):
             / (np.sum(self.data*self.data, axis=1) ** .5 * np.sum((x * x), axis=1) ** .5)
 
 
+class ZeroOneLoss(ScoreFunction):
+    def __init__(self, data):
+        super(ZeroOneLoss, self).__init__(data)
+        self.sensitivity = 1 / len(data)
+        self.range = None
+
+    def __str__(self):
+        return 'zero_one_loss'
+
+    def score_function(self, x):
+        return np.sum(self.data * x, axis=1)\
+            / (np.sum(self.data*self.data, axis=1) ** .5 * np.sum((x * x), axis=1) ** .5)
+
+
 class ManhattanDistance(ScoreFunction):
     def __init__(self, data):
         super(ManhattanDistance, self).__init__(data)
@@ -185,6 +199,7 @@ class MatrixEuclideanDistance(ScoreFunction):
         super(MatrixEuclideanDistance, self).__init__(data)
         self.sensitivity = 1 / np.sqrt(self.data.size)
         self.max = np.sqrt(self.data.size)
+        self.range = None
 
     def score_function(self, x):
         scores = np.sqrt(np.sum(np.power(self.data - x, 2)))
