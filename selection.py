@@ -17,7 +17,7 @@ def run(args):
         'score_type': args['score_type'],
         'seed': seed,
         'dimensions': dimensions,
-        'metrics': ['LogReg_ZeroOneUtility']
+        'metrics': ['LogReg_F1']
     }
     run_select(args)
 

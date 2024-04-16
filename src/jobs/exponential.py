@@ -45,7 +45,7 @@ def run(args):
                 file_seed = int(params['seed'])
                 # file_score = float(params['score'])
 
-                file_score = performance[(performance['eps_phi'] == eps_z) & (performance['seed'] == file_seed)][metric].values[0]
+                file_score = performance[(performance['eps_phi'] == eps_z) & (performance['seed'] == file_seed)][args['score_type']].values[0]
 
                 if total_scores.get(eps_z) is None:
                     total_scores[eps_z] = {
@@ -56,7 +56,7 @@ def run(args):
                     total_scores[eps_z]['seeds'].append(file_seed)
                     total_scores[eps_z]['scores'].append(file_score)
 
-        eps_exponentials = [0.001, 0.01, 0.1, 1, 2, 5, 10, 100]
+        eps_exponentials = [0.125, 0.25, 0.5, 1, 2, 4]
         exponential_random_seed = 0
 
         global_results = []
@@ -87,24 +87,24 @@ def run(args):
                 if dim > len(values):
                     dim = len(values)
 
-                idx = list(range(len(values)))
-                # sampled_idx = np.random.choice(idx, dim, replace=False)
-                # samples = np.array(values)[sampled_idx]
-                samples = np.array(values)[:dim]
-
 
                 for eps_exp in eps_exponentials:
                     exp_results = []
 
                     for trial in range(10):
+                        idx = list(range(len(values)))
+                        sampled_idx = np.random.choice(idx, dim, replace=False)
+                        samples = np.array(values)[sampled_idx]
+                        # samples = np.array(values)[:dim]
+
                         sampled_seeds = samples[:, 0]
                         sampled_scores = samples[:, 1]
 
                         exponential_random_seed += 1
                         exp_mech = ExponentialMechanism(ZeroOneLoss(data), eps_exp, exponential_random_seed)
                         output = exp_mech.run_exponential_sensibile(sampled_seeds, np.array(sampled_scores))
-                        exp_results.append(sampled_scores[np.argwhere(sampled_seeds == int(output))[0, 0]])
-                        # exp_results.append(performance_eps_z[performance_eps_z.seed == int(output)][metric].values[0])
+                        # exp_results.append(sampled_scores[np.argwhere(sampled_seeds == int(output))[0, 0]])
+                        exp_results.append(performance_eps_z[performance_eps_z.seed == int(output)][metric].values[0])
 
                     row.append(np.max(exp_results))
                     row.append(np.mean(exp_results))

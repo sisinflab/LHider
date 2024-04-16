@@ -1,15 +1,16 @@
-from data_preprocessing.filters.dataset import Splitter
 from data_preprocessing.filters.filter import store_dataset
 from src.loader.paths import *
+from sklearn.model_selection import train_test_split as split
+
 
 import pandas as pd
 
 
-def run(dataset_name, numeric_to_categorical_columns=None, as_category_columns=None, drop_columns=None, categorical_to_one_hot=True, drop_na_value=None):
+def run(dataset_name, numeric_to_categorical_columns=None, as_category_columns=None, drop_columns=None, categorical_to_one_hot=True, drop_na_value=None, sep=',', remove_last_column=False):
     print(f'\n***** {dataset_name} data preprocessing *****\n'.upper())
 
     dataset_path = dataset_filepath(dataset_name, type='raw')
-    dataset = pd.read_csv(dataset_path, header=None, sep=',')
+    dataset = pd.read_csv(dataset_path, header=None, sep=sep)
     print(f'Dataset loaded from {dataset_path}')
 
     if drop_na_value:
@@ -29,19 +30,23 @@ def run(dataset_name, numeric_to_categorical_columns=None, as_category_columns=N
     if categorical_to_one_hot:
         dataset = pd.get_dummies(dataset)
 
+    if remove_last_column:
+        dataset = dataset.iloc[:,:-1]
+
     # SPLITTING
     print(f'\n***** {dataset_name} train-test splitting *****\n'.upper())
 
     print(f'\nTransactions: {len(dataset)}')
     print('\nThere will be the splitting...')
 
-    splitter = Splitter(data=dataset,
-                        test_ratio=0.2)
+    train_set, test_set = split(dataset, test_size=0.2, random_state=42)
 
-    splitting_results = splitter.filter()
+    splitting_results = {}
+    splitting_results['train'] = train_set
+    splitting_results['test'] = test_set
+
     print(f'Final training set transactions: {len(splitting_results["train"])}')
     print(f'Final test set transactions: {len(splitting_results["test"])}')
-    print(f'Final validation set transactions: {len(splitting_results["val"])}')
 
     # STORE ON FILE
     data_folder = dataset_directory(dataset_name=dataset_name)
