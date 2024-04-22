@@ -15,6 +15,8 @@ def run(args):
 
         performance = pd.read_csv(performance_file, sep='\t', decimal=',', header=0)
 
+        performance = performance[performance['method'] == args['randomizer']]
+
         directory = os.path.join(PROJECT_PATH, 'results_collection',
                                  args['dataset_name'] + '_' + args['dataset_type'], str(args['base_seed']))
 
@@ -28,21 +30,26 @@ def run(args):
         data = loader.load().A
 
         for file_name in os.listdir(directory):
-            params = dict(zip(['method', 'eps_z', 'reps', 'score', 'seed', 'total_eps'], file_name.split('_')))
+            if file_name == '.DS_Store':
+                continue
 
-            eps_z = float(params['eps_z'])
+            if file_name.startswith(args['randomizer']):
 
-            file_seed = int(params['seed'])
-            file_score = float(params['score'])
+                params = dict(zip(['method', 'eps_z', 'reps', 'score', 'seed', 'total_eps'], file_name.split('_')))
 
-            if total_scores.get(eps_z) is None:
-                total_scores[eps_z] = {
-                    'seeds': [file_seed],
-                    'scores': [file_score]
-                }
-            else:
-                total_scores[eps_z]['seeds'].append(file_seed)
-                total_scores[eps_z]['scores'].append(file_score)
+                eps_z = float(params['eps_z'])
+
+                file_seed = int(params['seed'])
+                file_score = float(params['score'])
+
+                if total_scores.get(eps_z) is None:
+                    total_scores[eps_z] = {
+                        'seeds': [file_seed],
+                        'scores': [file_score]
+                    }
+                else:
+                    total_scores[eps_z]['seeds'].append(file_seed)
+                    total_scores[eps_z]['scores'].append(file_score)
 
         eps_exponentials = [0.001, 0.01, 0.1, 1, 2, 5, 10, 100]
         exponential_random_seed = 0
@@ -75,8 +82,8 @@ def run(args):
                 if dim > len(values):
                     dim = len(values)
 
-                exp_results = []
                 for eps_exp in eps_exponentials:
+                    exp_results = []
                     for trial in range(10):
                         idx = list(range(len(values)))
                         sampled_idx = np.random.choice(idx, dim, replace=False)

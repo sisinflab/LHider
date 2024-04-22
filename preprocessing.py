@@ -1,7 +1,11 @@
 from data_preprocessing.data_preprocessing import run
 import os
 from src.loader.paths import CONFIG_DIR
+import pandas as pd
 
+
+def load_movielens(path):
+    return pd.read_csv(path, sep='::', header=None, engine='python', names=['u', 'i', 'r', 't'])
 
 if __name__ == '__main__':
 
@@ -18,3 +22,8 @@ if __name__ == '__main__':
 
     # Gift Cards
     run(dataset_name='gift', core=5, threshold=3)
+
+    dataframe = load_movielens('data/movielens/data/ratings.dat')
+    dataframe[['u', 'i', 'r']].to_csv('data/movielens/data/dataset.tsv', sep='\t', index=False, header=False)
+    # MovieLens
+    run(dataset_name='movielens', core=5, threshold=3)
