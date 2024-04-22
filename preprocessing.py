@@ -1,4 +1,4 @@
-from data_preprocessing.data_preprocessing import run
+from data_preprocessing.data_preprocessing_rec import run
 import os
 from src.loader.paths import CONFIG_DIR
 
