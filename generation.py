@@ -4,7 +4,7 @@ from src.jobs.split_generated import run as run_split
 from src.jobs.recs import run as run_recs
 from utils.collect_results import run as run_collect
 
-n = 500
+n = 100
 folder = 0
 seed = 0
 
@@ -23,8 +23,8 @@ def run(args):
             'generations': n,
             'seed': seed
         }
-        run_generation(args)
-    run_split(args)
+        # run_generation(args)
+    # run_split(args)
     run_recs(args)
     run_collect(args)
 
