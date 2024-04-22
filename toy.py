@@ -53,7 +53,7 @@ for eps_psi in [0.125, 0.25, 0.5, 1, 2, 4]:
         score_stats('RANDOM SAMPLING WITH n=' + str(n), scores)
         results.append(['random', min(scores), max(scores), sum(scores) / len(scores), eps_psi, '', n])
 
-    # EXTENDED RANDOMIZED RESPONSE
+    # EXTENDED RANDOMIZED RESPONSEg
     for j, eps in enumerate([0.125, 0.25, 0.5, 1, 1.4, 2, 4, 8]):
         randomized_seed = j * 5000
 
