@@ -88,16 +88,16 @@ def prepare_logger(name, path, log_level=logging.DEBUG):
     logger = logging.getLogger(name)
     logger.addFilter(TimeFilter())
     logger.setLevel(log_level)
-    logfilepath = os.path.abspath(os.sep.join([path, f"{name}-{datetime.datetime.now().strftime('%b-%d-%Y_%H-%M-%S')}.log"]))
-    fh = logging.FileHandler(logfilepath)
+    # logfilepath = os.path.abspath(os.sep.join([path, f"{name}-{datetime.datetime.now().strftime('%b-%d-%Y_%H-%M-%S')}.log"]))
+    # fh = logging.FileHandler(logfilepath)
     sh = logging.StreamHandler(sys.stdout)
-    fh.setLevel(log_level)
+    # fh.setLevel(log_level)
     sh.setLevel(log_level)
     filefmt = "%(time_filter)-15s: %(levelname)-.1s %(message)s"
     # filedatefmt = "%Y-%m-%d %H:%M:%S"
     formatter = logging.Formatter(filefmt)
-    fh.setFormatter(formatter)
+    # fh.setFormatter(formatter)
     sh.setFormatter(formatter)
-    logger.addHandler(fh)
+    # logger.addHandler(fh)
     logger.addHandler(sh)
     return logger
