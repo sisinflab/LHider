@@ -10,29 +10,34 @@ seed = 0
 
 
 def run(args):
-    for eph_phi in [0.125, 0.25, 0.5, 1, 2, 4, 8]:
+    for eph_phi in [1, 2, 4, 8]:
         args = {
             'dataset': args['dataset'],
             'dataset_name': args['dataset'],
             'dataset_type': 'train',
             'type': 'train',
             'eps_phi': eph_phi,
-            'randomizer': 'randomized',
+            'randomizer': args['randomizer'],
             'base_seed': folder,
             'score_type': args['score_type'],
             'generations': n,
-            'seed': seed
+            'seed': seed,
+            'min_val': args['min_val'],
+            'max_val': args['max_val']
         }
-        # run_generation(args)
+        run_generation(args)
     # run_split(args)
-    run_recs(args)
-    run_collect(args)
+    # run_recs(args)
+    # run_collect(args)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', required=True)
     parser.add_argument('--score_type', default='jaccard')
+    parser.add_argument('--min_val', type=int)
+    parser.add_argument('--max_val', type=int)
+    parser.add_argument('--randomizer', default='subsampled')
     arguments = parser.parse_args()
     run(vars(arguments))
 

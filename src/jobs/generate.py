@@ -222,6 +222,8 @@ def run_generation(args: dict):
                                        max_val=5)
     elif args['randomizer'] == 'subsampled':
         randomizer = RandomGenerator()
+    elif args['randomizer'] == 'discrete_laplace':
+        randomizer = DiscreteLaplaceMechanism(eps=args['eps_phi'], sensitivity=args['max_val'] - args['min_val'], min_val=args['min_val'], max_val=args['max_val'])
     else:
         print('randomizer not implemented')
 

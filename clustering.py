@@ -5,13 +5,17 @@ import numpy as np
 import pandas as pd
 import tqdm
 import sklearn.metrics
-from sklearn.cluster import KMeans
+from sklearn_extra.cluster import KMedoids
 
 from data_preprocessing.filters.dataset import Splitter
 from src.loader.paths import *
 from data_preprocessing.filters.filter import store_dataset
 from utils.collect_results import run as run_collect
 from src.jobs.generate import run_generation
+
+
+from sklearn.preprocessing import StandardScaler
+
 
 
 n = 100
@@ -21,14 +25,18 @@ seed = 0
 
 class ClusteringExperiment():
     def __init__(self):
-        self.clf = KMeans(random_state=0, cv=2, class_weight='balanced')
+        self.kmedoids = KMedoids(n_clusters=5, metric='euclidean', method='pam', random_state=42)
 
     def train(self, features):
-        self.clf.fit(features)
+        self.kmedoids.fit(features)
 
-    def score(self, features, labels, train_data):
-        #TODO: Vedere un po' qua
-        predicted_values = self.clf.predict(features)
+    def score(self, features, train_data):
+
+        cluster_centers = self.kmedoids.cluster_centers_
+        print(cluster_centers)
+
+        predicted_values = self.kmeans.predict(features)
+
         values = {'model': 'LogReg', 'F1': sklearn.metrics.f1_score(predicted_values, labels),
                           'Accuracy': sklearn.metrics.accuracy_score(predicted_values, labels),
                            'Recall': sklearn.metrics.recall_score(predicted_values, labels),
@@ -87,8 +95,8 @@ def run_clustering(args):
 
     files = os.listdir(result_dir)
 
-    test_path = dataset_filepath(dataset_name, 'test')
-    test = pd.read_csv(test_path, sep='\t', header=None)
+    original_path = dataset_filepath(dataset_name, 'train')
+    original_data = pd.read_csv(original_path, sep='\t', header=None)
 
     output_folder = os.path.join(PROJECT_PATH, 'results_collection', dataset_name + '_' + dataset_type, str(base_seed))
     if os.path.exists(output_folder) is False:
@@ -106,16 +114,19 @@ def run_clustering(args):
 
                 dataset = pd.read_csv(os.path.join(result_dir, file), sep='\t', header=None)
 
-                x_train = dataset.drop(columns=[len(dataset.columns) - 1])
-                y_train = dataset[len(dataset.columns) - 1]
+                # x_train = dataset.drop(columns=[len(dataset.columns) - 1])
+                # y_train = dataset[len(dataset.columns) - 1]
+                #
+                # x_test = test.drop(columns=[len(test.columns) - 1])
+                # y_test = test[len(test.columns) - 1]
 
-                x_test = test.drop(columns=[len(test.columns) - 1])
-                y_test = test[len(test.columns) - 1]
+                # sc = StandardScaler()
+                # x_stsc = sc.fit_transform(dataset)
 
-                logistic_regression = ClusteringExperiment()
-                logistic_regression.train(x_train, y_train)
+                clustering = ClusteringExperiment()
+                clustering.train(dataset)
 
-                results = logistic_regression.score(x_test, y_test, (x_train, y_train))
+                results = clustering.score(dataset)
                 results.to_csv(os.path.join(result_folder, 'rec_cutoff_model.tsv'), index=False, sep='\t')
 
 
