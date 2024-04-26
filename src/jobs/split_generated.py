@@ -3,6 +3,7 @@ from data_preprocessing.filters.dataset import Splitter
 from data_preprocessing.filters.filter import store_dataset
 from src.dataset.dataset import *
 from src.jobs.sigir import noisy_dataset_folder
+import tqdm
 
 def already_split_check(folder: str):
     if os.path.exists(folder):
@@ -34,7 +35,7 @@ def run(args):
         os.makedirs(generated_folder)
         print(f'created directory \'{generated_folder}\'')
 
-    for file in files:
+    for file in tqdm.tqdm(files):
         data_name = file.replace('.tsv', '')
         data_folder = os.path.join(generated_folder, data_name)
 
