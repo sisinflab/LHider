@@ -31,37 +31,42 @@ def run(args):
 
     for file in files:
         data_name = file.replace('.tsv', '')
-        dataset_path = os.path.join(result_dir, file)
+        data_folder = os.path.join(generated_folder, data_name)
 
-        dataset = pd.read_csv(dataset_path, sep='\t', header=None, names=['u', 'i', 'r'])
-        print(f'dataset loaded from \'{dataset_path}\'')
+        if os.path.exists(data_folder):
+            print(f'SPLITTING: folder already exists. Folder:  \'{data_folder}\'')
+        else:
+            dataset_path = os.path.join(result_dir, file)
 
-        splitter = Splitter(data=dataset,
-                            test_ratio=0.2)
-        try:
-            splitting_results = splitter.filter()
+            dataset = pd.read_csv(dataset_path, sep='\t', header=None, names=['u', 'i', 'r'])
+            print(f'dataset loaded from \'{dataset_path}\'')
 
-            data_folder = os.path.join(generated_folder, data_name)
-            if os.path.exists(data_folder) is False:
-                os.makedirs(data_folder)
-                print(f'created directory \'{data_folder}\'')
+            splitter = Splitter(data=dataset,
+                                test_ratio=0.2)
 
-            train = splitting_results["train"]
-            val = splitting_results["test"]
+            try:
+                splitting_results = splitter.filter()
 
-            train['r'] = 1
-            val['r'] = 1
+                if os.path.exists(data_folder) is False:
+                    os.makedirs(data_folder)
+                    print(f'created directory \'{data_folder}\'')
 
-            store_dataset(data=splitting_results["train"],
-                          folder=data_folder,
-                          name='train',
-                          message='training set')
+                train = splitting_results["train"]
+                val = splitting_results["test"]
 
-            store_dataset(data=splitting_results["test"],
-                          folder=data_folder,
-                          name='validation',
-                          message='val set')
-        except Exception as e:
-            print(e)
-            print(f'Dataset {dataset_name} has not been split')
+                train['r'] = 1
+                val['r'] = 1
+
+                store_dataset(data=splitting_results["train"],
+                              folder=data_folder,
+                              name='train',
+                              message='training set')
+
+                store_dataset(data=splitting_results["test"],
+                              folder=data_folder,
+                              name='validation',
+                              message='val set')
+            except Exception as e:
+                print(e)
+                print(f'Dataset {dataset_name} has not been split')
 
