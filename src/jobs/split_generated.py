@@ -4,6 +4,11 @@ from data_preprocessing.filters.filter import store_dataset
 from src.dataset.dataset import *
 from src.jobs.sigir import noisy_dataset_folder
 
+def already_split_check(folder: str):
+    if os.path.exists(folder):
+        if len(os.listdir(folder)) > 1:
+            return True
+    return False
 
 def run(args):
     print(' --- SPLITTING ---')
@@ -33,7 +38,7 @@ def run(args):
         data_name = file.replace('.tsv', '')
         data_folder = os.path.join(generated_folder, data_name)
 
-        if os.path.exists(data_folder):
+        if already_split_check(data_folder):
             print(f'SPLITTING: folder already exists. Folder:  \'{data_folder}\'')
         else:
             dataset_path = os.path.join(result_dir, file)
