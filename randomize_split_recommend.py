@@ -36,7 +36,7 @@ if __name__ == '__main__':
     parser.add_argument('--score_type', default='jaccard')
     arguments = parser.parse_args()
     # fixed arguments
-    arguments.generations = 10
+    arguments.generations = 500
     arguments.base_seed = 0
     arguments.seed = 0
     # run script
