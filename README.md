@@ -1,5 +1,5 @@
 # Enhancing Utility in Differentially Private Recommendation Data Release with Exponential Mechanism
-This is the official repository for the paper *Enhancing Utility in Differentially Private Recommendation Data Release with Exponential Mechanism* currently under review at SIGIR 2024.
+This is the official repository for the paper *Enhancing Utility in Differentially Private Recommendation Data Release with Exponential Mechanism* currently submitted at RecSys 2024.
 
 
 The recommenders' training and evaluation procedures have been developed on the reproducibility framework **Elliot**,
