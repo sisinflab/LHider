@@ -1,5 +1,5 @@
 # Enhancing Utility in Differentially Private Recommendation Data Release with Exponential Mechanism
-This is the official repository for the paper *Enhancing Utility in Differentially Private Recommendation Data Release with Exponential Mechanism* currently under review at SIGIR 2024.
+This is the official repository for the paper *Enhancing Utility in Differentially Private Recommendation Data Release with Exponential Mechanism* currently submitted at RecSys 2024.
 
 
 The recommenders' training and evaluation procedures have been developed on the reproducibility framework **Elliot**,
@@ -67,13 +67,13 @@ This step binarize all the datasets and splits them into train and test sets. Th
 From the binarized datasets, 500 randomized versions have been generated with the following:
 
 ```bash
-python generation.py --dataset [DATASET_NAME]
+python randomize_split_recommend.py --dataset [DATASET_NAME]
 ```
 The perturbed dataset will be stored in the directory `perturbed_dataset/[DATASET_NAME]_train/0`.
 
 For example, if you want to run the script on the Amazon Gift Card dataset
 ```bash
-python generation.py --dataset gift
+python randomize_split_recommend.py --dataset gift
 ```
 
 Each perturbed dataset will be then split in train and validation set, which will be stored in `data/[DATASET_NAME]/generated_train/0`.

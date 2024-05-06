@@ -134,7 +134,7 @@ def run_new_expo(args: dict):
     SCORES_PROPERTIES = {
         'manhattan':
             {
-                'sensitivity': lambda x: 1/sum(sum(x)),
+                'sensitivity': lambda x: 1 / sum(sum(x)),
                 'range': 1
             },
         'jaccard':
@@ -240,6 +240,7 @@ def save_generated(data, actual_seed, score, args):
     print(f'File stored at \'{file_path}\'')
     return file_path
 
+
 def save_result(dataset, args, total_eps, eps_exp):
     result = from_csr_to_pandas(csr_matrix(dataset))
 
@@ -267,7 +268,6 @@ def from_csr_to_pandas(data: csr_matrix, explicit=False):
 def noisy_dataset_filename(randomizer, eps_phi, reps, eps_exp, seed, total_eps):
     return '_'.join([str(randomizer), str(eps_phi), str(reps), str(eps_exp),
                      str(seed), str(total_eps)])
-
 
 
 def noisy_dataset_folder(dataset_name, dataset_type, base_seed):
