@@ -23,7 +23,7 @@ we suggest to refer to the official Github [page](https://github.com/sisinflab/e
 
 This software has been executed on the operative system Ubuntu `20.04`.
 
-Please have at least Python `3.8.0` installed on your system.
+Please have at least Python `3.9.0` installed on your system.
 
 ### Installation guidelines
 

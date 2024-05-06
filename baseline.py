@@ -1,7 +1,7 @@
 import argparse
 import os.path
 
-from config_templates.short_training import TEMPLATE_PATH
+from config_templates.training import TEMPLATE_PATH
 from elliot.run import run_experiment
 from data_preprocessing.filters.dataset import Splitter
 import pandas as pd
