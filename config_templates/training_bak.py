@@ -58,6 +58,26 @@ TEMPLATE_PATH = """experiment:
       meta:
         verbose: True
         save_recs: True
+    EASER:
+      meta:
+        verbose: True
+        save_recs: True
+        hyper_max_evals: 5
+        hyper_opt_alg: tpe
+      l2_norm: [uniform, 10, 10e7]
+      seed: 42
+      validation_metric: nDCGRendle2020@10
+    ItemKNN:
+      meta:
+        save_recs: True
+        verbose: True
+        hyper_max_evals: 5
+        hyper_opt_alg: tpe
+      neighbors: [uniform, 30, 150]
+      similarity: cosine
+      implementation: aiolli
+      seed: 42
+      validation_metric: nDCGRendle2020@10
     external.LightGCN:
       meta:
         hyper_max_evals: 5
