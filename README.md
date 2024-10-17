@@ -1,4 +1,4 @@
-# Enhancing Utility in Differentially Private Recommendation Data Release with Exponential Mechanism
+# Enhancing Utility in Differentially Private Recommendation Data Release via Exponential Mechanism
 This is the official repository for the paper *Enhancing Utility in Differentially Private Recommendation Data Release with Exponential Mechanism* currently under review.
 
 
